@@ -38,9 +38,9 @@
     "external_api_enabled": true,
     "external_api_token": "sk-cow-f7ece8ad08c763552b4ec2b1223340351b62db089594aea2",
     "agent": true,
-    "agent_max_context_tokens": 999999,
-    "agent_max_context_turns": 9999,
-    "agent_max_steps": 9999,
+    "agent_max_context_tokens": 50000,
+    "agent_max_context_turns": 38,
+    "agent_max_steps": 30,
     "agent_permission_mode": "workspace-write",
     "subagent": {
         "enabled": true,
@@ -51,7 +51,7 @@
     "knowledge": true,
     "self_evolution_enabled": true,
     "mcp_tool_retrieval_enabled": true,
-    "bot_type": "custom",
+    "bot_type": "custom:5e0cfadb",
     "custom_api_key": "any-value",
     "custom_api_base": "http://127.0.0.1:8741/v1",
     "always_reply_voice": false,
@@ -64,7 +64,8 @@
     },
     "voice_to_text_model": "gpt-4o-mini",
     "reasoning_effort_by_model": {
-        "custom:gpt-5-nano": "high"
+        "custom:gpt-5-nano": "high",
+        "custom:fe01f280:llama3.2:3b": "high"
     },
     "line_channel_secret": "62723ed5d146e8fd998946bb4cf6d96c",
     "line_channel_access_token": "wD1Q42ZU2b7MRBpBC1eAkvkt1c2ac73zr07RdWkgXODzIaU2YME7HBdA3Qdfp6AJChKsyF4P6PKVRRUgP6f+KsBMGxcqVx+4Yv69Tmnz06lvrhyP08/O6GwMqz4OYtutTFWt1xdEU2k0pL0aDege0gdB04t89/1O/w1cDnyilFU=",
@@ -73,5 +74,21 @@
     "botnoi_speaker": "1",
     "botnoi_speed": 1.0,
     "botnoi_volume": 1.0,
-    "text_to_voice_model": "Gpt-5.4-nano"
+    "text_to_voice_model": "Gpt-5.4-nano",
+    "custom_providers": [
+        {
+            "id": "5e0cfadb",
+            "name": "Puter Bridge (ฟรี)",
+            "api_key": "any-value",
+            "api_base": "http://127.0.0.1:8741/v1",
+            "model": "gpt-4o-mini"
+        },
+        {
+            "id": "fe01f280",
+            "name": "Ollama (Local ฟรี)",
+            "api_key": "ollama",
+            "api_base": "http://localhost:11434/v1",
+            "model": "llama3.2:3b"
+        }
+    ]
 }
