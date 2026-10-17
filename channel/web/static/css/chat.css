@@ -2,8 +2,8 @@
    NovaAgent — Design System Variables (A1)
    ============================================ */
 :root {
-  --color-brand: #4ABE6E;
-  --color-brand-2: #228547;
+  --color-brand: #a78bfa;
+  --color-brand-2: #7c3aed;
   --bg-app: #f8fafc;
   --bg-surface: #ffffff;
   --bg-elevated: #f1f5f9;
@@ -18,10 +18,10 @@
 }
 
 .dark {
-  --bg-app: #0f172a;
-  --bg-surface: #1A1A1A;
+  --bg-app: #1a0f2e;
+  --bg-surface: #241648;
   --bg-elevated: #1e1e1e;
-  --text: #e2e8f0;
+  --text: #e9d5ff;
   --text-muted: #94a3b8;
   --text-subtle: #64748b;
   --border: #2a2f3a;
@@ -1145,3 +1145,100 @@
     100% { box-shadow: 0 0 0 3px rgba(74, 190, 110, 0); }
 }
 
+
+/* ═══════════════════════════════════════
+   Settings Theme - Purple Glassmorphism
+   ═══════════════════════════════════════ */
+
+/* พื้นหลังหน้า Settings */
+.config-view {
+    background: linear-gradient(135deg, #1a0f2e 0%, #0f0a1f 100%) !important;
+    min-height: 100vh;
+}
+
+/* การ์ดแต่ละส่วน */
+.config-section {
+    background: rgba(167, 139, 250, 0.05) !important;
+    backdrop-filter: blur(12px) !important;
+    border: 1px solid rgba(167, 139, 250, 0.2) !important;
+    border-radius: 16px !important;
+    padding: 20px !important;
+    margin-bottom: 20px !important;
+}
+
+/* หัวข้อ */
+.config-section h3,
+.config-section h2 {
+    color: #a78bfa !important;
+    font-weight: 600 !important;
+    margin-bottom: 16px !important;
+}
+
+/* Input / Select */
+.config-section input,
+.config-section select,
+.config-section textarea {
+    background: rgba(15, 10, 31, 0.8) !important;
+    border: 1px solid rgba(167, 139, 250, 0.3) !important;
+    color: #e9d5ff !important;
+    border-radius: 8px !important;
+    padding: 10px 14px !important;
+    transition: all 0.2s ease !important;
+}
+
+.config-section input:focus,
+.config-section select:focus,
+.config-section textarea:focus {
+    border-color: #a78bfa !important;
+    box-shadow: 0 0 0 3px rgba(167, 139, 250, 0.2) !important;
+    outline: none !important;
+}
+
+/* ปุ่ม Save */
+.config-section .btn-primary,
+.config-section button[type="submit"] {
+    background: linear-gradient(135deg, #a78bfa, #7c3aed) !important;
+    border: none !important;
+    color: white !important;
+    padding: 10px 24px !important;
+    border-radius: 8px !important;
+    font-weight: 600 !important;
+    transition: all 0.2s ease !important;
+}
+
+.config-section .btn-primary:hover,
+.config-section button[type="submit"]:hover {
+    transform: translateY(-2px) !important;
+    box-shadow: 0 8px 24px rgba(167, 139, 250, 0.4) !important;
+}
+
+/* Tabs */
+.config-tabs button,
+.settings-tabs button {
+    color: #94a3b8 !important;
+    border-bottom: 2px solid transparent !important;
+    padding: 12px 20px !important;
+    transition: all 0.2s ease !important;
+}
+
+.config-tabs button.active,
+.settings-tabs button.active {
+    color: #a78bfa !important;
+    border-bottom-color: #a78bfa !important;
+}
+
+/* Label */
+.config-section label {
+    color: #cbd5e1 !important;
+    font-size: 13px !important;
+    font-weight: 500 !important;
+    margin-bottom: 6px !important;
+    display: block !important;
+}
+
+/* Description text */
+.config-section .config-desc,
+.config-section small {
+    color: #64748b !important;
+    font-size: 12px !important;
+}
