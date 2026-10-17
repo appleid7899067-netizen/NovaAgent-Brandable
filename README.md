@@ -1,7 +1,16 @@
-# 🎃 NovaAgent - Brandable AI Agent ♦️
+# 🎃 Panupan's NovaAgent - Brandable AI Agent ♦️
 
-> **AI Agent Harness ระดับ Production** — สร้างด้วย Python + FastAPI + Vanilla JS  
+> **AI Agent Harness ระดับ Production** — สร้างโดย **ภาณุพันธ์ (Panupan)**  
 > ฉลาด · สวยงาม · ยืดหยุ่น · ปลอดภัย · ฟรี 100%
+
+---
+
+## 👋 ผู้พัฒนา
+
+- **ชื่อ:** ภาณุพันธ์ (Panupan)
+- **GitHub:** [@appleid7899067-netizen](https://github.com/appleid7899067-netizen)
+- **โปรเจกต์:** NovaAgent-Brandable
+- **Brand:** boss.slilelo
 
 ---
 
@@ -92,7 +101,7 @@ MIT License - ดูรายละเอียดใน LICENSE
 
 <div align="center">
 
-**สร้างด้วย 💜 โดย NovaAgent Team**
+**สร้างด้วย 💜 โดย ภาณุพันธ์ (Panupan)**
 
 ⭐ Star โปรเจกต์นี้ถ้าคุณชอบ!
 
