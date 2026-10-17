@@ -1,0 +1,12 @@
+__pycache__/
+*.pyc
+node_modules/
+*.log
+.env
+*.tar.gz
+run.log
+guard_backups/
+guard_logs/
+projects/
+*.backup*
+config.json.backup*

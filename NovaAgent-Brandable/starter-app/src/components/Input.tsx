@@ -1,0 +1,1 @@
+export default function Input({ placeholder }: any){ return <input placeholder={placeholder} className="border rounded px-3 py-2"/> }

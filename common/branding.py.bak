@@ -1,0 +1,45 @@
+"""NovaAgent Branding Module"""
+import os
+import json
+from pathlib import Path
+
+_HERE = Path(__file__).resolve()
+_PROJECT_ROOT = _HERE.parent.parent.parent
+
+def _find_brand_config():
+    candidates = [
+        _PROJECT_ROOT / "branding" / "brand_config.json",
+        Path("branding/brand_config.json"),
+        Path("../branding/brand_config.json"),
+    ]
+    for path in candidates:
+        if path.exists():
+            return path
+    return None
+
+def _load():
+    p = _find_brand_config()
+    if p:
+        try:
+            with open(p) as f:
+                return json.load(f)
+        except Exception:
+            pass
+    return {}
+
+def get_brand_name():
+    return os.getenv("BRAND_NAME") or _load().get("brand_name", "boss.slilelo")
+
+def get_brand_display():
+    return os.getenv("BRAND_DISPLAY") or _load().get("display_name", "boss.slilelo")
+
+def get_brand_tagline():
+    return _load().get("tagline", "AI Agent")
+
+def get_brand_logo():
+    return _load().get("logo_text", "🤖")
+
+BRAND_NAME = get_brand_name()
+BRAND_DISPLAY = get_brand_display()
+BRAND_TAGLINE = get_brand_tagline()
+BRAND_LOGO = get_brand_logo()

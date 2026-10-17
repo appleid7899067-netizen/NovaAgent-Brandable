@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Video Demo: Cute Space Cat</title>
+    <script src="https://js.puter.com/v2/"></script>
+    <style>
+        body { background: #0f0f0f; color: #fff; font-family: sans-serif; text-align: center; padding: 20px; }
+        h1 { color: #a78bfa; }
+        #video-container { margin-top: 20px; min-height: 200px; }
+        video { max-width: 100%; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.5); }
+        .loading { color: #94a3b8; font-style: italic; }
+    </style>
+</head>
+<body>
+    <h1>Video Demo: Cute Space Cat</h1>
+    <p>This video showcases a cute space cat! Enjoy!</p>
+    
+    <div id="video-container">
+        <p class="loading" id="status">⏳ กำลังสร้างวิดีโอด้วย AI... (อาจใช้เวลาสักครู่)</p>
+    </div>
+
+    <script>
+        async function generateVideo() {
+            try {
+                const status = document.getElementById('status');
+                const container = document.getElementById('video-container');
+                
+                const videoElement = await puter.ai.txt2vid("A cute orange cat floating in space, wearing an astronaut helmet, stars and galaxies in the background, cinematic lighting", {
+                    model: "wan-ai/wan2.7-t2v"
+                });
+                
+                status.remove();
+                container.appendChild(videoElement);
+                videoElement.controls = true;
+                videoElement.play();
+                
+            } catch (error) {
+                document.getElementById('status').innerText = "❌ เกิดข้อผิดพลาด: " + error.message;
+            }
+        }
+        
+        // เริ่มสร้างวิดีโอทันทีที่โหลดหน้า
+        generateVideo();
+    </script>
+</body>
+</html>
