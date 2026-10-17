@@ -201,5 +201,19 @@
         "source": "custom",
         "enabled": true,
         "category": "skill"
+    },
+    "learning-license": {
+        "name": "learning-license",
+        "description": "ระบบการเรียนรู้ ใบอนุญาติ และความชำนาญของแบรนด์ boss.slilelo รองรับการสร้างคอร์สเรียน ออกใบอนุญาติและใบประกาศนียบัตร ประเมินระดับความชำนาญ (Beginner → Master) และติดตามความคืบหน้าการเรียนรู้ (GOD-MODE / CHEAT)",
+        "source": "custom",
+        "enabled": true,
+        "category": "skill"
+    },
+    "mix-mode": {
+        "name": "mix-mode",
+        "description": "สกิลสวมบทบาทเป็นโมเดล AI ใดก็ได้ พิมพ์ชื่อโมเดลแล้วระบบจะดึงความเก่งของโมเดลนั้นมาใช้งานจริงในโหมด GOD-MODE / CHEAT",
+        "source": "custom",
+        "enabled": true,
+        "category": "skill"
     }
 }
