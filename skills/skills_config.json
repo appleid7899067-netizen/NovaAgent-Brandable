@@ -194,5 +194,12 @@
         "source": "custom",
         "enabled": true,
         "category": "skill"
+    },
+    "browser-slilelo": {
+        "name": "browser-slilelo",
+        "description": "เบราว์เซอร์สกิลระดับโกง (GOD-MODE) สำหรับการทดสอบ UI, อัตโนมัติเว็บแอป, และแนะนำการออกแบบ UI โดย SlilelO boss ใช้ Playwright ควบคุมเบราว์เซอร์จริง ถ่ายภาพหน้าจอ ตรวจจับเซเลกเตอร์ และออกใบอนุญาตอย่างเป็นทางการ",
+        "source": "custom",
+        "enabled": true,
+        "category": "skill"
     }
 }
