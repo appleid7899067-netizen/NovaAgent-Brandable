@@ -1,0 +1,1 @@
+export default function Card({ title, children }: any){ return <div className=\"bg-white rounded-lg shadow p-4\"><div className=\"font-semibold mb-2\">{title}</div><div>{children}</div></div> }
