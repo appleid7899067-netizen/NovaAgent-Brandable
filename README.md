@@ -53,6 +53,53 @@ nohup env BRAND_NAME=boss.slilelo python app.py > ~/nova.log 2>&1 &
 
 http://localhost:9999
 
+> 💡 ถ้าอยากให้เข้าถึงได้จากเครื่องอื่น/LAN ให้ใส่ `WEB_HOST=0.0.0.0` และตั้ง `web_password`
+> ใน `config.json` ก่อน (ถ้าไม่ตั้งรหัสผ่าน ระบบจะ bind แค่ `127.0.0.1`)
+
+---
+
+## 🦙 รันด้วย Ollama (Local ฟรี — ไม่ต้องใช้ API key)
+
+`config.json` ตั้งค่าเริ่มต้นไว้ให้ใช้ **Ollama** แล้ว (provider `custom:fe01f280`)
+
+```bash
+# 1) ติดตั้ง Ollama  (macOS: brew install ollama | Linux: curl -fsSL https://ollama.com/install.sh | sh)
+# 2) รันสคริปต์เดียวจบ — เช็ก/สตาร์ท ollama, ดาวน์โหลดโมเดล, แล้วเปิด NovaAgent
+bash scripts/start-ollama.sh
+```
+
+สคริปต์จะจัดการให้อัตโนมัติ:
+
+| ขั้นตอน | รายละเอียด |
+|:---|:---|
+| ตรวจ `ollama` | แจ้งวิธีติดตั้งถ้ายังไม่มี |
+| สตาร์ท server | `ollama serve` ถ้ายังไม่รัน (พอร์ต 11434) |
+| ดึงโมเดลแชท | `qwen2.5:3b` (เปลี่ยนได้: `OLLAMA_MODEL=qwen2.5:7b bash scripts/start-ollama.sh`) |
+| ดึง embedding | `nomic-embed-text` (ใช้กับ Memory + Knowledge base) |
+| เปิดเว็บ | `http://localhost:9999` (bind `0.0.0.0`) |
+
+**ค่าที่ตั้งไว้ใน `config.json`:**
+
+```json
+{
+  "model": "qwen2.5:3b",
+  "bot_type": "custom:fe01f280",
+  "custom_api_base": "http://127.0.0.1:11434/v1",
+  "custom_api_key": "ollama",
+  "embedding_provider": "custom:fe01f280",
+  "embedding_model": "nomic-embed-text",
+  "embedding_dimensions": 768,
+  "enable_thinking": false
+}
+```
+
+**หมายเหตุ**
+- ถ้ารัน NovaAgent ใน **Docker** ให้เปลี่ยน `custom_api_base` เป็น `http://host.docker.internal:11434/v1`
+  (หรือ IP ของเครื่อง host) เพราะ `127.0.0.1` ใน container คือตัว container เอง
+- โมเดลเล็ก (3B) เรียก tool ได้ไม่แม่นเท่าโมเดลใหญ่ — งาน agent หลายขั้นตอนแนะนำ `qwen2.5:7b` ขึ้นไป
+- ต้องการสลับกลับไปใช้ Puter Bridge / OpenAI ใช้หน้า **Settings** ในคอนโซล หรือแก้ `config.json`
+  (ไฟล์สำรองก่อนแก้อยู่ที่ `config.json.bak`) — ค่า `bot_type` ต้องตรงกับ `custom_providers[].id`
+
 ---
 
 ## 🛠️ API Endpoints
