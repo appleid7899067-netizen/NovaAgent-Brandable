@@ -127,8 +127,77 @@ COW_DATA_DIR="$HOME/.cow" ./.venv/bin/python app.py
 
 **Embedding:** สคริปต์จะเช็กให้อัตโนมัติ — ถ้าเครื่องมี Ollama รันอยู่จะใช้ `nomic-embed-text` (274 MB) ต่อให้แชทใช้ cloud ไม่งั้นจะตั้งเป็น keyword-only (Memory ยังทำงาน แต่ค้นด้วยคีย์เวิร์ด)
 
+## 📱 Termux (Android) — ไม่มี Docker
+
+> **Docker ใช้บน Termux ไม่ได้** — Termux เป็นแอป Android ไม่มี Docker daemon
+> (ต้อง root + kernel ที่รองรับ) ข้อความ `Cannot connect to the Docker daemon ... /data/data/com.termux/...`
+> คือเรื่องปกติ ไม่ใช่ความผิดพลาดของคุณ
+
+ติดตั้งแบบ native แทน:
+
+```bash
+# 1) แพ็กเกจพื้นฐาน (ใช้เวลาสักครู่)
+pkg update -y && pkg upgrade -y
+pkg install -y python git clang make binutils libffi openssl
+
+# 2) แพ็กเกจที่ต้องคอมไพล์ — ใช้ตัวที่ Termux เตรียมไว้ (อย่า pip install)
+pkg install -y python-numpy python-pillow python-cryptography
+
+# 3) โคลนโปรเจ็ก
+cd ~
+git clone https://github.com/appleid7899067-netizen/NovaAgent-Brandable.git
+cd NovaAgent-Brandable
+
+# 4) venv ต้องใช้ --system-site-packages เพื่อมองเห็น numpy/pillow/cryptography จาก pkg
+python -m venv --system-site-packages .venv
+source .venv/bin/activate
+pip install -U pip setuptools wheel
+
+# 5) ติดตั้งเฉพาะที่จำเป็นกับ Web console (ไม่ต้องลง SDK ของ Telegram/Discord/...)
+pip install -r requirements-web.txt
+#    ถ้าต้องการทุก channel ค่อยใช้: pip install -r requirements.txt
+
+# 6) ตั้งค่า + รัน
+export COW_DATA_DIR="$HOME/.cow"
+TYPHOON_API_KEY="sk-..." bash scripts/use-provider.sh typhoon
+COW_DATA_DIR="$HOME/.cow" python app.py
+```
+
+เปิดเบราว์เซอร์บนมือถือ → **http://localhost:9999**
+
+**ให้มือถือ/แท็บเล็ตอื่นในวง Wi-Fi เดียวกันเข้าถึงได้:**
+
+```bash
+ip addr show wlan0 | grep 'inet '     # เอา IP เช่น 192.168.1.42
+COW_DATA_DIR="$HOME/.cow" WEB_HOST=0.0.0.0 python app.py
+# เปิด http://192.168.1.42:9999 จากเครื่องอื่น
+```
+
+**ให้ทำงานต่อแม้ปิดหน้าจอ:**
+
+```bash
+pkg install -y termux-api tmux
+termux-wake-lock                     # กัน Android ฆ่า process
+tmux new -s nova
+# ... รัน app.py ใน tmux แล้วกด Ctrl+B แล้ว D เพื่อออกจาก session
+tmux attach -t nova                  # กลับมาดู
+termux-wake-unlock                   # เลิกใช้เมื่อหยุด
+```
+
+และปิด **Battery optimization** ให้ Termux ในการตั้งค่า Android
+
+**แก้ปัญหาบน Termux:**
+
+| อาการ | วิธีแก้ |
+|:---|:---|
+| `No module named 'numpy'` ใน venv | สร้าง venv ใหม่ด้วย `python -m venv --system-site-packages .venv` |
+| `error: command 'clang' failed` | `pkg install clang make binutils` แล้วรัน pip ใหม่ |
+| `cryptography` ติดตั้งไม่ผ่าน | `pkg install python-cryptography` แล้วใช้ `--system-site-packages` |
+| แอปถูกฆ่าเมื่อปิดจอ | `termux-wake-lock` + ปิด battery optimization |
+| อยากได้ wheel สำเร็จรูปเพิ่ม | `pip install --extra-index-url https://termux-user-repository.github.io/pypi/ ...` |
+
 **หมายเหตุ**
-- ถ้ารัน NovaAgent ใน **Docker** ให้เปลี่ยน `custom_api_base` เป็น `http://host.docker.internal:11434/v1`
+- ถ้ารัน NovaAgent ใน **Docker** (บน PC/NAS ไม่ใช่ Termux) ให้เปลี่ยน `custom_api_base` เป็น `http://host.docker.internal:11434/v1`
   (หรือ IP ของเครื่อง host) เพราะ `127.0.0.1` ใน container คือตัว container เอง
 - โมเดลเล็ก (3B) เรียก tool ได้ไม่แม่นเท่าโมเดลใหญ่ — งาน agent หลายขั้นตอนแนะนำ `qwen2.5:7b` ขึ้นไป
 - ต้องการสลับกลับไปใช้ Puter Bridge / OpenAI ใช้หน้า **Settings** ในคอนโซล หรือแก้ `config.json`

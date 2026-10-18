@@ -1,0 +1,31 @@
+# Minimal dependencies for running the Web console only (no IM channels).
+#
+# Use this on constrained devices (Termux/Android, Raspberry Pi, small VPS) where
+# installing every channel SDK is slow or fails to build. The web channel is
+# loaded lazily, so Telegram/Discord/Slack/Feishu/WeChat SDKs are not needed
+# unless you switch `channel_type` to one of those.
+#
+#   pip install -r requirements-web.txt
+#
+# Tip for Termux: install the compiled packages from pkgs first, then use a venv
+# created with --system-site-packages:
+#   pkg install python-numpy python-pillow python-cryptography
+#   python -m venv --system-site-packages .venv
+
+numpy>=1.21
+markdown-it-py>=3.0.0
+aiohttp>=3.8.6,<3.10; python_version < "3.13"
+aiohttp>=3.10; python_version >= "3.13"
+requests>=2.28.2
+chardet>=5.1.0
+Pillow
+python-dotenv>=1.0.0
+PyYAML>=6.0
+croniter>=2.0.0
+tzdata; sys_platform == "win32"
+click>=8.0
+qrcode
+json-repair
+regex>=2019.3.12
+web.py>=0.76; python_version >= "3.10"
+web.py; python_version < "3.10"
