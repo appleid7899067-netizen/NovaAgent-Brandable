@@ -23,7 +23,14 @@ OLLAMA_MODEL="${OLLAMA_MODEL:-qwen2.5:3b}"
 OLLAMA_EMBED_MODEL="${OLLAMA_EMBED_MODEL:-nomic-embed-text}"
 WEB_HOST="${WEB_HOST:-0.0.0.0}"
 export COW_WEB_PORT="${COW_WEB_PORT:-9999}"
-export COW_DATA_DIR="${COW_DATA_DIR:-$HOME/cow}"
+# config ที่แอปอ่านจริง = "$COW_DATA_DIR/config.json" (ถ้าไม่ตั้ง จะใช้ ./config.json)
+DATA_DIR="${COW_DATA_DIR:-$BASE_DIR}"
+export COW_DATA_DIR="$DATA_DIR"
+mkdir -p "$DATA_DIR"
+CFG="$DATA_DIR/config.json"
+if [ ! -f "$CFG" ]; then
+  cp "$BASE_DIR/config.json" "$CFG"
+fi
 
 GREEN='\033[0;32m'; RED='\033[0;31m'; YELLOW='\033[0;33m'; CYAN='\033[0;36m'; NC='\033[0m'
 info()  { echo -e "${CYAN}[ollama-start]${NC} $*"; }
@@ -76,10 +83,9 @@ if [ -x "$BASE_DIR/.venv/bin/python" ]; then
 fi
 
 # ให้ config ชี้ไปที่โมเดลที่เลือก (ถ้าเลือกโมเดลอื่นผ่าน OLLAMA_MODEL)
-"$PY" - "$OLLAMA_MODEL" "$OLLAMA_EMBED_MODEL" <<'PYEOF'
+"$PY" - "$CFG" "$OLLAMA_MODEL" "$OLLAMA_EMBED_MODEL" <<'PYEOF'
 import json, sys
-model, embed_model = sys.argv[1], sys.argv[2]
-path = "config.json"
+path, model, embed_model = sys.argv[1], sys.argv[2], sys.argv[3]
 with open(path, encoding="utf-8") as f:
     cfg = json.load(f)
 cfg["model"] = model
@@ -99,7 +105,8 @@ with open(path, "w", encoding="utf-8") as f:
 PYEOF
 
 ok "สตาร์ท NovaAgent — เปิดเบราว์เซอร์ที่ http://localhost:${COW_WEB_PORT}"
-info "โมเดล: ${OLLAMA_MODEL} | bind: ${WEB_HOST}:${COW_WEB_PORT} | data: ${COW_DATA_DIR}"
+info "โมเดล: ${OLLAMA_MODEL} | bind: ${WEB_HOST}:${COW_WEB_PORT}"
+info "config ที่ใช้: ${CFG}"
 echo
 
 WEB_HOST="$WEB_HOST" exec "$PY" "$BASE_DIR/app.py"

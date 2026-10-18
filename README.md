@@ -93,6 +93,40 @@ bash scripts/start-ollama.sh
 }
 ```
 
+---
+
+## 🆓 ผู้ให้บริการฟรี (API key) — สลับได้ด้วยคำสั่งเดียว
+
+```bash
+# เก็บ config + key ไว้นอก repo ก่อน (กัน key หลุดขึ้น git)
+export COW_DATA_DIR="$HOME/.cow"
+
+TYPHOON_API_KEY=xxx   bash scripts/use-provider.sh typhoon
+GEMINI_API_KEY=xxx    bash scripts/use-provider.sh gemini
+GROQ_API_KEY=xxx      bash scripts/use-provider.sh groq
+OPENROUTER_API_KEY=xxx bash scripts/use-provider.sh openrouter
+bash scripts/use-provider.sh ollama          # กลับมาใช้โมเดลในเครื่อง
+
+# ระบุโมเดลเอง / เปลี่ยนโมเดล
+MODEL=typhoon-v2.1-12b-instruct bash scripts/use-provider.sh typhoon
+
+COW_DATA_DIR="$HOME/.cow" ./.venv/bin/python app.py
+```
+
+| ผู้ให้บริการ | โควตาฟรี (ต.ค. 2026) | จุดเด่น | ข้อควรระวัง |
+|:---|:---|:---|:---|
+| **Typhoon** (SCB 10X) ⭐ | 200 req/min, 5 req/s — ไม่จำกัด token/วันแบบประกาศ | 30B A3B, ไทยล้ำ, รองรับ tool use, context 128K, OpenAI-compatible | เป็น research showcase — ผู้ให้บริการเก็บข้อมูลไปพัฒนาโมเดล |
+| **Gemini** (AI Studio) | ~1,500 req/วัน, 15 RPM, 1M TPM | context 1M, เรียก tool เก่ง, รองรับ native ในโปรเจ็ก | ข้อมูล free tier ถูกนำไปใช้เทรน |
+| **OpenRouter** | 50 req/วัน (1,000 หลังเติม $10 ครั้งเดียว) | โมเดล `:free` หลายค่าย | โมเดลฟรีหมุนเวียน/หายบ่อย |
+| **Groq** | 1,000 req/วัน แต่ **200K tokens/วัน** | เร็วมาก | prompt ของโปรเจ็ก ~14K tokens → ได้ ~14 ข้อความ/วัน |
+| **Cerebras** | ❌ ยกเลิกฟรีถาวรแล้ว (เหลือ $5 trial 30 วัน + ต้องผูกบัตร) | — | — |
+
+> ⚠️ **GitHub Models** ปิดให้บริการ 30 ก.ค. 2026 แล้ว
+
+**ทำไม Typhoon ถึงคุ้มสุดสำหรับโปรเจ็กนี้:** prompt เริ่มต้นของ NovaAgent คือ ~14,000 tokens (system prompt + tool schema 17 ตัว) ผู้ให้บริการที่จำกัด *token/วัน* จะหมดโควตาเร็วมาก ส่วน Typhoon จำกัดแค่ *req/min* ที่ 200 — ใช้ได้จริงทั้งวันโดยไม่ต้องกังวลเรื่อง token
+
+**Embedding:** สคริปต์จะเช็กให้อัตโนมัติ — ถ้าเครื่องมี Ollama รันอยู่จะใช้ `nomic-embed-text` (274 MB) ต่อให้แชทใช้ cloud ไม่งั้นจะตั้งเป็น keyword-only (Memory ยังทำงาน แต่ค้นด้วยคีย์เวิร์ด)
+
 **หมายเหตุ**
 - ถ้ารัน NovaAgent ใน **Docker** ให้เปลี่ยน `custom_api_base` เป็น `http://host.docker.internal:11434/v1`
   (หรือ IP ของเครื่อง host) เพราะ `127.0.0.1` ใน container คือตัว container เอง
