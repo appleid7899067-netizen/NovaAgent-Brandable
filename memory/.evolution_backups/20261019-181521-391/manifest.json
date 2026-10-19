@@ -1,0 +1,22 @@
+[
+  {
+    "rel": "MEMORY.md",
+    "bak": "0.bak"
+  },
+  {
+    "rel": "memory/2026-10-19.md",
+    "bak": "1.bak"
+  },
+  {
+    "rel": "AGENT.md",
+    "bak": "2.bak"
+  },
+  {
+    "rel": "skills/pip-skill/SKILL.md",
+    "bak": "3.bak"
+  },
+  {
+    "rel": "skills/terminal-css-modifier/SKILL.md",
+    "bak": "4.bak"
+  }
+]
