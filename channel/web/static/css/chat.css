@@ -2,7 +2,7 @@
    NovaAgent — Design System Variables (A1)
    ============================================ */
 :root {
-  --color-brand: #a78bfa;
+  --color-brand: #d5c6e0;
   --color-brand-2: #7c3aed;
   --bg-app: #f8fafc;
   --bg-surface: #ffffff;
@@ -55,7 +55,7 @@
 }
 .composer-card:focus-within {
     background: #241648;
-    border-color: #A78BFA;
+    border-color: #d5c6e0;
     box-shadow: 0 0 0 3px rgba(74, 190, 110, 0.12);
 }
 .dark .composer-card {
@@ -64,11 +64,11 @@
 }
 .dark .composer-card:focus-within {
     background: rgba(255, 255, 255, 0.06);
-    border-color: #A78BFA;
+    border-color: #d5c6e0;
     box-shadow: 0 0 0 3px rgba(74, 190, 110, 0.14);
 }
 /* Drag-over highlight reuses the focus treatment. */
-.composer-card.drag-over { border-color: #A78BFA; background: #241648; }
+.composer-card.drag-over { border-color: #d5c6e0; background: #241648; }
 
 .composer-textarea {
     width: 100%;
@@ -120,7 +120,7 @@
     cursor: pointer;
     transition: background 0.12s ease, color 0.12s ease;
 }
-.composer-icon-btn:hover { background: rgba(139, 92, 246, 0.15); color: #A78BFA; }
+.composer-icon-btn:hover { background: rgba(139, 92, 246, 0.15); color: #d5c6e0; }
 .composer-icon-btn-warn:hover { background: #FEF3C7; color: #B45309; }
 .dark .composer-icon-btn:hover { background: rgba(74, 190, 110, 0.14); color: #6EE7A0; }
 .dark .composer-icon-btn-warn:hover { background: rgba(245, 158, 11, 0.16); color: #FCD34D; }
@@ -150,8 +150,8 @@
     cursor: pointer;
     transition: background 0.12s ease, color 0.12s ease, border-color 0.12s ease;
 }
-.composer-chip:hover { background: rgba(139, 92, 246, 0.15); color: #A78BFA; }
-.composer-chip.open { background: rgba(139, 92, 246, 0.15); color: #A78BFA; border-color: #BBF0CD; }
+.composer-chip:hover { background: rgba(139, 92, 246, 0.15); color: #d5c6e0; }
+.composer-chip.open { background: rgba(139, 92, 246, 0.15); color: #d5c6e0; border-color: #BBF0CD; }
 .composer-chip > i { font-size: 11px; flex-shrink: 0; }
 .composer-chip-label {
     overflow: hidden;
@@ -222,7 +222,7 @@
     flex-shrink: 0;
     border: none;
     border-radius: 9px;
-    background: #00D4FF;
+    background: #d5c6e0;
     color: #fff;
     cursor: pointer;
     transition: background 0.12s ease, opacity 0.12s ease;
@@ -316,7 +316,7 @@
     transition: background 0.12s ease, color 0.12s ease;
     text-align: left;
 }
-.composer-menu-item:hover { background: rgba(139, 92, 246, 0.15); color: #A78BFA; }
+.composer-menu-item:hover { background: rgba(139, 92, 246, 0.15); color: #d5c6e0; }
 .composer-menu-item.active { background: rgba(139, 92, 246, 0.15); }
 /* Single-line Agent rows (avatar + name + trailing icon) center vertically;
    only the multi-line permission rows need top alignment. */
@@ -333,7 +333,7 @@
     color: #94a3b8; font-size: 11px;
 }
 .composer-menu-item.composer-menu-create:hover .composer-menu-create-icon {
-    border-color: #A78BFA; color: #A78BFA;
+    border-color: #d5c6e0; color: #d5c6e0;
 }
 .dark .composer-menu-create-icon { border-color: #475569; color: #94a3b8; }
 .composer-menu-item > i:first-child {
@@ -359,7 +359,7 @@
     color: #94a3b8;
     white-space: normal;
 }
-.composer-menu-check { color: #A78BFA; flex-shrink: 0; margin-top: 2px; }
+.composer-menu-check { color: #d5c6e0; flex-shrink: 0; margin-top: 2px; }
 .dark .composer-menu-item { color: #cbd5e1; }
 .dark .composer-menu-item:hover,
 .dark .composer-menu-item.active { background: rgba(74, 190, 110, 0.14); color: #6EE7A0; }
@@ -405,7 +405,7 @@
 }
 .attach-menu-item:hover {
     background: rgba(139, 92, 246, 0.15);
-    color: #A78BFA;
+    color: #d5c6e0;
 }
 .attach-menu-item i {
     width: 14px;
@@ -471,7 +471,7 @@
 /* Drag-over highlight */
 .drag-over {
     background: rgba(74, 190, 110, 0.08) !important;
-    border-color: #00D4FF !important;
+    border-color: #d5c6e0 !important;
 }
 
 /* User message attachments */
@@ -567,7 +567,7 @@
     font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, monospace;
 }
 .slash-menu-item.active .cmd {
-    color: #A78BFA;
+    color: #d5c6e0;
 }
 .slash-menu-item .desc {
     font-size: 12px;
@@ -593,7 +593,7 @@
     color: #e9d5ff;
 }
 .dark .slash-menu-item.active .cmd {
-    color: #00D4FF;
+    color: #d5c6e0;
 }
 .dark .slash-menu-item .desc {
     color: #64748b;
@@ -612,7 +612,7 @@
 }
 .dark .attach-menu-item:hover {
     background: rgba(74, 190, 110, 0.1);
-    color: #00D4FF;
+    color: #d5c6e0;
 }
 
 /* Context-usage popover on the clear-context button. A body-level fixed card
@@ -1132,9 +1132,9 @@
     transition: width 150ms ease, background 150ms ease;
 }
 .chat-timeline-row:hover .chat-timeline-row-dash { background: #94a3b8; }
-.chat-timeline-row.is-active .chat-timeline-row-dash { width: 14px; background: #00D4FF; }
+.chat-timeline-row.is-active .chat-timeline-row-dash { width: 14px; background: #d5c6e0; }
 .dark .chat-timeline-row-dash { background: rgba(255, 255, 255, 0.18); }
-.dark .chat-timeline-row.is-active .chat-timeline-row-dash { background: #00D4FF; }
+.dark .chat-timeline-row.is-active .chat-timeline-row-dash { background: #d5c6e0; }
 
 /* Brief ring on the bubble a jump lands on. */
 .timeline-flash {
