@@ -1243,6 +1243,7 @@
     font-size: 12px !important;
 }
 :root, html, body, [data-theme] {
+  --color-primary-400: #a78bfa !important;
   --color-primary-500: #8b5cf6 !important;
   --color-primary-600: #7c3aed !important;
 }
@@ -1250,3 +1251,9 @@
 /* ============================================
    NovaAgent — Design System Variables (A1)
    ============================================ */
+:root {
+  --color-primary-400: #a78bfa !important;
+  --color-primary-500: #8b5cf6 !important;
+  --color-primary-600: #7c3aed !important;
+}
+

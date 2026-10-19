@@ -84,7 +84,7 @@ function createUserMessageEl(content, timestamp, attachments) {
     const textHtml = content ? renderMarkdown(content) : '';
     el.innerHTML = `
         <div class="max-w-[75%] sm:max-w-[60%]">
-            <div class="bg-primary-400 text-white rounded-2xl px-4 py-2.5 text-sm leading-relaxed msg-content user-bubble">
+            <div class="bg-indigo-600 text-white rounded-2xl px-4 py-2.5 text-sm leading-relaxed msg-content user-bubble">
                 ${attachHtml}${textHtml}
             </div>
             <div class="flex items-center justify-end gap-2 mt-1.5">
@@ -990,9 +990,9 @@ function addLoadingIndicator() {
         <span class="bot-face">${agentAvatarHTML(findAgent(activeAgentId), 32)}</span>
         <div class="bg-white dark:bg-[#1A1A1A] border border-slate-200 dark:border-white/10 rounded-2xl px-4 py-3">
             <div class="flex items-center gap-1.5">
-                <span class="w-2 h-2 rounded-full bg-primary-400 animate-pulse-dot" style="animation-delay: 0s"></span>
-                <span class="w-2 h-2 rounded-full bg-primary-400 animate-pulse-dot" style="animation-delay: 0.2s"></span>
-                <span class="w-2 h-2 rounded-full bg-primary-400 animate-pulse-dot" style="animation-delay: 0.4s"></span>
+                <span class="w-2 h-2 rounded-full bg-indigo-600 animate-pulse-dot" style="animation-delay: 0s"></span>
+                <span class="w-2 h-2 rounded-full bg-indigo-600 animate-pulse-dot" style="animation-delay: 0.2s"></span>
+                <span class="w-2 h-2 rounded-full bg-indigo-600 animate-pulse-dot" style="animation-delay: 0.4s"></span>
             </div>
         </div>
     `;
