@@ -883,7 +883,7 @@
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    background: var(--color-primary-500, #2563eb);
+    background: var(--color-primary-500, #8b5cf6);
     color: #fff;
     flex-shrink: 0;
     cursor: pointer;
@@ -907,7 +907,7 @@
 .voice-pill-fill {
     height: 100%;
     width: 0%;
-    background: var(--color-primary-500, #2563eb);
+    background: var(--color-primary-500, #8b5cf6);
     border-radius: inherit;
     transition: width 0.1s linear;
 }
