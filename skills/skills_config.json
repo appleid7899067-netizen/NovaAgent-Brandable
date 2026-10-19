@@ -446,5 +446,12 @@
         "source": "custom",
         "enabled": true,
         "category": "skill"
+    },
+    "code-reviewer": {
+        "name": "code-reviewer",
+        "description": "AI Code Reviewer สำหรับตรวจสอบโค้ดที่เปลี่ยนแปลง (Git Diff) เพื่อหาบั๊ก ช่องโหว่ หรือส่วนที่ทำให้ระบบพัง ก่อนนำไปใช้งานจริง",
+        "source": "custom",
+        "enabled": true,
+        "category": "skill"
     }
 }
