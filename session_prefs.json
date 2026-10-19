@@ -1,0 +1,15 @@
+{
+  "sessions": {
+    "default::session_1ff8be20-17c2-4992-8994-3f00b0a4eb1a": {
+      "provider": "custom:5e0cfadb",
+      "model": "deepseek-v4-flash-0731",
+      "ts": 1792381851.604028
+    },
+    "default::session_b4caa699-f036-4adf-8a4d-4db5cf2fc4df": {
+      "provider": "custom:5e0cfadb",
+      "model": "gpt-4o-mini",
+      "permission": "full-access",
+      "ts": 1792387821.0556126
+    }
+  }
+}

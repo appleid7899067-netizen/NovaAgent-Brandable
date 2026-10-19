@@ -1,0 +1,11 @@
+{
+    "agents": [
+        {
+            "id": "default",
+            "name": "boss.slilelo",
+            "enabled": true,
+            "avatar": "image"
+        }
+    ],
+    "default_agent_id": "default"
+}

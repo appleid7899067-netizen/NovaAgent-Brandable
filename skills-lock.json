@@ -1,0 +1,19 @@
+{
+  "version": 1,
+  "skills": {
+    "free-ride": {
+      "source": "clawhub.ai",
+      "sourceUrl": "https://clawhub.ai/shaivpidadi/skills/free-ride",
+      "sourceType": "well-known",
+      "computedHash": "15dd3f96cc60220d0a514866c69878cbb6a3a5ffb76b6e78f0eb1432f9547558",
+      "wellKnownDigest": "sha256:9def34ab199ed7ebf6beb1cca2a4f984adf2c39962c04f92af67a965c59e9cad"
+    },
+    "openclaw-tavily-search": {
+      "source": "clawhub.ai",
+      "sourceUrl": "https://clawhub.ai/jacky1n7/skills/openclaw-tavily-search",
+      "sourceType": "well-known",
+      "computedHash": "d963207b869ed24b546353a72e06df4362061146cacc1606162e956f1ea65d67",
+      "wellKnownDigest": "sha256:fcb8e12691e958e10b1ff3224892ba804aa74defd8c1d54e019f7b8ca2ca6b8d"
+    }
+  }
+}
