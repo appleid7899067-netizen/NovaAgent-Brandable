@@ -1,0 +1,712 @@
+/* =====================================================================
+   Theme: Tool Calls Timeline (21st.dev style)
+   Override markdown.css tool call styles
+   ===================================================================== */
+
+/* ============================================
+   Container
+   ============================================ */
+.agent-steps:not(:empty) {
+  margin: 12px 0;
+  padding: 12px 14px;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 14px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06) !important;
+  backdrop-filter: blur(10px);
+}
+
+/* ============================================
+   Tool Step (each tool call)
+   ============================================ */
+.agent-tool-step {
+  position: relative;
+  padding: 8px 4px;
+  margin: 0;
+  border-radius: 10px;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.agent-tool-step:hover {
+  background: rgba(139, 92, 246, 0.06);
+}
+
+/* Timeline connector */
+.agent-tool-step:not(:last-child)::after {
+  content: '';
+  position: absolute;
+  left: 17px;
+  top: 40px;
+  bottom: -4px;
+  width: 2px;
+  background: linear-gradient(
+    to bottom,
+    rgba(139, 92, 246, 0.4),
+    rgba(139, 92, 246, 0.05)
+  );
+  border-radius: 1px;
+}
+
+/* ============================================
+   Tool Header
+   ============================================ */
+.agent-tool-step .tool-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 6px 8px;
+  border-radius: 8px;
+  cursor: pointer;
+  user-select: none;
+  transition: all 0.2s ease;
+}
+
+.agent-tool-step .tool-header:hover {
+  background: rgba(255, 255, 255, 0.04);
+}
+
+/* Icon box */
+.agent-tool-step .tool-icon {
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  border-radius: 7px;
+  background: linear-gradient(
+    135deg,
+    rgba(139, 92, 246, 0.18),
+    rgba(59, 130, 246, 0.18)
+  );
+  border: 1px solid rgba(139, 92, 246, 0.3);
+  color: #a78bfa !important;
+  font-size: 11px !important;
+  flex-shrink: 0;
+  transition: all 0.2s ease;
+}
+
+.agent-tool-step:hover .tool-icon {
+  background: linear-gradient(
+    135deg,
+    rgba(139, 92, 246, 0.3),
+    rgba(59, 130, 246, 0.3)
+  );
+  border-color: rgba(139, 92, 246, 0.5);
+  box-shadow: 0 0 12px rgba(139, 92, 246, 0.3);
+}
+
+/* Tool name */
+.agent-tool-step .tool-name {
+  flex: 1;
+  font-size: 13px;
+  font-weight: 500;
+  color: #e2e8f0;
+  letter-spacing: -0.01em;
+}
+
+/* Time */
+.agent-tool-step .tool-time {
+  font-size: 11px;
+  color: #64748b;
+  font-family: 'JetBrains Mono', monospace;
+  margin-left: auto;
+  margin-right: 4px;
+}
+
+/* Chevron */
+.agent-tool-step .tool-chevron {
+  font-size: 10px !important;
+  color: #64748b;
+  transition: transform 0.25s ease, color 0.2s ease;
+  opacity: 0.6;
+}
+
+.agent-tool-step:hover .tool-chevron {
+  color: #a78bfa;
+  opacity: 1;
+}
+
+.agent-tool-step.expanded .tool-chevron {
+  transform: rotate(90deg);
+  color: #a78bfa;
+  opacity: 1;
+}
+
+/* ============================================
+   Tool Detail (expanded content)
+   ============================================ */
+.agent-tool-step .tool-detail {
+  display: none;
+  margin: 6px 0 8px 36px;
+  padding: 10px 12px;
+  background: rgba(0, 0, 0, 0.25);
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  animation: toolDetailFade 0.25s ease;
+}
+
+@keyframes toolDetailFade {
+  from { opacity: 0; transform: translateY(-4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.agent-tool-step.expanded .tool-detail {
+  display: block;
+}
+
+/* Detail labels */
+.tool-detail-label {
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #a78bfa;
+  margin-bottom: 4px;
+  opacity: 0.9;
+}
+
+/* Detail content */
+.tool-detail-content {
+  font-family: 'JetBrains Mono', 'Fira Code', monospace;
+  font-size: 11.5px;
+  line-height: 1.6;
+  white-space: pre-wrap;
+  word-break: break-word;
+  max-height: 200px;
+  overflow-y: auto;
+  margin: 0;
+  padding: 8px 10px;
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: 6px;
+  color: #cbd5e1;
+}
+
+.tool-detail-content::-webkit-scrollbar {
+  width: 4px;
+}
+
+.tool-detail-content::-webkit-scrollbar-thumb {
+  background: rgba(139, 92, 246, 0.3);
+  border-radius: 2px;
+}
+
+.tool-error-text {
+  color: #f87171;
+  background: rgba(248, 113, 113, 0.1);
+}
+
+/* ============================================
+   Status states
+   ============================================ */
+.agent-tool-step.tool-failed .tool-name {
+  color: #f87171;
+}
+
+.agent-tool-step.tool-failed .tool-icon {
+  background: linear-gradient(
+    135deg,
+    rgba(248, 113, 113, 0.2),
+    rgba(239, 68, 68, 0.2)
+  );
+  border-color: rgba(248, 113, 113, 0.4);
+  color: #f87171 !important;
+}
+
+/* Running state */
+.agent-tool-step.tool-running .tool-icon {
+  animation: toolPulse 1.5s ease-in-out infinite;
+}
+
+@keyframes toolPulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(139, 92, 246, 0.5); }
+  50% { box-shadow: 0 0 0 8px rgba(139, 92, 246, 0); }
+}
+
+/* ============================================
+   Thinking step (override)
+   ============================================ */
+.agent-thinking-step .thinking-header {
+  padding: 6px 8px;
+  border-radius: 8px;
+  transition: all 0.2s ease;
+}
+
+.agent-thinking-step .thinking-header:hover {
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.agent-thinking-step .thinking-full {
+  margin-left: 36px;
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  padding: 10px 12px;
+}
+
+/* ============================================
+   Sub-steps (sub-agent tools)
+   ============================================ */
+.agent-tool-step .tool-substeps {
+  padding: 6px 0 6px 36px;
+  gap: 4px;
+}
+
+.tool-substep {
+  padding: 4px 6px;
+  border-radius: 6px;
+  transition: background 0.15s ease;
+}
+
+.tool-substep:hover {
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.tool-substep-icon {
+  width: 14px;
+  height: 14px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 9px;
+  border-radius: 4px;
+  background: rgba(139, 92, 246, 0.15);
+  color: #a78bfa;
+}
+
+.tool-substep-name {
+  font-size: 11.5px;
+  color: #cbd5e1;
+  font-weight: 500;
+}
+
+.tool-substep-args {
+  font-size: 11px;
+  color: #64748b;
+  font-family: 'JetBrains Mono', monospace;
+}
+
+.tool-substep-time {
+  font-size: 10.5px;
+  color: #475569;
+  font-family: 'JetBrains Mono', monospace;
+}
+
+/* ============================================
+   Tool display output (markdown)
+   ============================================ */
+.tool-display-output.has-content {
+  margin-left: 36px;
+  margin-top: 8px;
+  padding: 10px 12px;
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 8px;
+  border-left: 3px solid rgba(139, 92, 246, 0.4);
+  font-size: 12.5px;
+  line-height: 1.7;
+}
+
+/* ============================================
+   Light mode adjustments
+   ============================================ */
+:not(.dark) .agent-steps:not(:empty) {
+  background: rgba(0, 0, 0, 0.02);
+  border-color: rgba(0, 0, 0, 0.06);
+}
+
+:not(.dark) .agent-tool-step .tool-name {
+  color: #1e293b;
+}
+
+:not(.dark) .agent-tool-step .tool-detail {
+  background: rgba(0, 0, 0, 0.03);
+  border-color: rgba(0, 0, 0, 0.06);
+}
+
+:not(.dark) .tool-detail-content {
+  background: rgba(0, 0, 0, 0.04);
+  color: #334155;
+}
+
+/* ============================================
+   Mobile responsive
+   ============================================ */
+@media (max-width: 640px) {
+  .agent-steps:not(:empty) {
+    padding: 10px;
+    border-radius: 12px;
+  }
+  
+  .agent-tool-step .tool-name {
+    font-size: 12.5px;
+  }
+  
+  .agent-tool-step .tool-detail {
+    margin-left: 32px;
+    padding: 8px 10px;
+  }
+  
+  .tool-detail-content {
+    font-size: 11px;
+  }
+}
+
+/* =====================================================================
+   Tool Context Box (21st.dev style)
+   ===================================================================== */
+
+/* ทำให้ tool name แสดงเต็ม */
+.agent-tool-step .tool-name {
+  overflow: visible !important;
+  text-overflow: clip !important;
+  white-space: normal !important;
+  word-break: break-word;
+  line-height: 1.4;
+}
+
+.agent-tool-step .tool-header {
+  align-items: flex-start;
+  padding: 8px 10px;
+}
+
+.agent-tool-step .tool-icon {
+  margin-top: 2px;
+}
+
+/* แสดง context box ข้างใต้ tool */
+.agent-tool-step .tool-detail {
+  border-left: 3px solid rgba(167, 139, 250, 0.4) !important;
+  padding-left: 14px !important;
+  margin-left: 40px !important;
+}
+
+/* ปรับ tool-header ให้สวยขึ้น */
+.agent-tool-step .tool-header {
+  background: rgba(255, 255, 255, 0.02);
+  border-radius: 10px;
+  transition: all 0.2s ease;
+}
+
+.agent-tool-step:hover .tool-header {
+  background: rgba(139, 92, 246, 0.08);
+}
+
+/* Icon states */
+.agent-tool-step .tool-icon.fa-check {
+  background: linear-gradient(135deg, rgba(139, 92, 246, 0.2), rgba(59, 130, 246, 0.2));
+  color: #a78bfa !important;
+}
+
+.agent-tool-step .tool-icon.fa-times {
+  background: linear-gradient(135deg, rgba(248, 113, 113, 0.2), rgba(239, 68, 68, 0.2));
+  color: #f87171 !important;
+}
+
+/* =====================================================================
+   Tool Context Box (21st.dev style)
+   แสดงเนื้อหา/thinking ข้างใต้ tool
+   ===================================================================== */
+
+/* ปรับ tool-detail ให้เป็น context box */
+.agent-tool-step .tool-detail {
+  display: none;
+  margin: 8px 0 12px 40px;
+  padding: 12px 14px;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-left: 3px solid rgba(167, 139, 250, 0.5);
+  border-radius: 10px;
+  font-size: 12.5px;
+  line-height: 1.7;
+  color: rgba(255, 255, 255, 0.6);
+  max-height: 300px;
+  overflow-y: auto;
+  animation: contextFade 0.3s ease;
+}
+
+.agent-tool-step.expanded .tool-detail {
+  display: block;
+}
+
+@keyframes contextFade {
+  from { opacity: 0; transform: translateY(-6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Context box inner sections */
+.tool-detail-section {
+  margin: 8px 0;
+}
+
+.tool-detail-section:first-child { margin-top: 0; }
+.tool-detail-section:last-child { margin-bottom: 0; }
+
+.tool-detail-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #a78bfa;
+  margin-bottom: 6px;
+  padding: 2px 6px;
+  background: rgba(167, 139, 250, 0.1);
+  border-radius: 4px;
+}
+
+.tool-detail-label::before {
+  content: '▸';
+  font-size: 8px;
+}
+
+/* Code content */
+.tool-detail-content {
+  font-family: 'JetBrains Mono', 'Fira Code', monospace;
+  font-size: 11.5px;
+  line-height: 1.6;
+  white-space: pre-wrap;
+  word-break: break-word;
+  max-height: 200px;
+  overflow-y: auto;
+  margin: 0;
+  padding: 10px 12px;
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: 8px;
+  color: #cbd5e1;
+  border: 1px solid rgba(255, 255, 255, 0.04);
+}
+
+/* Output section */
+.tool-output-section .tool-detail-label {
+  color: #4ade80;
+  background: rgba(74, 222, 128, 0.1);
+}
+
+.tool-output-section .tool-detail-content {
+  border-left: 2px solid rgba(74, 222, 128, 0.3);
+}
+
+/* Tool display output (markdown) */
+.tool-display-output.has-content {
+  display: block !important;
+  margin: 8px 0 0 0;
+  padding: 12px 14px;
+  background: rgba(0, 0, 0, 0.25);
+  border-radius: 10px;
+  border-left: 3px solid rgba(167, 139, 250, 0.5);
+  font-size: 12.5px;
+  line-height: 1.7;
+  color: rgba(255, 255, 255, 0.75);
+  max-height: 280px;
+  overflow-y: auto;
+}
+
+.tool-display-output.has-content h3 {
+  font-size: 12px;
+  font-weight: 600;
+  color: #a78bfa;
+  margin: 10px 0 6px;
+}
+
+.tool-display-output.has-content h3:first-child { margin-top: 0; }
+
+.tool-display-output.has-content p {
+  margin: 6px 0;
+}
+
+.tool-display-output.has-content code {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  background: rgba(167, 139, 250, 0.1);
+  padding: 1px 5px;
+  border-radius: 3px;
+  color: #c4b5fd;
+}
+
+/* Live output (streaming) */
+.tool-live-output {
+  margin-top: 8px;
+  padding: 10px 12px;
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 8px;
+  font-size: 12px;
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.7);
+  border-left: 3px solid rgba(167, 139, 250, 0.4);
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+/* Cursor blink */
+.tool-streaming .tool-live-output:not(:empty)::after {
+  content: '▋';
+  display: inline-block;
+  margin-left: 2px;
+  color: #a78bfa;
+  animation: cursorBlink 1s steps(1) infinite;
+}
+
+@keyframes cursorBlink {
+  50% { opacity: 0; }
+}
+
+/* Sub-steps */
+.tool-substeps {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 8px 0;
+  max-height: 280px;
+  overflow-y: auto;
+}
+
+.tool-substep {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 8px;
+  background: rgba(255, 255, 255, 0.02);
+  border-radius: 6px;
+  font-size: 11.5px;
+  transition: background 0.15s ease;
+}
+
+.tool-substep:hover {
+  background: rgba(139, 92, 246, 0.06);
+}
+
+.tool-substep-icon {
+  width: 16px;
+  height: 16px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 9px;
+  border-radius: 4px;
+  background: rgba(167, 139, 250, 0.15);
+  color: #a78bfa;
+  flex-shrink: 0;
+}
+
+.tool-substep-failed {
+  color: #f87171 !important;
+}
+
+.tool-substep-failed .tool-substep-icon {
+  background: rgba(248, 113, 113, 0.15);
+  color: #f87171;
+}
+
+.tool-substep-name {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  color: #cbd5e1;
+  font-weight: 500;
+}
+
+.tool-substep-args {
+  font-size: 10.5px;
+  color: #64748b;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  min-width: 0;
+}
+
+.tool-substep-time {
+  margin-left: auto;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  color: #475569;
+  padding-left: 8px;
+  flex-shrink: 0;
+}
+
+/* Light mode */
+:not(.dark) .agent-tool-step .tool-detail {
+  background: rgba(0, 0, 0, 0.02);
+  border-color: rgba(0, 0, 0, 0.06);
+  color: #475569;
+}
+
+:not(.dark) .tool-detail-content {
+  background: rgba(0, 0, 0, 0.04);
+  color: #334155;
+}
+
+:not(.dark) .tool-detail-label {
+  background: rgba(139, 92, 246, 0.1);
+  color: #7c3aed;
+}
+
+:not(.dark) .tool-display-output.has-content {
+  background: rgba(0, 0, 0, 0.02);
+  color: #334155;
+}
+
+/* Mobile */
+@media (max-width: 640px) {
+  .agent-tool-step .tool-detail {
+    margin-left: 32px;
+    padding: 10px 12px;
+    font-size: 12px;
+  }
+  
+  .tool-detail-content {
+    font-size: 11px;
+    padding: 8px 10px;
+  }
+  
+  .tool-substep {
+    padding: 5px 6px;
+    font-size: 11px;
+  }
+}
+
+/* =====================================================================
+   Fix: Tool Name แสดงเต็ม
+   ===================================================================== */
+
+.agent-tool-step .tool-header {
+  flex-wrap: wrap !important;
+  align-items: flex-start !important;
+}
+
+.agent-tool-step .tool-name {
+  flex: 1 1 100% !important;
+  overflow: visible !important;
+  text-overflow: clip !important;
+  white-space: normal !important;
+  word-break: break-word !important;
+  line-height: 1.4 !important;
+  min-width: 0;
+  font-size: 13px !important;
+  color: #e2e8f0 !important;
+}
+
+.agent-tool-step .tool-time {
+  flex: 0 0 auto !important;
+  font-size: 11px !important;
+  color: #64748b !important;
+  font-family: 'JetBrains Mono', monospace !important;
+  margin-left: auto;
+  margin-top: 2px;
+}
+
+/* Icon ไม่ให้บีบ */
+.agent-tool-step .tool-icon {
+  flex-shrink: 0 !important;
+}
+
+/* Chevron */
+.agent-tool-step .tool-chevron {
+  flex-shrink: 0 !important;
+}
+
+/* Mobile */
+@media (max-width: 640px) {
+  .agent-tool-step .tool-name {
+    font-size: 12.5px !important;
+  }
+}
