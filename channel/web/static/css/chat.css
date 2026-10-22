@@ -849,6 +849,16 @@
     min-height: 2.5em;  /* ~2 lines at text-sm leading-relaxed */
 }
 
+/* User message surface: keep the bubble color independent of Tailwind utility classes. */
+.user-bubble {
+    background-color: #1e3a8a !important;
+    color: #ffffff !important;
+}
+.user-bubble .text-slate-500,
+.user-bubble .dark\:text-slate-400 {
+    color: rgba(255, 255, 255, 0.82) !important;
+}
+
 /* --------------------------------------------------------------------
  * Voice pill — compact custom audio player used by mic uploads and TTS
  * replies. Replaces the bulky native <audio controls> with a play/pause
