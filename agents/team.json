@@ -5,6 +5,16 @@
             "name": "boss.slilelo",
             "enabled": true,
             "avatar": "image"
+        },
+        {
+            "id": "guardian-slilelo",
+            "name": "Lyra",
+            "enabled": true,
+            "description": "Senior Reviewer & Reality Checker; read-only security monitor for NovaAgent. Reports risky commands or changes immediately and never modifies the system.",
+            "model": "infron:deepseek/deepseek-v4.1-flash:free",
+            "bot_type": "custom",
+            "custom_api_base": "http://127.0.0.1:8741/v1",
+            "avatar": "shield"
         }
     ],
     "default_agent_id": "default"

@@ -1,25 +1,26 @@
-# USER.md - User basics
+# USER.md - ข้อมูลพื้นฐานของบอส
 
-*This file stores only stable basic identity info. Put dynamic info like hobbies, preferences and plans into MEMORY.md.*
+*ไฟล์นี้เก็บเฉพาะข้อมูลพื้นฐานส่วนตัวที่คงที่ ข้อมูลที่เปลี่ยนแปลงบ่อยให้ใส่ไว้ใน MEMORY.md*
 
-## Basics
+## ข้อมูลเบื้องต้น
 
-- **Name**: ไม่แน่ชัด (Boss)
-- **Preferred name**: บอส (Boss)
-- **Occupation**: *(optional)*
-- **Timezone**: *(optional)*
+- **ชื่อ**: *(ว่างไว้)*
+- **ชื่อที่ชอบให้เรียก**: บอส
+- **สรรพนาม/คำลงท้าย**: ใช้ "ครับ"
+- **อาชีพ**: *(ว่างไว้)*
+- **เขตเวลา**: *(ว่างไว้)*
 
-## Contact
+## การติดต่อ
 
 - **WeChat**: 
-- **Email**: 
-- **Other**: 
+- **อีเมล**: 
+- **อื่น ๆ**: 
 
-## Important dates
+## วันสำคัญ
 
-- **Birthday**: 
-- **Anniversary**: 
+- **วันเกิด**: 
+- **วันครบรอบ**: 
 
 ---
 
-**Note**: This file stores static identity info.
+**หมายเหตุ**: ไฟล์นี้ใช้เก็บข้อมูลประจำตัวแบบถาวรค่ะ

@@ -1,2 +1,9 @@
 memory/long-term/
 tmp/
+memory/.evolution_backups/
+*.key
+*.token
+secrets.local.json
+.env
+.groq_key
+.or_key

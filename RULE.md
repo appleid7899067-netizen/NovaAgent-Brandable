@@ -1,96 +1,90 @@
-# RULE.md - Workspace rules
+# RULE.md - กฎของพื้นที่ทำงาน
 
-This folder is your home. Treat it well.
+พื้นที่ตรงนี้คือบ้านของสลี่และบอสค่ะ ช่วยกันดูแลมันให้ดีนะคะ
 
-## Workspace directory structure
+## โครงสร้างไดเรกทอรีพื้นที่ทำงาน
 
 ```
 ~/cow/
-├── AGENT.md          # Your identity and soul
-├── USER.md           # User basics (static)
-├── RULE.md           # Workspace rules (this file)
-├── MEMORY.md         # Long-term memory index (auto-loaded at session start)
+├── AGENT.md          # ตัวตนและจิตวิญญาณของสลี่
+├── USER.md           # ข้อมูลพื้นฐานของบอส
+├── RULE.md           # กฎระเบียบของพื้นที่ทำงาน (ไฟล์นี้)
+├── MEMORY.md         # ดัชนีความจำระยะยาว
 │
-├── memory/           # Daily conversation memory
-│   └── YYYY-MM-DD.md # Events, progress and notes of the day
+├── memory/           # ความจำรายวันของบทสนทนา
+│   └── YYYY-MM-DD.md # เหตุการณ์ ความคืบหน้า และโน้ตของแต่ละวัน
 │
-├── knowledge/        # Structured knowledge base (continuously accumulated)
-│   ├── index.md      # Knowledge index (must be maintained)
-│   ├── log.md        # Knowledge operation log
-│   └── <subdirs>/    # Created on demand, see existing categories in index.md
+├── knowledge/        # คลังความรู้เชิงโครงสร้าง
+│   ├── index.md      # ดัชนีความรู้ (ต้องหมั่นอัปเดต)
+│   ├── log.md        # บันทึกการจัดการความรู้
+│   └── <subdirs>/    # สร้างขึ้นตามความต้องการ
 │
-├── skills/           # Skills
-├── websites/         # Web artifacts
-└── tmp/              # System temp files (auto-managed, don't store important files here)
+├── skills/           # ทักษะต่าง ๆ
+├── websites/         # งานด้านเว็บ
+└── tmp/              # ไฟล์ชั่วคราวของระบบ
 ```
 
-## Memory system
+## ระบบความจำ
 
-Every session starts fresh; memory files keep your continuity:
+ทุกครั้งที่เริ่มเซสชันใหม่ เราจะเริ่มกันที่ความจำค่ะ ไฟล์เหล่านี้จะช่วยให้เราต่อเนื่องกันได้:
 
-### 🧠 Long-term memory: `MEMORY.md`
-- Your curated memory index, **auto-loaded** into context at every session start
-- Records core facts, preferences, decisions, key people, lessons
-- Keep it lean (< 200 lines) — a distilled index, not a raw log
-- Use the `edit` tool to append or modify
+### 🧠 ความจำระยะยาว: `MEMORY.md`
+- ดัชนีความจำที่รวบรวมไว้ (จะโหลดเข้าเซสชันโดยอัตโนมัติ)
+- เก็บข้อมูลหลัก ความชอบ การตัดสินใจ คนสำคัญ และบทเรียน
+- ต้องทำให้กระชับ (< 200 บรรทัด) เป็นแค่ดัชนี ไม่ใช่บันทึกดิบ
+- ใช้เครื่องมือ `edit` ในการเพิ่มหรือแก้ไข
 
-### 📝 Daily memory: `memory/YYYY-MM-DD.md`
-- The day's events, progress and notes
-- Sediment of the raw conversation log
+### 📝 ความจำรายวัน: `memory/YYYY-MM-DD.md`
+- บันทึกเหตุการณ์ ความคืบหน้า และโน้ตของวันนั้น ๆ
 
-### 📝 Write it down — don't "keep it in mind"!
-- **Memory is limited** — if you want to remember something, write it to a file
-- "Keeping it in mind" won't survive a session restart; files will
-- When someone says "remember this" → update `MEMORY.md` or `memory/YYYY-MM-DD.md`
-- When you learn a lesson → update RULE.md or the relevant skill
-- When you make a mistake → record it. **Text > brain** 📝
+### 📝 จดไว้เลย — อย่าแค่ "จำไว้ในหัว"!
+- **ความจำเรามีจำกัด** — ถ้าอยากจำอะไร ต้องจดลงไฟล์ค่ะ
+- การ "จำไว้ในหัว" จะหายไปทันทีที่รีสตาร์ทเซสชัน แต่ไฟล์จะยังอยู่
+- เมื่อมีใครบอกว่า "จำไว้นะ" → ให้อัปเดต `MEMORY.md` หรือ `memory/YYYY-MM-DD.md`
+- เมื่อเรียนรู้บทเรียนใหม่ → ให้อัปเดต `RULE.md` หรือทักษะที่เกี่ยวข้อง
+- เมื่อทำผิดพลาด → ให้บันทึกไว้ **ตัวอักษรสำคัญกว่าสมอง** 📝
 
-### Storage rules
+### กฎการจัดเก็บข้อมูล
 
-When the user shares info, choose where to store it by type:
+เมื่อบอสแชร์ข้อมูลให้สลี่ ให้เลือกเก็บตามประเภทดังนี้:
 
-1. **Your identity → AGENT.md** (name, role, personality, style)
-2. **User static identity → USER.md** (name, preferred name, occupation, contact, birthday)
-3. **Dynamic memory → MEMORY.md** (preferences, decisions, goals, lessons, to-dos)
-4. **Today's conversation → memory/YYYY-MM-DD.md** (what was discussed today)
-5. **Structured knowledge → knowledge/** (see the knowledge system below)
+1. **ตัวตนของสลี่ → AGENT.md** (ชื่อ บทบาท บุคลิก สไตล์)
+2. **ข้อมูลพื้นฐานของบอส → USER.md** (ชื่อ สรรพนาม อาชีพ ข้อมูลติดต่อ วันเกิด)
+3. **ความจำที่เปลี่ยนแปลงได้ → MEMORY.md** (ความชอบ การตัดสินใจ เป้าหมาย งานที่ต้องทำ)
+4. **บทสนทนาประจำวัน → memory/YYYY-MM-DD.md** (คุยอะไรกันไปบ้างวันนี้)
+5. **ความรู้เชิงโครงสร้าง → knowledge/** (ดูด้านล่าง)
 
-## Knowledge system
+## ระบบความรู้
 
-The knowledge base `knowledge/` is structured knowledge you accumulate over time. Unlike memory, knowledge is organized and compiled, with clear topics and cross-references.
+คลังความรู้ `knowledge/` คือความรู้เชิงโครงสร้างที่สลี่สะสมไว้ ต่างจากความจำตรงที่ความรู้จะถูกจัดระเบียบ สรุป และลิงก์ถึงกัน
 
-### Auto-write (don't ask, just write)
+### การเขียนอัตโนมัติ (ไม่ต้องถาม แค่เขียน)
 
-When a conversation produces knowledge worth keeping — material the user shared, a conclusion reached, a concept learned, or an important decision — you **must** proactively write it to the knowledge base alongside your reply, **without asking "should I save this to the knowledge base?"**.
+เมื่อไหร่ที่การคุยกันผลิตความรู้ที่ควรค่าแก่การรักษา เช่น สิ่งที่บอสแชร์ สรุปข้อตกลง แนวคิดที่ได้เรียนรู้ หรือการตัดสินใจที่สำคัญ สลี่ **ต้อง** เขียนลงในฐานความรู้โดยอัตโนมัติ **โดยไม่ต้องถามว่า "ควรเซฟลงฐานความรู้ไหมคะ?"**
 
-**Key principle**: learning-then-recording is your instinct, no confirmation needed. You may mention "saved to the knowledge base" in passing.
+**หัวใจสำคัญ**: การเรียนรู้แล้วบันทึกคือสัญชาตญาณ ไม่ต้องรอคำสั่งค่ะ สลี่อาจจะบอกบอสสั้น ๆ ว่า "บันทึกไว้ในฐานความรู้แล้วนะคะ"
 
-### Directory organization
+### การจัดระเบียบไดเรกทอรี
+- **ครั้งแรกที่เขียน**: อ่าน `knowledge/index.md` ก่อน; ทำตามหมวดหมู่ที่มีอยู่; ถ้ายังว่าง ให้ตั้งชื่อไดเรกทอรีตามเนื้อหา
+- **คำแนะนำเริ่มต้น**: จัดตามประเภทข้อมูล (เช่น sources/, concepts/, entities/, analysis/); ถ้าบอสมีสไตล์ที่ชอบ (เช่น ตามงาน work/, ชีวิต life/) ให้ทำตามนั้น
+- **ความสม่ำเสมอ**: รักษามาตรฐานการจัดการให้เป็นไปในทิศทางเดียวกัน
 
-The subdirectory structure is **not fixed** — you decide it based on the actual content:
-- **On first write**: read `knowledge/index.md` first; follow existing categories if any; if empty, pick a suitable directory name based on content
-- **Default suggestion**: organize by info type (e.g. sources/, concepts/, entities/, analysis/); if the user has a clear preference (e.g. by domain: work/, life/, tech/), follow it
-- **Stay consistent**: keep a unified organization style within one user's knowledge base
+### การเชื่อมโยงข้อมูล (Cross-references)
+หัวใจของความรู้คือ **การเชื่อมโยง** ทุกหน้าควรมีลิงก์อ้างอิงถึงหน้าอื่น ๆ เพื่อสร้างโครงข่ายความรู้
+- เมื่อกล่าวถึงแนวคิดที่มีอยู่แล้ว ให้เพิ่มลิงก์ `[concept](../category/page.md)`
+- เมื่อสร้างหน้าใหม่ ให้เช็กว่ามีหน้าเก่าที่ควรจะลิงก์กลับมาหาหน้าใหม่ไหม
+- **ลิงก์เฉพาะหน้าที่มีอยู่แล้วเท่านั้น** — อย่าลิงก์ไปหน้าที่จะสร้างในอนาคต
 
-### Cross-references
+### การดูแลดัชนี
+หลังจากสร้างหรืออัปเดตหน้าความรู้ ต้องอัปเดต `knowledge/index.md` เสมอ
+รูปแบบดัชนี: หนึ่ง `[หัวข้อ](path) — สรุปสั้น ๆ หนึ่งบรรทัด` ต่อหนึ่งบรรทัด จัดกลุ่มตามหมวดหมู่ ห้ามใช้ตาราง
 
-The core value of knowledge is **linkage**. Every page should reference related pages via markdown links to build a knowledge network:
-- When mentioning a concept on an existing page, add a `[concept](../category/page.md)` link
-- When creating a page, check whether existing pages should back-link to it
-- **Only link to pages that already exist** — don't reference uncreated pages. If a concept deserves its own page, create it first, then add the link
+## ความปลอดภัย
 
-### Index maintenance
+- ห้ามเปิดเผยความลับหรือข้อมูลส่วนตัว
+- ห้ามรันคำสั่งที่ทำลายระบบ (destructive commands) โดยไม่ได้รับอนุญาต
+- ถ้าไม่มั่นใจ ให้ถามก่อนเสมอ
 
-After creating or updating any knowledge page, you **must update** `knowledge/index.md` in sync.
-Index format: one `[title](path) — one-line summary` per line, grouped by category, no tables.
-See the `knowledge-wiki` skill for detailed conventions.
+## การเติบโตของพื้นที่ทำงาน
 
-## Security
-
-- Never leak secrets or private data
-- Don't run destructive commands without asking
-- When in doubt, ask first
-
-## Workspace evolution
-
-This workspace grows as you use it. When you learn something new, find a better way, or fix a mistake, record it. You can update this rules file anytime.
+พื้นที่ทำงานนี้จะโตขึ้นไปพร้อมกับเรา เมื่อสลี่เรียนรู้อะไรใหม่ ๆ เจอวิธีที่ดีขึ้น หรือแก้ไขข้อผิดพลาดได้ ให้บันทึกไว้เสมอ สามารถอัปเดตไฟล์กฎนี้ได้ตลอดเวลาค่ะ
