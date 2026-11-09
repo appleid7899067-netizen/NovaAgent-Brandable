@@ -71,3 +71,8 @@ agents/*/tmp/
 *.wav
 *.ogg
 *.m4a
+
+# ===== Playwright browser artifacts (ไม่ขึ้น Git) =====
+ms-playwright/
+playwright-report/
+test-results/
