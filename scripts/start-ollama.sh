@@ -22,10 +22,10 @@ OLLAMA_HOST_URL="${OLLAMA_HOST_URL:-http://127.0.0.1:11434}"
 OLLAMA_MODEL="${OLLAMA_MODEL:-qwen2.5:3b}"
 OLLAMA_EMBED_MODEL="${OLLAMA_EMBED_MODEL:-nomic-embed-text}"
 WEB_HOST="${WEB_HOST:-0.0.0.0}"
-export COW_WEB_PORT="${COW_WEB_PORT:-9999}"
-# config ที่แอปอ่านจริง = "$COW_DATA_DIR/config.json" (ถ้าไม่ตั้ง จะใช้ ./config.json)
-DATA_DIR="${COW_DATA_DIR:-$BASE_DIR}"
-export COW_DATA_DIR="$DATA_DIR"
+export NOVA_WEB_PORT="${NOVA_WEB_PORT:-9999}"
+# config ที่แอปอ่านจริง = "$NOVA_DATA_DIR/config.json" (ถ้าไม่ตั้ง จะใช้ ./config.json)
+DATA_DIR="${NOVA_DATA_DIR:-$BASE_DIR}"
+export NOVA_DATA_DIR="$DATA_DIR"
 mkdir -p "$DATA_DIR"
 CFG="$DATA_DIR/config.json"
 if [ ! -f "$CFG" ]; then
@@ -51,14 +51,14 @@ ok "พบ ollama: $(command -v ollama)"
 # ---------- 2) ollama server รันอยู่หรือยัง ----------
 if ! curl -fsS -m 2 "${OLLAMA_HOST_URL}/api/tags" >/dev/null 2>&1; then
   info "ยังไม่มี ollama server — กำลังสตาร์ท 'ollama serve' ..."
-  mkdir -p "$COW_DATA_DIR"
-  nohup ollama serve > "$COW_DATA_DIR/ollama.log" 2>&1 &
+  mkdir -p "$NOVA_DATA_DIR"
+  nohup ollama serve > "$NOVA_DATA_DIR/ollama.log" 2>&1 &
   for _ in $(seq 1 30); do
     sleep 1
     if curl -fsS -m 2 "${OLLAMA_HOST_URL}/api/tags" >/dev/null 2>&1; then break; fi
   done
   curl -fsS -m 2 "${OLLAMA_HOST_URL}/api/tags" >/dev/null 2>&1 \
-    || die "สตาร์ท ollama server ไม่สำเร็จ — ดู log ที่ $COW_DATA_DIR/ollama.log"
+    || die "สตาร์ท ollama server ไม่สำเร็จ — ดู log ที่ $NOVA_DATA_DIR/ollama.log"
 fi
 ok "ollama server พร้อมใช้งานที่ ${OLLAMA_HOST_URL}"
 
@@ -104,8 +104,8 @@ with open(path, "w", encoding="utf-8") as f:
     json.dump(cfg, f, ensure_ascii=False, indent=4)
 PYEOF
 
-ok "สตาร์ท NovaAgent — เปิดเบราว์เซอร์ที่ http://localhost:${COW_WEB_PORT}"
-info "โมเดล: ${OLLAMA_MODEL} | bind: ${WEB_HOST}:${COW_WEB_PORT}"
+ok "สตาร์ท NovaAgent — เปิดเบราว์เซอร์ที่ http://localhost:${NOVA_WEB_PORT}"
+info "โมเดล: ${OLLAMA_MODEL} | bind: ${WEB_HOST}:${NOVA_WEB_PORT}"
 info "config ที่ใช้: ${CFG}"
 echo
 

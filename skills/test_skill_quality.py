@@ -2,7 +2,7 @@
 import re
 from pathlib import Path
 
-ROOT = Path('/data/data/com.termux/files/home/projects/NovaAgent-Brandable/cowbase/skills')
+ROOT = Path('/data/data/com.termux/files/home/projects/NovaAgent-Brandable/novabase/skills')
 
 def scan_skill(md_path: Path):
     try:

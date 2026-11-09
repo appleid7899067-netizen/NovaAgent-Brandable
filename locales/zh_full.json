@@ -704,7 +704,7 @@
   "sidebar_expand": "展开侧边栏",
   "ws_default_workspace": "默认空间",
   "ws_sel_title": "选择工作空间",
-  "ws_sel_default_hint": "使用默认工作空间（~/cow）",
+  "ws_sel_default_hint": "使用默认工作空间（~/nova）",
   "ws_sel_recents": "最近使用",
   "ws_sel_open": "打开项目…",
   "ws_sel_new": "新建项目",

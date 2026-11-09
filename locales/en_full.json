@@ -704,7 +704,7 @@
   "sidebar_expand": "Expand sidebar",
   "ws_default_workspace": "Default",
   "ws_sel_title": "Select workspace",
-  "ws_sel_default_hint": "Use the default workspace (~/cow)",
+  "ws_sel_default_hint": "Use the default workspace (~/nova)",
   "ws_sel_recents": "Recent",
   "ws_sel_open": "Open project…",
   "ws_sel_new": "New project",

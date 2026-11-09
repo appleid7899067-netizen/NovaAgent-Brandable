@@ -76,7 +76,7 @@ const I18N = {
         settings_tab_models: '模型配置',
         knowledge_shared_hint: '知识库默认全员共享，在侧栏「知识」查看和编辑。',
         menu_memory: '记忆', menu_knowledge: '知识', menu_channels: '通道', menu_tasks: '定时',
-        menu_logs: '日志',
+        menu_logs: '日志', menu_opencode: 'OpenCode', opencode_starting: '正在启动 OpenCode…',
         models_title: '模型管理',
         models_desc: '统一管理对话、图像、语音、向量、搜索能力',
         models_section_vendors: '厂商凭据',
@@ -551,7 +551,7 @@ const I18N = {
         artifacts_meta_session: '会话', artifacts_meta_size: '大小',
         sidebar_collapse: '收起侧边栏', sidebar_expand: '展开侧边栏',
         ws_default_workspace: '默认空间', ws_sel_title: '选择工作空间',
-        ws_sel_default_hint: '使用默认工作空间（~/cow）', ws_sel_recents: '最近使用',
+        ws_sel_default_hint: '使用默认工作空间（~/nova）', ws_sel_recents: '最近使用',
         ws_sel_open: '打开项目…', ws_sel_new: '新建项目', ws_sel_new_placeholder: '项目名称',
         ws_sel_create: '创建', ws_sel_up: '上一级',
         ws_sel_new_subtitle: '将在 {root} 下创建新项目目录', ws_sel_new_hint: '仅填写项目名称，不含路径分隔符',
@@ -768,7 +768,7 @@ const I18N = {
         settings_tab_models: '模型設定',
         knowledge_shared_hint: '知識庫預設全員共享，在側欄「知識」查看和編輯。',
         menu_memory: '記憶', menu_knowledge: '知識', menu_channels: '管道', menu_tasks: '定時',
-        menu_logs: '日誌',
+        menu_logs: '日誌', menu_opencode: 'OpenCode', opencode_starting: '正在啟動 OpenCode…',
         models_title: '模型管理',
         models_desc: '統一管理對話、影像、語音、向量、搜尋能力',
         models_section_vendors: '廠商憑據',
@@ -1243,7 +1243,7 @@ const I18N = {
         artifacts_meta_session: '會話', artifacts_meta_size: '大小',
         sidebar_collapse: '收合側邊欄', sidebar_expand: '展開側邊欄',
         ws_default_workspace: '預設空間', ws_sel_title: '選擇工作空間',
-        ws_sel_default_hint: '使用預設工作空間（~/cow）', ws_sel_recents: '最近使用',
+        ws_sel_default_hint: '使用預設工作空間（~/nova）', ws_sel_recents: '最近使用',
         ws_sel_open: '開啟專案…', ws_sel_new: '新建專案', ws_sel_new_placeholder: '專案名稱',
         ws_sel_create: '建立', ws_sel_up: '上一層',
         ws_sel_new_subtitle: '將在 {root} 下建立新專案目錄', ws_sel_new_hint: '僅填寫專案名稱，不含路徑分隔符',
@@ -1465,6 +1465,8 @@ const I18N = {
         menu_channels: 'ช่องทาง',
         menu_tasks: 'งาน',
         menu_logs: 'บันทึก',
+        menu_opencode: 'OpenCode',
+        opencode_starting: 'กำลังเริ่ม OpenCode…',
         models_title: 'คุณสมบัติ',
         models_desc: 'จัดการความสามารถในการแชทรูปภาพเสียงการฝังและการค้นหาได้ในที่เดียว',
         models_section_vendors: 'ข้อมูลประจำตัวของผู้ให้บริการ',
@@ -2091,7 +2093,7 @@ const I18N = {
         sidebar_expand: 'ขยายแถบด้านข้าง',
         ws_default_workspace: 'ค่าเริ่มต้น',
         ws_sel_title: 'เลือกเวิร์กสเปซ',
-        ws_sel_default_hint: 'ใช้เวิร์กสเปซเริ่มต้น (~/cow)',
+        ws_sel_default_hint: 'ใช้เวิร์กสเปซเริ่มต้น (~/nova)',
         ws_sel_recents: 'ล่าสุด',
         ws_sel_open: 'เปิดโปรเจกต์…',
         ws_sel_new: 'โปรเจกต์ใหม่',
@@ -2337,6 +2339,8 @@ const I18N = {
         knowledge_shared_hint: 'Knowledge is shared by every Agent. Open it from the Knowledge page.',
         menu_memory: 'Memory', menu_knowledge: 'Knowledge', menu_channels: 'Channels', menu_tasks: 'Tasks',
         menu_logs: 'Logs',
+        menu_opencode: 'OpenCode',
+        opencode_starting: 'Starting OpenCode…',
         models_title: 'Models',
         models_desc: 'Manage chat, image, voice, embedding and search capabilities in one place',
         models_section_vendors: 'Provider Credentials',
@@ -2811,7 +2815,7 @@ const I18N = {
         artifacts_meta_session: 'Chat', artifacts_meta_size: 'Size',
         sidebar_collapse: 'Collapse sidebar', sidebar_expand: 'Expand sidebar',
         ws_default_workspace: 'Default', ws_sel_title: 'Select workspace',
-        ws_sel_default_hint: 'Use the default workspace (~/cow)', ws_sel_recents: 'Recent',
+        ws_sel_default_hint: 'Use the default workspace (~/nova)', ws_sel_recents: 'Recent',
         ws_sel_open: 'Open project…', ws_sel_new: 'New project', ws_sel_new_placeholder: 'Project name',
         ws_sel_create: 'Create', ws_sel_up: 'Up',
         ws_sel_new_subtitle: 'Creates a new project directory under {root}', ws_sel_new_hint: 'Project name only, no path separators',
@@ -2960,10 +2964,10 @@ const I18N = {
 };
 
 // Resolve language by priority: user choice (localStorage) -> backend-detected
-// (cow_lang) -> browser language -> 'zh'. Shares __cowResolveLang__ defined in
+// (nova_lang) -> browser language -> 'zh'. Shares __novaResolveLang__ defined in
 // chat.html; falls back to a local resolver if loaded standalone.
-let currentLang = (typeof window.__cowResolveLang__ === 'function')
-    ? window.__cowResolveLang__()
+let currentLang = (typeof window.__novaResolveLang__ === 'function')
+    ? window.__novaResolveLang__()
     : (function () {
         const norm = (raw) => {
             if (!raw) return '';
@@ -2974,16 +2978,25 @@ let currentLang = (typeof window.__cowResolveLang__ === 'function')
             // Then Simplified Chinese
             if (v.indexOf('zh') === 0) return 'zh';
             if (v.indexOf('en') === 0) return 'en';
+            if (v.indexOf('th') === 0) return 'th';
             return '';
         };
-        return norm(localStorage.getItem('cow_lang'))
-            || norm(window.__COW_DEFAULT_LANG__)
+        return norm(localStorage.getItem('nova_lang'))
+            || norm(window.__NOVA_DEFAULT_LANG__)
             || norm(navigator.language)
             || 'zh';
     })();
 
 function t(key) {
     return (I18N[currentLang] && I18N[currentLang][key]) || (I18N.en[key]) || key;
+}
+
+// Ad-hoc inline copy that predates the key table: pick by the active language.
+// Thai falls back to the English branch when no Thai string is supplied.
+function tln(zh, en, th) {
+    if (currentLang === 'zh') return zh;
+    if (currentLang === 'th' && th != null) return th;
+    return en;
 }
 
 // Resolve a localized label that may be either a plain string or
@@ -3029,14 +3042,14 @@ function applyI18n() {
     _syncLangControls();
     // Point the docs link to the locale-specific documentation site.
     const docsLink = document.getElementById('docs-link');
-    if (docsLink) docsLink.href = currentLang === 'zh' ? 'https://docs.cowagent.ai/zh' : 'https://docs.cowagent.ai';
+    if (docsLink) docsLink.href = currentLang === 'zh' ? 'https://docs.novaagent.ai/zh' : 'https://docs.novaagent.ai';
     // Workspace panel content is rendered by JS, not data-i18n attributes.
     if (typeof relocalizeWorkspacePanel === 'function') relocalizeWorkspacePanel();
 }
 
 // Single entry point for switching language. Updates the in-memory language,
 // persists the user choice locally, re-renders the UI, and binds the choice to
-// the backend `cow_lang` config so logs / agent replies / CLI follow suit.
+// the backend `nova_lang` config so logs / agent replies / CLI follow suit.
 function setLanguage(lang) {
     const next = (lang === 'en' || lang === 'zh' || lang === 'zh-Hant' || lang === 'th') ? lang : 'en';
     if (next === currentLang) {
@@ -3045,7 +3058,7 @@ function setLanguage(lang) {
         return;
     }
     currentLang = next;
-    localStorage.setItem('cow_lang', currentLang);
+    localStorage.setItem('nova_lang', currentLang);
     applyI18n();
     _applyInputTooltips();
     // Keep the language switch button and config selector visually in sync.
@@ -3058,14 +3071,14 @@ function setLanguage(lang) {
     });
 }
 
-// Persist the language to the backend `cow_lang` config (best-effort; the UI
+// Persist the language to the backend `nova_lang` config (best-effort; the UI
 // has already switched locally, so a network failure is non-blocking).
 function syncLanguageToBackend(lang, callback) {
     try {
         fetch('/config', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ updates: { cow_lang: lang } })
+            body: JSON.stringify({ updates: { nova_lang: lang } })
         })
         .then(() => { if (callback) callback(); })
         .catch(() => { if (callback) callback(); });

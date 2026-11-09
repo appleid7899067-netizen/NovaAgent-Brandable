@@ -20,7 +20,7 @@ available_setting = {
     # and channel replies. Options: "auto" (detect from system locale, default),
     # "zh" (Chinese) or "en" (English). An explicit value locks the language.
     # value: auto/en/zh
-    "cow_lang": "auto",
+    "nova_lang": "auto",
     # openai api config
     "open_ai_api_key": "",  # openai api key
     # openai api base; when use_azure_chatgpt is true, set the matching api base
@@ -234,7 +234,7 @@ available_setting = {
     "weixin_token": "",  # bot_token obtained after WeChat login; leave empty to auto scan-login on startup
     "weixin_base_url": "https://ilinkai.weixin.qq.com",  # Weixin ilink API base URL
     "weixin_cdn_base_url": "https://novac2c.cdn.weixin.qq.com/c2c",  # CDN base URL
-    "weixin_credentials_path": "~/.weixin_cow_credentials.json",  # credentials file path
+    "weixin_credentials_path": "~/.weixin_nova_credentials.json",  # credentials file path
     # custom trigger words for chatgpt commands
     "clear_memory_commands": ["#清除记忆"],  # session-reset command; must start with #
     # channel config
@@ -285,10 +285,10 @@ available_setting = {
     "web_file_serve_root": "~",  # Root dir the /api/file endpoint may serve; "/" allows the whole filesystem
     "mcp_oauth_redirect_base": "",  # Base URL for MCP OAuth callback (e.g. http://your-ip:9899); empty uses local web console
     "agent": True,  # whether to enable Agent mode
-    "agent_workspace": "~/cow",  # agent workspace path, used to store skills, memory, etc.
-    # Optional native multi-agent registry. When empty or omitted, boss.slilelo
+    "agent_workspace": "~/nova",  # agent workspace path, used to store skills, memory, etc.
+    # Optional native multi-agent registry. When empty or omitted, PanupanGrok
     # synthesizes one "default" agent from agent_workspace and behaves exactly
-    # as before. Each configured workspace is a complete boss.slilelo workspace.
+    # as before. Each configured workspace is a complete PanupanGrok workspace.
     "agents": [],
     # Agent handling conversations that no channel instance binds. Defaults to
     # the first configured agent when unset. When no agents list is configured,
@@ -315,7 +315,7 @@ available_setting = {
     # Default permission mode for sessions that have not picked one of their own:
     # "read-only" | "workspace-write" | "full-access". Kept at full-access so an
     # existing install behaves exactly as before an upgrade. Only a fresh desktop
-    # client (COW_DESKTOP=1 with no config.json yet) is tightened to the stricter
+    # client (NOVA_DESKTOP=1 with no config.json yet) is tightened to the stricter
     # workspace-write in load_config(); docker/source stay at full-access.
     "agent_permission_mode": "full-access",
     # In-process sub agents: the Agent hands a self-contained task to a
@@ -503,7 +503,7 @@ def load_config():
     logger.info("                          |___/                 ")
     logger.info("")
     # User config lives in the data root: source deployments use CWD (./), while
-    # the desktop build points COW_DATA_DIR at ~/.cow so config survives updates.
+    # the desktop build points NOVA_DATA_DIR at ~/.nova so config survives updates.
     user_config_path = os.path.join(get_data_root(), "config.json")
     config_path = user_config_path
     if not os.path.exists(config_path):
@@ -519,14 +519,14 @@ def load_config():
     # otherwise silently drop all but the last occurrence.
     #
     # Self-heal a corrupted user config.json instead of crashing on startup —
-    # but ONLY for the packaged desktop client (COW_DESKTOP=1). A truncated or
+    # but ONLY for the packaged desktop client (NOVA_DESKTOP=1). A truncated or
     # invalid file (e.g. a bad write during a previous update) would otherwise
     # make json.loads raise and strand the desktop app on "Initialization
     # Failed" forever, with no way for an end user to recover short of manually
     # deleting the file. Source deployments deliberately keep the original
     # behavior (raise): a developer editing config.json wants a clear error to
     # fix, not to have their file silently backed up and replaced by defaults.
-    desktop_mode = os.environ.get("COW_DESKTOP") == "1"
+    desktop_mode = os.environ.get("NOVA_DESKTOP") == "1"
     try:
         config = Config(json.loads(config_str, object_pairs_hook=_merge_duplicate_keys))
     except ValueError as parse_err:
@@ -569,7 +569,7 @@ def load_config():
     # never silently tightened by an upgrade. Non-desktop (docker, source) is
     # untouched. Placed before the env override so AGENT_PERMISSION_MODE still
     # wins if explicitly set.
-    if os.environ.get("COW_DESKTOP") == "1" and config_path != user_config_path:
+    if os.environ.get("NOVA_DESKTOP") == "1" and config_path != user_config_path:
         config["agent_permission_mode"] = "workspace-write"
 
     # override config with environment variables.
@@ -623,7 +623,7 @@ def load_config():
 
     # Resolve the global UI language as early as possible so that every
     # downstream layer (logs, CLI, agent prompts, channel replies) shares it.
-    resolved_lang = i18n.resolve_language(config.get("cow_lang", "auto"))
+    resolved_lang = i18n.resolve_language(config.get("nova_lang", "auto"))
 
     logger.info("[INIT] load config: {}".format(drag_sensitive(config)))
 
@@ -918,12 +918,12 @@ def read_config_template():
 def get_data_root():
     """Directory for writable user data (config.json, user_datas.pkl, run.log).
 
-    The desktop build sets COW_DATA_DIR (e.g. ~/.cow) so data lives in the
+    The desktop build sets NOVA_DATA_DIR (e.g. ~/.nova) so data lives in the
     user's home rather than inside the read-only app bundle and survives app
     updates. When unset (source deployment), it falls back to get_root(), so
     existing behavior is unchanged.
     """
-    data_dir = os.environ.get("COW_DATA_DIR")
+    data_dir = os.environ.get("NOVA_DATA_DIR")
     if data_dir:
         data_dir = os.path.expanduser(data_dir)
         os.makedirs(data_dir, exist_ok=True)
@@ -952,9 +952,9 @@ def get_weixin_credentials_path(instance_id: str = ""):
     """Resolve the Weixin credentials (token) file path.
 
     Honors an explicit ``weixin_credentials_path`` from config. Otherwise the
-    packaged desktop build (COW_DATA_DIR set) keeps it under the data dir
-    (~/.cow) so all user data stays together, while source deployments retain
-    the legacy ~/.weixin_cow_credentials.json default unchanged.
+    packaged desktop build (NOVA_DATA_DIR set) keeps it under the data dir
+    (~/.nova) so all user data stays together, while source deployments retain
+    the legacy ~/.weixin_nova_credentials.json default unchanged.
 
     ``instance_id`` isolates the credentials file when several Weixin instances
     run in one process, each logged into a different account: their tokens must
@@ -964,10 +964,10 @@ def get_weixin_credentials_path(instance_id: str = ""):
     configured = conf().get("weixin_credentials_path")
     if configured:
         base = os.path.expanduser(configured)
-    elif os.environ.get("COW_DATA_DIR"):
+    elif os.environ.get("NOVA_DATA_DIR"):
         base = os.path.join(get_data_root(), "weixin_credentials.json")
     else:
-        base = os.path.expanduser("~/.weixin_cow_credentials.json")
+        base = os.path.expanduser("~/.weixin_nova_credentials.json")
     if not instance_id:
         return base
     root, ext = os.path.splitext(base)

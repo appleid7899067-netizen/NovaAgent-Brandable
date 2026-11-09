@@ -1,6 +1,6 @@
 # Learning License Skill
 
-ระบบการเรียนรู้ ใบอนุญาติ และความชำนาญของแบรนด์ boss.slilelo
+ระบบการเรียนรู้ ใบอนุญาติ และความชำนาญของแบรนด์ PanupanGrok
 
 ## คุณสมบัติหลัก
 
@@ -17,7 +17,7 @@
 ```json
 "learning-license": {
     "name": "learning-license",
-    "description": "ระบบการเรียนรู้ ใบอนุญาติ และความชำนาญของแบรนด์ boss.slilelo รองรับการสร้างคอร์ส ออกใบอนุญาติ และประเมินความชำนาญ",
+    "description": "ระบบการเรียนรู้ ใบอนุญาติ และความชำนาญของแบรนด์ PanupanGrok รองรับการสร้างคอร์ส ออกใบอนุญาติ และประเมินความชำนาญ",
     "source": "custom",
     "enabled": true,
     "category": "skill"

@@ -204,7 +204,7 @@
     },
     "learning-license": {
         "name": "learning-license",
-        "description": "ระบบการเรียนรู้ ใบอนุญาติ และความชำนาญของแบรนด์ boss.slilelo รองรับการสร้างคอร์สเรียน ออกใบอนุญาติและใบประกาศนียบัตร ประเมินระดับความชำนาญ (Beginner → Master) และติดตามความคืบหน้าการเรียนรู้ (GOD-MODE / CHEAT)",
+        "description": "ระบบการเรียนรู้ ใบอนุญาติ และความชำนาญของแบรนด์ PanupanGrok รองรับการสร้างคอร์สเรียน ออกใบอนุญาติและใบประกาศนียบัตร ประเมินระดับความชำนาญ (Beginner → Master) และติดตามความคืบหน้าการเรียนรู้ (GOD-MODE / CHEAT)",
         "source": "custom",
         "enabled": true,
         "category": "skill"

@@ -1,7 +1,7 @@
 ---
 name: github
 description: GitHub 核心操作 - 仓库管理、Fork、PR、Release、Issue 评论
-metadata: {"cowagent":{"requires":{"bins":["git","curl","jq"],"env":["GITHUB_TOKEN"]},"primaryEnv":"GITHUB_TOKEN"}}
+metadata: {"novaagent":{"requires":{"bins":["git","curl","jq"],"env":["GITHUB_TOKEN"]},"primaryEnv":"GITHUB_TOKEN"}}
 ---
 
 # GitHub Operations Skill
@@ -128,7 +128,7 @@ curl -s -X POST https://api.github.com/repos/$OWNER/$REPO/issues \
 5. 点击 Generate token，复制保存
 
 > 快捷模板链接（推送代码 + 创建 PR）:
-> https://github.com/settings/personal-access-tokens/new?name=cowagent-token&contents=write&pull_requests=write&issues=write
+> https://github.com/settings/personal-access-tokens/new?name=novaagent-token&contents=write&pull_requests=write&issues=write
 
 ### 方式二: Personal Access Token (classic)
 

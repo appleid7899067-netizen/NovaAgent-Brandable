@@ -115,7 +115,7 @@ class AuthLoginHandler:
             logger.warning("[WebChannel] Invalid login attempt")
             return json.dumps({"status": "error", "message": "Wrong password"})
         token = _create_auth_token()
-        web.setcookie("cow_auth_token", token, expires=_session_expire_seconds(),
+        web.setcookie("nova_auth_token", token, expires=_session_expire_seconds(),
                        path="/", httponly=True, samesite="Lax")
         # Also return the token in the body: the desktop client (file:// origin)
         # can't rely on the cookie and sends it back via an Authorization header.
@@ -125,5 +125,5 @@ class AuthLoginHandler:
 class AuthLogoutHandler:
     def POST(self):
         web.header('Content-Type', 'application/json; charset=utf-8')
-        web.setcookie("cow_auth_token", "", expires=-1, path="/")
+        web.setcookie("nova_auth_token", "", expires=-1, path="/")
         return json.dumps({"status": "success"})

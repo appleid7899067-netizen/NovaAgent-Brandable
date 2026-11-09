@@ -319,6 +319,22 @@ class AgentStreamExecutor:
         # stamps it on the stored answer.
         self.run_usage: Optional[Dict[str, int]] = None
 
+        # Provenance / attribution — tracks which models, tools, skills, and
+        # MCP servers contributed to this run's output. Mirrors the pattern
+        # GitHub Copilot uses for review attribution: every tool execution,
+        # every LLM call, and every skill accessed is recorded so the final
+        # answer can carry provenance metadata for audit, debugging, and
+        # user-facing transparency.
+        self.run_provenance: Dict[str, Any] = {
+            "models": [],          # list of model names used (deduplicated, in order of first use)
+            "providers": [],       # list of provider ids used (deduplicated)
+            "model_calls": 0,      # total LLM API calls in this run
+            "tools_used": [],      # list of {name, type, mcp_server?, count}
+            "mcp_servers_used": [],  # list of MCP server names used
+            "skills_accessed": [],    # list of skill names whose SKILL.md was read
+            "fallback_used": False,   # whether any fallback model was used
+        }
+
     @staticmethod
     def _normalize_stream_usage(stream_usage: Dict[str, Any]) -> Dict[str, int]:
         """Normalize one provider usage payload to the console's field names."""
@@ -365,6 +381,62 @@ class AgentStreamExecutor:
     def _record_stream_usage(self, snapshot: Optional[Dict[str, Any]]) -> None:
         if snapshot:
             self.run_usage = self._merge_usage(self.run_usage, snapshot)
+
+    # ── Provenance tracking helpers ────────────────────────────────────────
+
+    def _record_model_used(self, model_name: str, provider_id: str = None) -> None:
+        """Record that a model was called for provenance tracking."""
+        if model_name and model_name not in self.run_provenance["models"]:
+            self.run_provenance["models"].append(model_name)
+        if provider_id and provider_id not in self.run_provenance["providers"]:
+            self.run_provenance["providers"].append(provider_id)
+        self.run_provenance["model_calls"] += 1
+
+    def _record_tool_used(self, tool_name: str, tool_type: str = "builtin",
+                          mcp_server: str = None) -> None:
+        """Record that a tool was executed for provenance tracking.
+
+        Args:
+            tool_name: Name of the tool
+            tool_type: "builtin", "mcp", "skill", "agent"
+            mcp_server: MCP server name if tool_type == "mcp"
+        """
+        prov = self.run_provenance
+        existing = next((t for t in prov["tools_used"] if t["name"] == tool_name), None)
+        if existing:
+            existing["count"] = existing.get("count", 1) + 1
+        else:
+            entry = {"name": tool_name, "type": tool_type, "count": 1}
+            if mcp_server:
+                entry["mcp_server"] = mcp_server
+            prov["tools_used"].append(entry)
+
+        if mcp_server and mcp_server not in prov["mcp_servers_used"]:
+            prov["mcp_servers_used"].append(mcp_server)
+
+    def _record_skill_accessed(self, skill_name: str) -> None:
+        """Record that a skill's SKILL.md was read by the agent."""
+        if skill_name and skill_name not in self.run_provenance["skills_accessed"]:
+            self.run_provenance["skills_accessed"].append(skill_name)
+
+    def _detect_skill_access(self, tool_name: str, arguments: Dict) -> None:
+        """Detect when the agent reads a SKILL.md file via the read tool.
+
+        This is a heuristic — it looks for read tool calls whose path contains
+        "/skills/" and ends with "SKILL.md". When found, it extracts the skill
+        name (parent directory name) and records it in provenance.
+        """
+        if tool_name != "read":
+            return
+        path = str((arguments or {}).get("path", "")).strip()
+        if not path.endswith("SKILL.md"):
+            return
+        # Walk up to find the skill directory name
+        parts = [p for p in path.replace("\\", "/").split("/") if p]
+        # SKILL.md is at the end, parent dir is the skill name
+        if len(parts) >= 2 and parts[-1] == "SKILL.md":
+            skill_name = parts[-2]
+            self._record_skill_accessed(skill_name)
 
     def _check_cancelled(self) -> None:
         """Raise AgentCancelledError if the user requested cancellation.
@@ -1655,6 +1727,18 @@ class AgentStreamExecutor:
 
         self._emit_event("message_start", {"role": "assistant"})
 
+        # ── Provenance: record model used for this call ────────────────────
+        try:
+            model_name = getattr(self.model, "model", None)
+            provider_id = getattr(self.model, "provider_id", None)
+            if model_name:
+                self._record_model_used(str(model_name), provider_id=str(provider_id) if provider_id else None)
+            if _on_fallback:
+                self.run_provenance["fallback_used"] = True
+        except Exception:
+            pass
+        # ──────────────────────────────────────────────────────────────────
+
         # Streaming response
         full_content = ""
         self._reset_think_stream()
@@ -2343,6 +2427,15 @@ class AgentStreamExecutor:
             return result
 
         tool = tool_override or self.tools.get(tool_name)
+        # ── Provenance: record tool usage ─────────────────────────────────
+        tool_type = "builtin"
+        mcp_server = None
+        if tool is not None:
+            tool_type = getattr(tool, "_tool_type", "builtin")
+            mcp_server = getattr(tool, "server_name", None)
+        self._record_tool_used(tool_name, tool_type=tool_type, mcp_server=mcp_server)
+        self._detect_skill_access(tool_name, arguments)
+        # ──────────────────────────────────────────────────────────────────
         start_event = {
             "tool_call_id": tool_id,
             "tool_name": tool_name,
@@ -2418,6 +2511,10 @@ class AgentStreamExecutor:
             end_event = {"tool_call_id": tool_id, "tool_name": tool_name, **result_dict}
             if getattr(result, "display", None):
                 end_event["display"] = result.display
+            # Provenance info for this tool call
+            if mcp_server:
+                end_event["mcp_server"] = mcp_server
+            end_event["tool_type"] = tool_type
             if not own_cards:
                 self._emit_event("tool_execution_end", end_event)
             elif not emitted_own:

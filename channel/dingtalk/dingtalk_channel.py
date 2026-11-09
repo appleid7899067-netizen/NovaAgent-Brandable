@@ -50,7 +50,7 @@ def _markdown_preview_title(markdown: str, limit: int = 30) -> str:
         text = line.strip().strip("#>*-_`|").strip()
         if text:
             return text[:limit]
-    return "boss.slilelo"
+    return "PanupanGrok"
 
 
 class CustomAICardReplier(CardReplier):
@@ -160,7 +160,7 @@ class DingTalkChanel(ChatChannel, dingtalk_stream.ChatbotHandler):
                     "clientSecret": client.credential.client_secret,
                     "subscriptions": [{"type": "CALLBACK",
                                        "topic": dingtalk_stream.chatbot.ChatbotMessage.TOPIC}],
-                    "ua": "dingtalk-sdk-python/cow",
+                    "ua": "dingtalk-sdk-python/nova",
                     "localIp": "",
                 },
                 timeout=10,

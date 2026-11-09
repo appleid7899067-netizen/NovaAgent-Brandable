@@ -1,4 +1,4 @@
-# 🎃 Panupan's NovaAgent - Brandable AI Agent ♦️
+# 🎃 PanupanGrok's NovaAgent - Brandable AI Agent ♦️
 
 > **AI Agent Harness ระดับ Production** — สร้างโดย **ภาณุพันธ์ (Panupan)**  
 > ฉลาด · สวยงาม · ยืดหยุ่น · ปลอดภัย · ฟรี 100%
@@ -10,7 +10,7 @@
 - **ชื่อ:** ภาณุพันธ์ (Panupan)
 - **GitHub:** [@appleid7899067-netizen](https://github.com/appleid7899067-netizen)
 - **โปรเจกต์:** NovaAgent-Brandable
-- **Brand:** boss.slilelo
+- **Brand:** PanupanGrok
 
 ---
 
@@ -47,7 +47,7 @@ pip install -r requirements.txt
 
 ### 3. รัน NovaAgent
 
-nohup env BRAND_NAME=boss.slilelo python app.py > ~/nova.log 2>&1 &
+nohup env BRAND_NAME=PanupanGrok python app.py > ~/nova.log 2>&1 &
 
 ### 4. เปิดเบราว์เซอร์
 
@@ -99,7 +99,7 @@ bash scripts/start-ollama.sh
 
 ```bash
 # เก็บ config + key ไว้นอก repo ก่อน (กัน key หลุดขึ้น git)
-export COW_DATA_DIR="$HOME/.cow"
+export NOVA_DATA_DIR="$HOME/.nova"
 
 TYPHOON_API_KEY=xxx   bash scripts/use-provider.sh typhoon
 GEMINI_API_KEY=xxx    bash scripts/use-provider.sh gemini
@@ -110,7 +110,7 @@ bash scripts/use-provider.sh ollama          # กลับมาใช้โม
 # ระบุโมเดลเอง / เปลี่ยนโมเดล
 MODEL=typhoon-v2.1-12b-instruct bash scripts/use-provider.sh typhoon
 
-COW_DATA_DIR="$HOME/.cow" ./.venv/bin/python app.py
+NOVA_DATA_DIR="$HOME/.nova" ./.venv/bin/python app.py
 ```
 
 | ผู้ให้บริการ | โควตาฟรี (ต.ค. 2026) | จุดเด่น | ข้อควรระวัง |
@@ -158,9 +158,9 @@ pip install -r requirements-web.txt
 #    ถ้าต้องการทุก channel ค่อยใช้: pip install -r requirements.txt
 
 # 6) ตั้งค่า + รัน
-export COW_DATA_DIR="$HOME/.cow"
+export NOVA_DATA_DIR="$HOME/.nova"
 TYPHOON_API_KEY="sk-..." bash scripts/use-provider.sh typhoon
-COW_DATA_DIR="$HOME/.cow" python app.py
+NOVA_DATA_DIR="$HOME/.nova" python app.py
 ```
 
 เปิดเบราว์เซอร์บนมือถือ → **http://localhost:9999**
@@ -169,7 +169,7 @@ COW_DATA_DIR="$HOME/.cow" python app.py
 
 ```bash
 ip addr show wlan0 | grep 'inet '     # เอา IP เช่น 192.168.1.42
-COW_DATA_DIR="$HOME/.cow" WEB_HOST=0.0.0.0 python app.py
+NOVA_DATA_DIR="$HOME/.nova" WEB_HOST=0.0.0.0 python app.py
 # เปิด http://192.168.1.42:9999 จากเครื่องอื่น
 ```
 
@@ -243,7 +243,7 @@ MIT License - ดูรายละเอียดใน LICENSE
 
 ## 🙏 กิตติศัพท์
 
-- สร้างต่อยอดจาก CowAgent (https://github.com/zhayujie/CowAgent)
+- สร้างต่อยอดจาก NovaAgent (https://github.com/zhayujie/NovaAgent)
 - ใช้ FastAPI (https://fastapi.tiangolo.com/), Tailwind CSS (https://tailwindcss.com/)
 - LLM Providers: OpenRouter, Groq, Ollama
 

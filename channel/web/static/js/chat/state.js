@@ -40,10 +40,10 @@ function updateEditButtonsState() {
 let streamBuffers = {};   // request_id -> { items: [event...], timestamp } for re-attach replay
 const resumedRequests = new Set();  // in-flight replies picked up after a page load, at most once each
 let isComposing = false;
-let appConfig = { use_agent: false, title: 'boss.slilelo', subtitle: '', providers: {}, api_bases: {} };
+let appConfig = { use_agent: false, title: 'PanupanGrok', subtitle: '', providers: {}, api_bases: {} };
 
-let activeAgentId = localStorage.getItem('cow_active_agent') || '';
-const SESSION_ID_KEY = 'cow_session_id';
+let activeAgentId = localStorage.getItem('nova_active_agent') || '';
+const SESSION_ID_KEY = 'nova_session_id';
 
 function activeSessionStorageKey() {
     return activeAgentId && activeAgentId !== defaultAgentId && activeAgentId !== 'default'

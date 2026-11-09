@@ -699,7 +699,7 @@ function externalApiExample(lang, reveal) {
 function renderExternalApi() {
     const s = externalApiState;
     const docs = document.getElementById('cfg-api-docs');
-    if (docs) docs.href = (currentLang === 'zh' ? 'https://docs.boss.slilelo.ai/zh' : 'https://docs.boss.slilelo.ai') + '/extensions/chat-api';
+    if (docs) docs.href = (currentLang === 'zh' ? 'https://docs.panupangrok.ai/zh' : 'https://docs.panupangrok.ai') + '/extensions/chat-api';
     document.getElementById('cfg-api-enabled').checked = !!s.enabled;
     document.getElementById('cfg-api-detail').classList.toggle('hidden', !s.enabled);
     if (!s.enabled) return;
@@ -779,16 +779,60 @@ function copyExternalApiField(id, btn) {
     }).catch(() => {});
 }
 
+let openCodeCatalog = null;
+let openCodeCatalogLoaded = false;
+
+function loadOpenCodeRegistry() {
+    if (openCodeCatalogLoaded) return;
+    fetch('/api/opencode/catalog').then(r => r.json()).then(data => {
+        if (data.status !== 'success') throw new Error(data.message || 'โหลด OpenCode ไม่สำเร็จ');
+        openCodeCatalog = data;
+        openCodeCatalogLoaded = true;
+        document.getElementById('oc-version').textContent = data.version || 'unknown';
+        document.getElementById('oc-model-count').textContent = `${data.model_count || 0} models`;
+        const providers = [...new Set((data.models || []).map(m => m.provider))].sort();
+        const filter = document.getElementById('oc-provider-filter');
+        if (filter) filter.innerHTML = '<option value="">ทุก provider</option>' + providers.map(p => `<option value="${escapeHtml(p)}">${escapeHtml(p)}</option>`).join('');
+        renderOpenCodeModels();
+        const tools = data.tools || [], skills = data.skills || [], mcp = data.mcp || [];
+        document.getElementById('oc-tools-summary').textContent = `${tools.length} tools`;
+        document.getElementById('oc-skills-summary').textContent = `${skills.length} skills`;
+        document.getElementById('oc-mcp-summary').textContent = mcp.length ? `${mcp.length} MCP server(s)` : 'ยังไม่มี MCP';
+        const functionRows = [];
+        tools.forEach(x => functionRows.push({...x, kind: 'Tool', icon: 'fa-terminal', state: 'พร้อมใช้งาน'}));
+        skills.forEach(x => functionRows.push({...x, kind: 'Skill', icon: 'fa-bolt', state: 'โหลดแล้ว'}));
+        mcp.forEach(x => functionRows.push({name: x.name, kind: 'MCP', icon: 'fa-plug', state: x.status, description: `MCP server: ${x.status}`}));
+        document.getElementById('oc-function-list').innerHTML = functionRows.map(x => `<div class="oc-function-row"><i class="fas ${x.icon || 'fa-wrench'}"></i><span class="oc-function-kind">${escapeHtml(x.kind)}</span><code>${escapeHtml(x.name)}</code><span>${escapeHtml(x.description || '')}</span><small>${escapeHtml(x.state || '')}</small></div>`).join('') || '<div class="oc-loading">ไม่มี functions เพิ่มเติม</div>';
+    }).catch(err => { document.getElementById('oc-model-list').innerHTML = `<span class="oc-error">${escapeHtml(err.message)}</span>`; });
+}
+
+function renderOpenCodeModels() {
+    if (!openCodeCatalog) return;
+    const q = (document.getElementById('oc-model-search')?.value || '').toLowerCase();
+    const p = document.getElementById('oc-provider-filter')?.value || '';
+    const models = openCodeCatalog.models.filter(m => (!p || m.provider === p) && (!q || m.id.toLowerCase().includes(q)));
+    document.getElementById('oc-model-list').innerHTML = models.map(m => `<div class="oc-model-row"><i class="fas fa-microchip"></i><code>${escapeHtml(m.id)}</code><span>${escapeHtml(m.provider)}</span></div>`).join('') || '<span class="oc-loading">ไม่พบโมเดล</span>';
+}
+
+function switchOpenCodeTab(tab) {
+    document.querySelectorAll('[data-oc-tab]').forEach(b => b.classList.toggle('active', b.dataset.ocTab === tab));
+    document.getElementById('oc-panel-models')?.classList.toggle('hidden', tab !== 'models');
+    document.getElementById('oc-panel-functions')?.classList.toggle('hidden', tab !== 'functions');
+}
+
+document.addEventListener('click', e => { const b = e.target.closest('[data-oc-tab]'); if (b) switchOpenCodeTab(b.dataset.ocTab); });
+document.addEventListener('input', e => { if (e.target.id === 'oc-model-search' || e.target.id === 'oc-provider-filter') renderOpenCodeModels(); });
+
 function switchConfigTab(tab) {
-    ['basic', 'models'].forEach(name => {
+    ['basic', 'models', 'opencode'].forEach(name => {
         document.getElementById(`config-tab-${name}`)?.classList.toggle('active', name === tab);
         document.getElementById(`config-panel-${name}`)?.classList.toggle('hidden', name !== tab);
     });
     if (tab === 'models') loadModelsView();
+    if (tab === 'opencode') loadOpenCodeRegistry();
     // Re-pull /config when returning to Basic: a provider added on the Models
     // tab must show up in the basic main-model provider picker without a manual
     // page refresh. loadConfigView re-renders from the fresh provider list.
     if (tab === 'basic') loadConfigView();
     routeNoteTab('config', tab);
 }
-

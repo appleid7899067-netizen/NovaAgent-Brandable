@@ -1,6 +1,6 @@
-# Contributing to boss.slilelo
+# Contributing to PanupanGrok
 
-Thanks for taking the time to contribute! 🎉 boss.slilelo is built by a global
+Thanks for taking the time to contribute! 🎉 PanupanGrok is built by a global
 community, and contributions of all sizes are welcome — from typo fixes to new
 features.
 
@@ -14,7 +14,7 @@ pull requests, code comments, and commit messages in English.**
 
 ## Reporting issues
 
-Found a bug or have an idea? [Open an issue](https://github.com/zhayujie/boss.slilelo/issues/new/choose).
+Found a bug or have an idea? [Open an issue](https://github.com/zhayujie/PanupanGrok/issues/new/choose).
 
 Before opening one, please search existing issues (including closed ones) to
 avoid duplicates, and make sure you're on the latest version.
@@ -44,18 +44,18 @@ docs: clarify Docker setup
 
 ## Development setup
 
-See the [Install from Source](https://docs.boss.slilelo.ai/guide/manual-install)
+See the [Install from Source](https://docs.panupangrok.ai/guide/manual-install)
 guide. In short:
 
 ```bash
-git clone https://github.com/zhayujie/boss.slilelo.git
-cd boss.slilelo
+git clone https://github.com/zhayujie/PanupanGrok.git
+cd PanupanGrok
 pip install -r requirements.txt
 pip install -e .
-cow start
+nova start
 ```
 
 ## Code of conduct
 
-Be respectful and constructive. We want boss.slilelo to be a welcoming place for
+Be respectful and constructive. We want PanupanGrok to be a welcoming place for
 everyone.

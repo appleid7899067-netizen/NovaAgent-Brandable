@@ -1,4 +1,4 @@
-"""cow skill - Skill management commands."""
+"""nova skill - Skill management commands."""
 
 import os
 import re
@@ -121,7 +121,7 @@ def _clone_repo(git_url: str):
 
     Requires git to be installed. The caller must clean up tmp_dir.
     """
-    tmp_dir = tempfile.mkdtemp(prefix="cow-skill-")
+    tmp_dir = tempfile.mkdtemp(prefix="nova-skill-")
     repo_dir = os.path.join(tmp_dir, "repo")
     try:
         import subprocess
@@ -169,7 +169,7 @@ def _download_repo_zip(spec: str, branch: str = "main", host: str = "github", ti
     resp = requests.get(zip_url, timeout=req_timeout, allow_redirects=True)
     resp.raise_for_status()
 
-    tmp_dir = tempfile.mkdtemp(prefix="cow-skill-")
+    tmp_dir = tempfile.mkdtemp(prefix="nova-skill-")
     try:
         zip_path = os.path.join(tmp_dir, "repo.zip")
         with open(zip_path, "wb") as f:
@@ -389,7 +389,7 @@ def _write_skills_config(config: dict, skills_dir: str) -> None:
 def _register_installed_skill(name: str, source: str = "cowhub", display_name: str = "", agent_id: str = None):
     """Register a newly installed skill into skills_config.json.
 
-    source values: builtin, cow, github, clawhub, linkai, local, url
+    source values: builtin, nova, github, clawhub, linkai, local, url
     """
     skills_dir = _target_skills_dir(agent_id)
     config_path = os.path.join(skills_dir, "skills_config.json")
@@ -573,8 +573,8 @@ def _print_install_success(name: str, source: str):
     from cli.utils import get_cli_language
 
     # Import `common` only after get_cli_language() runs ensure_sys_path(),
-    # so it works when `cow` is invoked from outside the project directory.
-    get_cli_language()  # resolve cow_lang so i18n.t reflects config
+    # so it works when `nova` is invoked from outside the project directory.
+    get_cli_language()  # resolve nova_lang so i18n.t reflects config
     from common import i18n
     _t = i18n.t
 
@@ -706,12 +706,12 @@ def _check_checksum(content: bytes, expected: str):
 
 @click.group()
 def skill():
-    """Manage CowAgent skills."""
+    """Manage NovaAgent skills."""
     pass
 
 
 # ------------------------------------------------------------------
-# cow skill list
+# nova skill list
 # ------------------------------------------------------------------
 @skill.command("list")
 @click.option("--remote", is_flag=True, help="Browse skills on Skill Hub")
@@ -851,17 +851,17 @@ def _list_remote(page: int = 1):
     click.echo()
     nav_parts = []
     if page > 1:
-        nav_parts.append(f"cow skill list --remote --page {page - 1}")
+        nav_parts.append(f"nova skill list --remote --page {page - 1}")
     if page < total_pages:
-        nav_parts.append(f"cow skill list --remote --page {page + 1}")
+        nav_parts.append(f"nova skill list --remote --page {page + 1}")
     if nav_parts:
         click.echo(f"  Navigate: {' | '.join(nav_parts)}")
-    click.echo("  Install:  cow skill install <name>")
-    click.echo("  Browse:   https://skills.cowagent.ai\n")
+    click.echo("  Install:  nova skill install <name>")
+    click.echo("  Browse:   https://skills.novaagent.ai\n")
 
 
 # ------------------------------------------------------------------
-# cow skill search
+# nova skill search
 # ------------------------------------------------------------------
 @skill.command()
 @click.argument("query")
@@ -896,7 +896,7 @@ def search(query):
         status = click.style("installed", fg="green") if name in installed else "—"
         click.echo(f"  {name:<{name_w}} {status:<12} {desc}")
 
-    click.echo("\n  Install with: cow skill install <name>\n")
+    click.echo("\n  Install with: nova skill install <name>\n")
 
 
 # ------------------------------------------------------------------
@@ -1185,7 +1185,7 @@ def commit_staged(staging_dir: str, names=None, agent_id: str = None) -> list:
 
 
 # ------------------------------------------------------------------
-# cow skill install (CLI thin wrapper)
+# nova skill install (CLI thin wrapper)
 # ------------------------------------------------------------------
 @skill.command()
 @click.argument("name")
@@ -1198,21 +1198,21 @@ def install(name):
 
     Examples:
 
-      cow skill install pptx                          (from Skill Hub)
+      nova skill install pptx                          (from Skill Hub)
 
-      cow skill install larksuite/cli                 (GitHub shorthand, all skills)
+      nova skill install larksuite/cli                 (GitHub shorthand, all skills)
 
-      cow skill install larksuite/cli#skills/lark-im  (single skill by subpath)
+      nova skill install larksuite/cli#skills/lark-im  (single skill by subpath)
 
-      cow skill install https://github.com/owner/repo
+      nova skill install https://github.com/owner/repo
 
-      cow skill install https://gitlab.com/org/repo
+      nova skill install https://gitlab.com/org/repo
 
-      cow skill install git@github.com:owner/repo.git
+      nova skill install git@github.com:owner/repo.git
 
-      cow skill install ./my-local-skills             (local directory)
+      nova skill install ./my-local-skills             (local directory)
 
-      cow skill install https://example.com/path/to/SKILL.md
+      nova skill install https://example.com/path/to/SKILL.md
     """
     result = install_skill(name)
     for msg in result.messages:
@@ -1643,7 +1643,7 @@ def _install_zip_bytes(content, name, skills_dir, result: InstallResult = None, 
 
 
 # ------------------------------------------------------------------
-# cow skill uninstall
+# nova skill uninstall
 # ------------------------------------------------------------------
 @skill.command()
 @click.argument("name")
@@ -1684,7 +1684,7 @@ def uninstall(name, yes):
 
 
 # ------------------------------------------------------------------
-# cow skill enable / disable
+# nova skill enable / disable
 # ------------------------------------------------------------------
 @skill.command()
 @click.argument("name")
@@ -1730,7 +1730,7 @@ def _set_enabled(name, enabled):
 
 
 # ------------------------------------------------------------------
-# cow skill info
+# nova skill info
 # ------------------------------------------------------------------
 @skill.command()
 @click.argument("name")

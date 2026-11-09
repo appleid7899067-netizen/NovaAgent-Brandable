@@ -43,6 +43,9 @@ from channel.web.api.memory import (  # noqa: F401
 )
 from channel.web.api.menu import MenuHandler  # noqa: F401
 from channel.web.api.models import ModelsHandler  # noqa: F401
+from channel.web.api.opencode import (  # noqa: F401
+    OpenCodeCatalogHandler, OpenCodeWebHandler,
+)
 from channel.web.api.openai_compat import (  # noqa: F401
     OpenAIChatCompletionsHandler, OpenAIModelsHandler,
 )
@@ -126,6 +129,8 @@ URLS = (
     '/config', 'ConfigHandler',
     '/api/external_api', 'ExternalApiHandler',
     '/api/models', 'ModelsHandler',
+    '/api/opencode/catalog', 'OpenCodeCatalogHandler',
+    '/api/opencode/web', 'OpenCodeWebHandler',
     '/api/channels', 'ChannelsHandler',
     '/line/webhook', 'LineWebhookHandler',
     '/api/weixin/qrlogin', 'WeixinQrHandler',
@@ -185,7 +190,7 @@ URLS = (
     # can ever shadow an API route above -- which is also why the
     # settings view is /settings and not /config, a path the config
     # API already owns.
-    '/(?:agents|artifacts|settings|skills|memory|knowledge|channels|scheduler|logs)'
+    '/(?:agents|artifacts|settings|skills|memory|knowledge|channels|scheduler|logs|opencode)'
     '(?:/[a-z]+)?/?', 'ChatHandler',
     # A page the user put in the menu: /m/<item id>.
     '/m/[A-Za-z0-9_-]{1,40}/?', 'ChatHandler',

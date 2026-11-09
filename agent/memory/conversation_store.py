@@ -2666,7 +2666,7 @@ def _default_db_path() -> Path:
         return MemoryConfig(workspace_root=str(default_ws)).get_db_path().resolve()
     except Exception:
         return (
-            Path(expand_path("~/cow")) / "memory" / "long-term" / "index.db"
+            Path(expand_path("~/nova")) / "memory" / "long-term" / "index.db"
         ).resolve()
 
 

@@ -3,13 +3,13 @@ import re
 from pathlib import Path
 from datetime import datetime
 
-ROOT = Path('/data/data/com.termux/files/home/projects/NovaAgent-Brandable/cowbase/skills')
+ROOT = Path('/data/data/com.termux/files/home/projects/NovaAgent-Brandable/novabase/skills')
 # Try to create backup dir in /tmp first; fallback to project tmp if needed
 try:
     BACKUP_ROOT = Path('/tmp/skill-backups')
     BACKUP_ROOT.mkdir(parents=True, exist_ok=True)
 except Exception:
-    BACKUP_ROOT = Path('/data/data/com.termux/files/home/projects/NovaAgent-Brandable/cowbase/tmp/skill-backups')
+    BACKUP_ROOT = Path('/data/data/com.termux/files/home/projects/NovaAgent-Brandable/novabase/tmp/skill-backups')
     BACKUP_ROOT.mkdir(parents=True, exist_ok=True)
 
 

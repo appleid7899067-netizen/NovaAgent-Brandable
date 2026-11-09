@@ -17,6 +17,7 @@ class McpTool(BaseTool):
         """
         self.client = client
         self.server_name = server_name
+        self._tool_type = "mcp"
         # Prefix only the local name; the server still expects its original name.
         self._remote_name = tool_schema["name"]
         self.name = name_prefix + self._remote_name

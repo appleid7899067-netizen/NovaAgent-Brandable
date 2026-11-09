@@ -1,1 +1,1 @@
-from .cow_cli import CowCliPlugin
+from .nova_cli import CowCliPlugin

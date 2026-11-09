@@ -8,7 +8,7 @@ services:
     ports:
       - "9899:9899"
     environment:
-      COW_LANG: 'auto'
+      NOVA_LANG: 'auto'
       # Empty: web console only. Multiple: 'web, weixin, feishu'
       CHANNEL_TYPE: ''
       # Empty: deepseek-flash
@@ -52,9 +52,9 @@ services:
       SELF_EVOLUTION_ENABLED: 'True'
       # Writable data root (config.json, run.log, credentials) — kept separate
       # from the workspace so it survives image upgrades / container recreation.
-      COW_DATA_DIR: '/home/agent/.cow'
+      NOVA_DATA_DIR: '/home/agent/.nova'
     volumes:
       # Workspace: skills, memory, knowledge, mcp.json, conversation artifacts
-      - ./cow:/home/agent/cow
+      - ./nova:/home/agent/nova
       # Data root: config.json, run.log, credentials
-      - ./cow-data:/home/agent/.cow
+      - ./nova-data:/home/agent/.nova

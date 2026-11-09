@@ -1522,13 +1522,22 @@ class WebChannel(ChatChannel):
     def startup(self):
         configured_host = conf().get("web_host", "")
         host = configured_host or ("0.0.0.0" if _is_password_enabled() else "127.0.0.1")
-        # The desktop app passes its chosen port via COW_WEB_PORT so its backend
+        # The desktop app passes its chosen port via NOVA_WEB_PORT so its backend
         # never collides with a source-run web console (default 9899). This makes
         # the port a single source of truth owned by the Electron shell.
-        port = int(os.environ.get("COW_WEB_PORT") or conf().get("web_port", 9899))
+        port = int(os.environ.get("NOVA_WEB_PORT") or conf().get("web_port", 9899))
         is_public_bind = host in ("0.0.0.0", "::")
 
         self._cleanup_stale_voice_recordings()
+
+        # Bring up the embedded OpenCode console alongside the web console so
+        # the "OpenCode" view has something to frame. Best effort: a missing or
+        # broken opencode binary must not stop the console from starting.
+        try:
+            from channel.web.api.opencode import ensure_web_server
+            ensure_web_server()
+        except Exception as e:
+            logger.warning(f"[WebChannel] Could not start OpenCode web UI: {e}")
 
         def _log_startup_banner():
             """Announce the console. Only called once the socket is actually
@@ -1583,7 +1592,7 @@ class WebChannel(ChatChannel):
 
             # In desktop mode the Electron shell renders the UI, so don't pop a
             # browser window (also avoids issues when running detached/headless).
-            if os.environ.get("COW_DESKTOP") != "1":
+            if os.environ.get("NOVA_DESKTOP") != "1":
                 try:
                     import webbrowser
                     webbrowser.open(f"http://localhost:{port}")
@@ -1657,6 +1666,11 @@ class WebChannel(ChatChannel):
             server.stop()
 
     def stop(self):
+        try:
+            from channel.web.api.opencode import stop_web_server
+            stop_web_server()
+        except Exception:
+            pass
         if self._http_server:
             try:
                 self._http_server.stop()

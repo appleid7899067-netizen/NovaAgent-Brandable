@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>boss.slilelo Console</title>
+    <title>PanupanGrok Console</title>
     <link rel="icon" href="/assets/logos/signature-logo.svg" type="image/x-icon">
     <!-- Vendored third-party assets (no external CDN dependency).
          See channel/web/static/vendor/README.md for sources & versions. -->
@@ -61,7 +61,7 @@
     <script>
     // Map an arbitrary locale string (zh-CN, en-US, fr ...) to 'zh' / 'zh-Hant' / 'en',
     // or '' when unrecognized so callers can fall through to the next source.
-    window.__cowNormalizeLang__ = function(raw) {
+    window.__novaNormalizeLang__ = function(raw) {
         if (!raw) return '';
         var v = String(raw).trim().toLowerCase().replace('_', '-');
         if (v === 'auto') return '';
@@ -70,32 +70,33 @@
         // Then Simplified Chinese
         if (v.indexOf('zh') === 0) return 'zh';
         if (v.indexOf('en') === 0) return 'en';
+        if (v.indexOf('th') === 0) return 'th';
         return '';
     };
     // Resolve the console language by priority:
     //   user choice (localStorage) -> backend-detected -> browser -> 'zh'.
-    window.__cowResolveLang__ = function() {
-        return window.__cowNormalizeLang__(localStorage.getItem('cow_lang'))
-            || window.__cowNormalizeLang__(window.__COW_DEFAULT_LANG__)
-            || window.__cowNormalizeLang__(navigator.language || (navigator.languages && navigator.languages[0]))
+    window.__novaResolveLang__ = function() {
+        return window.__novaNormalizeLang__(localStorage.getItem('nova_lang'))
+            || window.__novaNormalizeLang__(window.__NOVA_DEFAULT_LANG__)
+            || window.__novaNormalizeLang__(navigator.language || (navigator.languages && navigator.languages[0]))
             || 'zh';
     };
     (function() {
-        // Backend-resolved default language (from cow_lang config / auto-detect).
-        window.__COW_DEFAULT_LANG__ = '{{COW_DEFAULT_LANG}}';
-        var theme = localStorage.getItem('cow_theme') || 'dark';
+        // Backend-resolved default language (from nova_lang config / auto-detect).
+        window.__NOVA_DEFAULT_LANG__ = '{{NOVA_DEFAULT_LANG}}';
+        var theme = localStorage.getItem('nova_theme') || 'dark';
         if (theme === 'dark') document.documentElement.classList.add('dark');
-        if (localStorage.getItem('cow_sidebar_collapsed') === '1') {
+        if (localStorage.getItem('nova_sidebar_collapsed') === '1') {
             document.documentElement.classList.add('sidebar-collapsed');
         }
         // A customised menu is drawn by menu.js; keep the built-in one in
         // sidebar.html from showing first. The timer is the way out should
         // that script never run.
-        if (localStorage.getItem('cow_menu_cache')) {
+        if (localStorage.getItem('nova_menu_cache')) {
             document.documentElement.classList.add('menu-pending');
             setTimeout(function () { document.documentElement.classList.remove('menu-pending'); }, 3000);
         }
-        document.documentElement.setAttribute('lang', window.__cowResolveLang__());
+        document.documentElement.setAttribute('lang', window.__novaResolveLang__());
     })();
     </script>
 <link rel="stylesheet" href="/assets/css/call.css">
@@ -103,6 +104,8 @@
     <link rel="stylesheet" href="/assets/css/theme-tools.css">
     <link rel="stylesheet" href="/assets/css/theme-thinking.css">
     <link rel="stylesheet" href="/assets/css/theme-tools-grouped.css">
+    <!-- OpenCode-inspired terminal UI override -->
+    <link rel="stylesheet" href="/assets/css/theme-opencode.css">
 </head>
 <body class="h-screen overflow-hidden bg-gray-50 dark:bg-[#111111] text-slate-800 dark:text-slate-200 font-sans">
 
@@ -147,6 +150,8 @@
 <!--#include templates/views/tasks.html-->
 
 <!--#include templates/views/logs.html-->
+
+<!--#include templates/views/opencode.html-->
 
 <!--#include templates/views/custom.html-->
 
@@ -236,6 +241,8 @@
     <script defer src="/assets/js/views/knowledge.js"></script>
     <script defer src="/assets/js/views/logs.js"></script>
     <script defer src="/assets/js/views/artifacts.js"></script>
+    <script defer src="/assets/js/views/opencode.js"></script>
+    <script defer src="/assets/js/views/puterxboss.js"></script>
     <script defer src="/assets/js/views/menu-editor.js"></script>
 
     <!-- Last of the core layer rather than first, which is where it sat in

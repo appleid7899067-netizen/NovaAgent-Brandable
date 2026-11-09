@@ -9,11 +9,11 @@
                 <!-- The mark itself goes home, as it does everywhere else on the
                      web. Only the image: the name beside it is a heading. -->
                 <img id="sidebar-home" role="button" tabindex="0"
-                     src="/assets/logo.svg?v=2" alt="boss.slilelo"
+                     src="/assets/logo.svg?v=2" alt="PanupanGrok"
                      class="w-8 h-8 rounded-lg flex-shrink-0 cursor-pointer
                             hover:opacity-80 transition-opacity duration-150">
                 <div class="sidebar-brand-text flex flex-col min-w-0">
-                    <span class="text-white font-semibold text-sm truncate">boss.slilelo</span>
+                    <span class="text-white font-semibold text-sm truncate">PanupanGrok</span>
                     <span class="text-neutral-500 text-xs" data-i18n="console">控制台</span>
                 </div>
             </div>
@@ -76,6 +76,11 @@
                            data-view="tasks">
                             <i class="fas fa-clock item-icon text-xs w-5 text-center"></i>
                             <span data-i18n="menu_tasks">定时</span>
+                        </a>
+                        <a class="sidebar-item flex items-center gap-3 px-3 py-2 rounded-lg cursor-pointer transition-all duration-150 hover:bg-white/5 hover:text-neutral-200 text-[14px]"
+                           data-view="opencode">
+                            <i class="fas fa-code item-icon text-xs w-5 text-center"></i>
+                            <span data-i18n="menu_opencode">OpenCode</span>
                         </a>
                     </div>
                 </div>
@@ -147,7 +152,7 @@
         <script>
         (function () {
             try {
-                var groups = JSON.parse(localStorage.getItem('cow_sidebar_groups') || '{}');
+                var groups = JSON.parse(localStorage.getItem('nova_sidebar_groups') || '{}');
                 document.querySelectorAll('#sidebar .menu-group[data-group]').forEach(function (g) {
                     if (groups[g.getAttribute('data-group')] === false) g.classList.remove('open');
                 });

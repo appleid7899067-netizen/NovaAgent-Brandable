@@ -704,7 +704,7 @@
   "sidebar_expand": "ขยายแถบด้านข้าง",
   "ws_default_workspace": "ค่าเริ่มต้น",
   "ws_sel_title": "เลือกเวิร์กสเปซ",
-  "ws_sel_default_hint": "ใช้เวิร์กสเปซเริ่มต้น (~/cow)",
+  "ws_sel_default_hint": "ใช้เวิร์กสเปซเริ่มต้น (~/nova)",
   "ws_sel_recents": "ล่าสุด",
   "ws_sel_open": "เปิดโปรเจกต์…",
   "ws_sel_new": "โปรเจกต์ใหม่",

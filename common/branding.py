@@ -31,10 +31,10 @@ def _load():
 
 
 def get_brand_name():
-    return os.getenv("BRAND_NAME") or _load().get("brand_name", "boss.slilelo")
+    return os.getenv("BRAND_NAME") or _load().get("brand_name", "PanupanGrok")
 
 def get_brand_display():
-    return os.getenv("BRAND_DISPLAY") or _load().get("display_name", "boss.slilelo")
+    return os.getenv("BRAND_DISPLAY") or _load().get("display_name", "PanupanGrok")
 
 def get_brand_short():
     return _load().get("short_name", get_brand_name())

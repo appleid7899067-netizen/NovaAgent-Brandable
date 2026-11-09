@@ -249,7 +249,7 @@ collide with a view name either.
 **Asset references in the page must be absolute** (`/assets/js/...`). Path
 routing depends on it: a relative reference under `/settings/models` would
 resolve to `/settings/assets/...` and 404 the whole page. This gives up nothing
-for reverse-proxy subpath mounts (say `https://host/cow/`): the console could
+for reverse-proxy subpath mounts (say `https://host/nova/`): the console could
 never be mounted that way, since every API call it makes is already an absolute
 `/api/...` path. Supporting a subpath would mean prefixing all of them, not
 making asset references relative again.

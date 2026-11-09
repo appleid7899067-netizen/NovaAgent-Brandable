@@ -5,7 +5,7 @@ This folder is your home. Treat it well.
 ## Workspace directory structure
 
 ```
-~/cow/
+~/nova/
 ├── AGENT.md          # Your identity and soul
 ├── USER.md           # User basics (static)
 ├── RULE.md           # Workspace rules (this file)
@@ -98,9 +98,9 @@ This workspace grows as you use it. When you learn something new, find a better 
 - Policy: from now on, any attempt to install or register a new skill will be checked against existing skills to prevent duplicates.
 - Guard: a dedicated guard script (guard_duplicate_install.py) will be invoked before installation to detect duplicates.
 - If a duplicate is detected, installation will abort with a clear message and no changes will be applied.
-- Script location: /data/data/com.termux/files/home/projects/NovaAgent-Brandable/cowbase/skills/guard_duplicate_install.py
+- Script location: /data/data/com.termux/files/home/projects/NovaAgent-Brandable/novabase/skills/guard_duplicate_install.py
 - How to use:
-  - Run the guard with the target skill name, e.g. python3 /data/data/com.termux/files/home/projects/NovaAgent-Brandable/cowbase/skills/guard_duplicate_install.py --name <skill-name>
+  - Run the guard with the target skill name, e.g. python3 /data/data/com.termux/files/home/projects/NovaAgent-Brandable/novabase/skills/guard_duplicate_install.py --name <skill-name>
   - If output contains DUPLICATE, do not proceed with installation. If OK, proceed.
 - Logging: duplicate attempts should be logged in the project log as part of knowledge base for traceability.
 

@@ -699,7 +699,7 @@ function deleteMcpServer(name) {
 // ---------------------------------------------------------------------
 
 const SKILL_SOURCES = {
-    hub: { labelKey: 'skill_value_hub', placeholder: 'skill-name', hintKey: 'skill_hint_hub', link: 'https://skills.boss.slilelo.ai/' },
+    hub: { labelKey: 'skill_value_hub', placeholder: 'skill-name', hintKey: 'skill_hint_hub', link: 'https://skills.panupangrok.ai/' },
     github: { labelKey: 'skill_value_github', placeholder: 'https://github.com/owner/repo/tree/main/skills/my-skill', hintKey: 'skill_hint_github' },
     clawhub: { labelKey: 'skill_value_clawhub', placeholder: 'skill-name', hintKey: 'skill_hint_clawhub', link: 'https://clawhub.ai/skills' },
 };
@@ -1364,7 +1364,7 @@ let _skillReadSeq = 0;
 // Whether the file list is showing at all. Remembered across sessions: someone
 // who reads skills on a narrow window should not have to fold it away again on
 // every visit.
-const SKILL_FILES_PANEL_KEY = 'cow_skill_files_panel';
+const SKILL_FILES_PANEL_KEY = 'nova_skill_files_panel';
 let _skillFilesPanelOpen = localStorage.getItem(SKILL_FILES_PANEL_KEY) !== '0';
 
 /**
@@ -1425,7 +1425,7 @@ function yamlScalar(raw) {
  * as-is it turns into a giant bold heading and a horizontal rule. Pull it out
  * so the viewer can present name/description as a proper header instead.
  *
- * Frontmatter nests: `metadata.boss.slilelo.requires.anyEnv` is a list four levels
+ * Frontmatter nests: `metadata.PanupanGrok.requires.anyEnv` is a list four levels
  * down. Read line by line with no regard for indentation, each container key
  * showed up as an empty row and the list under it vanished. So this walks the
  * indentation instead: a nested map becomes one row per leaf, keyed by its
@@ -2025,4 +2025,3 @@ async function postSkillCreate(formData) {
     _wsToast(`${t('skill_new_created')}: ${data.name}`);
     loadSkillsSection([data.name]);
 }
-

@@ -5,7 +5,7 @@
 // =====================================================================
 // Theme
 // =====================================================================
-let currentTheme = localStorage.getItem('cow_theme') || 'dark';
+let currentTheme = localStorage.getItem('nova_theme') || 'dark';
 
 function applyTheme() {
     const root = document.documentElement;
@@ -39,7 +39,7 @@ function rerenderMermaidDiagrams() {
 
 function toggleTheme() {
     currentTheme = currentTheme === 'dark' ? 'light' : 'dark';
-    localStorage.setItem('cow_theme', currentTheme);
+    localStorage.setItem('nova_theme', currentTheme);
     applyTheme();
 }
 

@@ -12,4 +12,4 @@
 - Notes:
   - Follow the Frontend-Design principles in the knowledge base and aim for distinctive, not templated, visuals.
 - Links:
-  - Frontend-design skill guide: /data/data/com.termux/files/home/projects/NovaAgent-Brandable/cowbase/skills/frontend-design/SKILL.md
+  - Frontend-design skill guide: /data/data/com.termux/files/home/projects/NovaAgent-Brandable/novabase/skills/frontend-design/SKILL.md

@@ -1,4 +1,4 @@
-"""CowAgent CLI - Manage your CowAgent from the command line."""
+"""NovaAgent CLI - Manage your NovaAgent from the command line."""
 
 import os as _os
 

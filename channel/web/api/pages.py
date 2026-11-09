@@ -40,6 +40,24 @@ class HealthHandler:
         return json.dumps({"status": "ok"})
 
 
+# Languages the console frontend ships translations for. The backend i18n only
+# resolves zh / zh-Hant / en, so a configured `nova_lang` of "th" would otherwise
+# be reported as "en" and the UI would default to English even though the Thai
+# catalog exists. Read the raw config to hand the frontend its own language.
+_CONSOLE_LANGS = ("zh", "zh-Hant", "en", "th")
+
+
+def _console_default_lang():
+    try:
+        from config import conf
+        raw = str(conf().get("nova_lang") or "").strip()
+        if raw in _CONSOLE_LANGS:
+            return raw
+    except Exception:
+        pass
+    return i18n.get_language()
+
+
 class ChatHandler:
     def GET(self):
         # Content-Type must be explicit: behind a reverse proxy that sends
@@ -54,7 +72,7 @@ class ChatHandler:
         # scripts while unchanged ones stay cacheable.
         html = template.render('chat.html')
         # Inject the backend-resolved default language for first-load fallback.
-        html = html.replace("{{COW_DEFAULT_LANG}}", i18n.get_language())
+        html = html.replace("{{NOVA_DEFAULT_LANG}}", _console_default_lang())
         return html
 
 

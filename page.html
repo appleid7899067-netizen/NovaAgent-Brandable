@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>boss.slilelo Console</title>
+    <title>PanupanGrok</title>
     <link rel="icon" href="/assets/favicon.ico" type="image/x-icon">
     <!-- Vendored third-party assets (no external CDN dependency).
          See channel/web/static/vendor/README.md for sources & versions. -->
@@ -61,7 +61,7 @@
     <script>
     // Map an arbitrary locale string (zh-CN, en-US, fr ...) to 'zh' / 'zh-Hant' / 'en',
     // or '' when unrecognized so callers can fall through to the next source.
-    window.__cowNormalizeLang__ = function(raw) {
+    window.__novaNormalizeLang__ = function(raw) {
         if (!raw) return '';
         var v = String(raw).trim().toLowerCase().replace('_', '-');
         if (v === 'auto') return '';
@@ -74,28 +74,28 @@
     };
     // Resolve the console language by priority:
     //   user choice (localStorage) -> backend-detected -> browser -> 'zh'.
-    window.__cowResolveLang__ = function() {
-        return window.__cowNormalizeLang__(localStorage.getItem('cow_lang'))
-            || window.__cowNormalizeLang__(window.__COW_DEFAULT_LANG__)
-            || window.__cowNormalizeLang__(navigator.language || (navigator.languages && navigator.languages[0]))
+    window.__novaResolveLang__ = function() {
+        return window.__novaNormalizeLang__(localStorage.getItem('nova_lang'))
+            || window.__novaNormalizeLang__(window.__NOVA_DEFAULT_LANG__)
+            || window.__novaNormalizeLang__(navigator.language || (navigator.languages && navigator.languages[0]))
             || 'zh';
     };
     (function() {
-        // Backend-resolved default language (from cow_lang config / auto-detect).
-        window.__COW_DEFAULT_LANG__ = 'en';
-        var theme = localStorage.getItem('cow_theme') || 'dark';
+        // Backend-resolved default language (from nova_lang config / auto-detect).
+        window.__NOVA_DEFAULT_LANG__ = 'en';
+        var theme = localStorage.getItem('nova_theme') || 'dark';
         if (theme === 'dark') document.documentElement.classList.add('dark');
-        if (localStorage.getItem('cow_sidebar_collapsed') === '1') {
+        if (localStorage.getItem('nova_sidebar_collapsed') === '1') {
             document.documentElement.classList.add('sidebar-collapsed');
         }
         // A customised menu is drawn by menu.js; keep the built-in one in
         // sidebar.html from showing first. The timer is the way out should
         // that script never run.
-        if (localStorage.getItem('cow_menu_cache')) {
+        if (localStorage.getItem('nova_menu_cache')) {
             document.documentElement.classList.add('menu-pending');
             setTimeout(function () { document.documentElement.classList.remove('menu-pending'); }, 3000);
         }
-        document.documentElement.setAttribute('lang', window.__cowResolveLang__());
+        document.documentElement.setAttribute('lang', window.__novaResolveLang__());
     })();
     </script>
 <link rel="stylesheet" href="/assets/css/call.css?v=1a140b802fc">
@@ -106,8 +106,8 @@
     <div id="login-overlay" class="fixed inset-0 z-[200] bg-gray-50 dark:bg-[#111111] flex items-center justify-center hidden">
         <div class="w-full max-w-sm mx-4">
             <div class="flex flex-col items-center mb-8">
-                <img src="/assets/logo.svg?v=2" alt="boss.slilelo" class="w-16 h-16 rounded-2xl mb-4 shadow-lg">
-                <h1 class="text-xl font-bold text-slate-800 dark:text-slate-100">boss.slilelo</h1>
+                <img src="/assets/logo.svg?v=2" alt="PanupanGrok" class="w-16 h-16 rounded-2xl mb-4 shadow-lg">
+                <h1 class="text-xl font-bold text-slate-800 dark:text-slate-100">PanupanGrok</h1>
                 <p class="text-sm text-slate-500 dark:text-slate-400 mt-1" id="login-subtitle">กรุณาใส่รหัสผ่านเพื่อเข้าสู่ระบบ</p>
             </div>
             <form id="login-form" class="space-y-4" onsubmit="return false;">
@@ -149,11 +149,11 @@
                 <!-- The mark itself goes home, as it does everywhere else on the
                      web. Only the image: the name beside it is a heading. -->
                 <img id="sidebar-home" role="button" tabindex="0"
-                     src="/assets/logo.svg?v=2" alt="boss.slilelo"
+                     src="/assets/logo.svg?v=2" alt="PanupanGrok"
                      class="w-8 h-8 rounded-lg flex-shrink-0 cursor-pointer
                             hover:opacity-80 transition-opacity duration-150">
                 <div class="sidebar-brand-text flex flex-col min-w-0">
-                    <span class="text-white font-semibold text-sm truncate">boss.slilelo</span>
+                    <span class="text-white font-semibold text-sm truncate">PanupanGrok</span>
                     <span class="text-neutral-500 text-xs" data-i18n="console">控制台</span>
                 </div>
             </div>
@@ -287,7 +287,7 @@
         <script>
         (function () {
             try {
-                var groups = JSON.parse(localStorage.getItem('cow_sidebar_groups') || '{}');
+                var groups = JSON.parse(localStorage.getItem('nova_sidebar_groups') || '{}');
                 document.querySelectorAll('#sidebar .menu-group[data-group]').forEach(function (g) {
                     if (groups[g.getAttribute('data-group')] === false) g.classList.remove('open');
                 });
@@ -430,14 +430,14 @@
                 </button>
 
                 <!-- Docs Link -->
-                <a id="docs-link" href="https://docs.boss.slilelo.ai" target="_blank" rel="noopener noreferrer"
+                <a id="docs-link" href="https://docs.panupangrok.ai" target="_blank" rel="noopener noreferrer"
                    class="p-2 rounded-lg text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-white/10
                           cursor-pointer transition-colors duration-150" title="Documentation">
                     <i class="fas fa-book text-base"></i>
                 </a>
 
                 <!-- Website Link -->
-                <a href="https://boss.slilelo.ai" target="_blank" rel="noopener noreferrer"
+                <a href="https://panupangrok.ai" target="_blank" rel="noopener noreferrer"
                    class="p-2 rounded-lg text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-white/10
                           cursor-pointer transition-colors duration-150" title="Website">
                     <i class="fas fa-home text-base"></i>
@@ -471,8 +471,8 @@
                     <div id="chat-messages" class="flex-1 overflow-y-auto">
                         <!-- Welcome Screen -->
                         <div id="welcome-screen" class="flex flex-col items-center justify-center h-full px-6 pb-16" style="padding-top: 6vh">
-                            <img src="/assets/logo.svg?v=2" alt="boss.slilelo" class="w-16 h-16 rounded-2xl mb-6 shadow-lg shadow-primary-500/20">
-                            <h1 id="welcome-title" class="text-2xl font-bold text-slate-800 dark:text-slate-100 mb-3">boss.slilelo</h1>
+                            <img src="/assets/logo.svg?v=2" alt="PanupanGrok" class="w-16 h-16 rounded-2xl mb-6 shadow-lg shadow-primary-500/20">
+                            <h1 id="welcome-title" class="text-2xl font-bold text-slate-800 dark:text-slate-100 mb-3">PanupanGrok</h1>
                             <p id="welcome-subtitle" class="text-slate-500 dark:text-slate-400 text-center max-w-lg mb-10 leading-relaxed"
                                data-i18n-html="welcome_subtitle">ฉันสามารถช่วยตอบคำถาม จัดการคอมพิวเตอร์<br>สร้างและใช้ทักษะ พร้อมเรียนรู้จากความจำและฐานความรู้</p>
 
@@ -1243,7 +1243,7 @@
                                             <h3 class="font-semibold text-slate-800 dark:text-slate-100" data-i18n="config_api">对话 API</h3>
                                             <p class="text-xs text-slate-400 dark:text-slate-500 mt-0.5">
                                                 <span data-i18n="config_api_desc">通过 OpenAI 兼容接口调用 Agent</span>
-                                                <a id="cfg-api-docs" href="https://docs.boss.slilelo.ai/zh/extensions/chat-api" target="_blank" rel="noopener noreferrer"
+                                                <a id="cfg-api-docs" href="https://docs.panupangrok.ai/zh/extensions/chat-api" target="_blank" rel="noopener noreferrer"
                                                    class="ml-1 text-primary-500 hover:underline" data-i18n="config_api_docs">查看文档</a>
                                             </p>
                                         </div>
@@ -1432,7 +1432,7 @@
                                     <div class="flex items-center gap-2 mb-3">
                                         <span class="cap-section-title" data-i18n="skills_section_title">技能</span>
                                         <span id="skills-count-badge" class="cap-count hidden"></span>
-                                        <a href="https://skills.boss.slilelo.ai/" target="_blank" rel="noopener noreferrer" class="cap-link-btn ml-auto">
+                                        <a href="https://skills.panupangrok.ai/" target="_blank" rel="noopener noreferrer" class="cap-link-btn ml-auto">
                                             <i class="fas fa-compass text-[11px]"></i>
                                             <span data-i18n="skills_hub_btn">探索技能广场</span>
                                             <i class="fas fa-arrow-up-right-from-square text-[9px] opacity-60"></i>

@@ -358,7 +358,7 @@ class SchedulerTool(BaseTool):
             return "Error: trusted recipient directory is unavailable"
         recipients = self.recipient_store.list()
         if not recipients:
-            return "No trusted recipients yet. A recipient must contact boss.slilelo first."
+            return "No trusted recipients yet. A recipient must contact PanupanGrok first."
         lines = ["Trusted scheduler recipients:"]
         for item in recipients:
             kind = "group" if item["is_group"] else "user"

@@ -465,7 +465,7 @@ def _build_memory_section(
     if not memory_manager:
         return []
 
-    # In project mode, memory files must be addressed absolutely under ~/cow.
+    # In project mode, memory files must be addressed absolutely under ~/nova.
     p = _state_path_prefix(workspace_dir, project_dir)
     mem_md = f"{p}MEMORY.md"
     mem_dir = f"{p}memory"
@@ -618,7 +618,7 @@ def _build_knowledge_section(
     except Exception:
         return []
 
-    # Anchor knowledge paths to ~/cow when a project cwd is active, and to the
+    # Anchor knowledge paths to ~/nova when a project cwd is active, and to the
     # shared root when this Agent reads the shared copy.
     kb = _knowledge_base_path(workspace_dir, project_dir)
 
@@ -856,7 +856,7 @@ def _build_project_workspace_section(
     Two directories are in play and the model must not confuse them:
     - Project directory (the current working dir): relative paths and work
       products (documents, code, generated files, etc.) live here.
-    - System directory (``workspace_dir``, e.g. ``~/cow``): memory and skills
+    - System directory (``workspace_dir``, e.g. ``~/nova``): memory and skills
       live here and are reached with absolute paths, never relative ones.
     """
     if language == "en":

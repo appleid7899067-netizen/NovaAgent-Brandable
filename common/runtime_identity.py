@@ -47,7 +47,7 @@ class RuntimeIdentity:
 EMPTY_IDENTITY = RuntimeIdentity()
 
 _current: contextvars.ContextVar[RuntimeIdentity] = contextvars.ContextVar(
-    "cow_runtime_identity", default=EMPTY_IDENTITY
+    "nova_runtime_identity", default=EMPTY_IDENTITY
 )
 
 

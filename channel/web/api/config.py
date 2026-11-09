@@ -35,7 +35,7 @@ from models.reasoning_capabilities import provider_reasoning_metadata
 class ConfigHandler:
 
     EDITABLE_KEYS = {
-        "cow_lang",
+        "nova_lang",
         "model", "bot_type", "use_linkai",
         "open_ai_api_base", "deepseek_api_base", "qianfan_api_base", "claude_api_base", "gemini_api_base",
         "zhipu_ai_api_base", "moonshot_base_url", "ark_base_url", "custom_api_base", "mimo_api_base",
@@ -63,7 +63,7 @@ class ConfigHandler:
 
             local_config = conf()
             use_agent = local_config.get("agent", True)
-            title = "boss.slilelo" if use_agent else "AI Assistant"
+            title = "PanupanGrok" if use_agent else "AI Assistant"
 
             api_bases = {}
             api_keys_masked = {}
@@ -161,7 +161,7 @@ class ConfigHandler:
             # The desktop app runs on the local trusted machine, so it can edit
             # the real password in place (cursor at the end, delete to clear).
             # Browser access only ever sees the masked value.
-            if os.environ.get("COW_DESKTOP") == "1":
+            if os.environ.get("NOVA_DESKTOP") == "1":
                 result["web_password"] = raw_pwd
             return json.dumps(result, ensure_ascii=False)
         except Exception as e:
@@ -239,9 +239,9 @@ class ConfigHandler:
 
             # Apply a language change immediately so backend logs, agent
             # replies and CLI output switch without a restart.
-            if "cow_lang" in applied:
+            if "nova_lang" in applied:
                 try:
-                    i18n.resolve_language(applied["cow_lang"])
+                    i18n.resolve_language(applied["nova_lang"])
                     logger.info(f"[WebChannel] Language switched to: {i18n.get_language()}")
                 except Exception as lang_err:
                     logger.warning(f"[WebChannel] Failed to apply language: {lang_err}")
@@ -329,7 +329,7 @@ class ExternalApiHandler:
             local_config = conf()
             token = str(local_config.get("external_api_token", "") or "")
             if action == "regenerate" or (action == "enable" and not token):
-                token = "sk-cow-" + secrets.token_hex(24)
+                token = "sk-nova-" + secrets.token_hex(24)
             updates = {"external_api_token": token}
             if action != "regenerate":
                 updates["external_api_enabled"] = action == "enable"

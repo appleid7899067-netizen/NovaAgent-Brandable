@@ -2,7 +2,7 @@
 name: brand-manager
 description: Manage brand identity for NovaAgent. Use when user asks about brand name, colors, logos, or wants to switch branding.
 metadata:
-  cow:
+  nova:
     emoji: 🎨
     always: true
 ---

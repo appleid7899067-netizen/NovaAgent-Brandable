@@ -20,7 +20,7 @@ run.log
 nova.log
 gold_api.log
 logs/
-.cow.pid
+.nova.pid
 user_datas.pkl
 
 # ===== Backups & Temp =====

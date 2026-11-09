@@ -2631,7 +2631,7 @@ class ModelsHandler:
         self._write_file_config(file_cfg)
         logger.info(f"[ModelsHandler] embedding updated: provider={provider_id!r} model={model!r}")
         # The next /memory rebuild-index command hot-swaps the provider onto
-        # the running MemoryManager (see plugins/cow_cli). The dim may have
+        # the running MemoryManager (see plugins/nova_cli). The dim may have
         # changed, so the frontend prompts the user to rebuild.
         return json.dumps({"status": "success", "provider": provider_id, "model": model})
 

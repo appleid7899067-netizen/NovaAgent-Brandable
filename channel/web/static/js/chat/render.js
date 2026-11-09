@@ -526,7 +526,7 @@ function createBotMessageEl(content, timestamp, requestId, msg, peer) {
             </div>
             <div class="bot-message-meta flex items-center gap-2 mt-1.5 flex-wrap">
                 <span class="text-xs text-slate-400 dark:text-slate-500">${formatTime(timestamp)}</span>
-                <button class="copy-msg-btn text-xs text-slate-300 dark:text-slate-600 hover:text-slate-500 dark:hover:text-slate-400 transition-colors cursor-pointer" data-tip-float data-tooltip="${currentLang === 'zh' ? 'คัดลอก' : 'Copy'}">
+                <button class="copy-msg-btn text-xs text-slate-300 dark:text-slate-600 hover:text-slate-500 dark:hover:text-slate-400 transition-colors cursor-pointer" data-tip-float data-tooltip="${tln('复制','Copy','คัดลอก')}">
                     <i class="fas fa-copy"></i>
                 </button>
                 <button class="speak-msg-btn text-xs text-slate-300 dark:text-slate-600 hover:text-slate-500 dark:hover:text-slate-400 transition-colors cursor-pointer" data-tip-float data-tooltip="${t('speak_msg')}">

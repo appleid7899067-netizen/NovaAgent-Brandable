@@ -2,8 +2,8 @@
 # ============================================================
 # use-provider.sh — สลับผู้ให้บริการโมเดลของ NovaAgent
 # ------------------------------------------------------------
-# เขียนค่าลง "$COW_DATA_DIR/config.json" (ค่าเริ่มต้น = ./config.json)
-# โดย **ไม่แตะไฟล์ที่ track ใน git** ถ้าตั้ง COW_DATA_DIR ไว้ เช่น ~/.cow
+# เขียนค่าลง "$NOVA_DATA_DIR/config.json" (ค่าเริ่มต้น = ./config.json)
+# โดย **ไม่แตะไฟล์ที่ track ใน git** ถ้าตั้ง NOVA_DATA_DIR ไว้ เช่น ~/.nova
 #
 # ใช้งาน:
 #   TYPHOON_API_KEY=xxx bash scripts/use-provider.sh typhoon
@@ -16,7 +16,7 @@
 # ถ้าไม่ใส่ env var สคริปต์จะถามแบบซ่อนตัวอักษร (read -s)
 # ตัวเลือกเสริม:
 #   MODEL=<ชื่อโมเดล>          ระบุโมเดลเอง
-#   COW_DATA_DIR=~/.cow        เก็บ config (รวม key) นอก repo
+#   NOVA_DATA_DIR=~/.nova        เก็บ config (รวม key) นอก repo
 # ============================================================
 set -euo pipefail
 
@@ -32,8 +32,8 @@ die()  { echo -e "${RED}[provider]${NC} $*" >&2; exit 1; }
 PROVIDER="${1:-}"
 [ -n "$PROVIDER" ] || die "ระบุ provider: typhoon | gemini | groq | openrouter | deepseek | ollama"
 
-# ---------- config ที่จะเขียน (ไม่ทับไฟล์ใน git ถ้าตั้ง COW_DATA_DIR) ----------
-DATA_DIR="${COW_DATA_DIR:-$BASE_DIR}"
+# ---------- config ที่จะเขียน (ไม่ทับไฟล์ใน git ถ้าตั้ง NOVA_DATA_DIR) ----------
+DATA_DIR="${NOVA_DATA_DIR:-$BASE_DIR}"
 mkdir -p "$DATA_DIR"
 CFG="$DATA_DIR/config.json"
 if [ ! -f "$CFG" ]; then
@@ -214,10 +214,10 @@ echo
 info "เปิดใช้งาน:"
 if [ "$DATA_DIR" = "$BASE_DIR" ]; then
   warn "  config อยู่ใน repo (config.json) — ถ้าใส่ API key จริง แนะนำย้ายไปนอก repo:"
-  warn "  export COW_DATA_DIR=\"\$HOME/.cow\" แล้วรันสคริปต์นี้ซ้ำ"
+  warn "  export NOVA_DATA_DIR=\"\$HOME/.nova\" แล้วรันสคริปต์นี้ซ้ำ"
   echo "  ./.venv/bin/python app.py"
 else
-  echo "  COW_DATA_DIR=\"$DATA_DIR\" ./.venv/bin/python app.py"
+  echo "  NOVA_DATA_DIR=\"$DATA_DIR\" ./.venv/bin/python app.py"
 fi
 echo
 info "ตรวจว่าโมเดลตอบได้:"

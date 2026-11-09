@@ -2,7 +2,7 @@
 name: slot-game-simulator
 description: Simulate a simple 3-reel slot game for bankroll management testing and basic analytics.
 metadata:
-  cowagent:
+  novaagent:
     always: true
 ---
 

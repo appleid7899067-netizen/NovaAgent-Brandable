@@ -1,4 +1,4 @@
-"""CowAgent CLI entry point."""
+"""NovaAgent CLI entry point."""
 
 import click
 from cli import __version__
@@ -10,23 +10,23 @@ from cli.commands.knowledge import knowledge
 from cli.commands.backup import backup_command, restore_command
 
 
-HELP_TEXT = """Usage: cow COMMAND [ARGS]...
+HELP_TEXT = """Usage: nova COMMAND [ARGS]...
 
-  CowAgent CLI - Manage your CowAgent instance.
+  NovaAgent CLI - Manage your NovaAgent instance.
 
 Commands:
   help     Show this message.
   version  Show the version.
-  start    Start CowAgent.
-  stop     Stop CowAgent.
-  restart  Restart CowAgent.
-  update   Update CowAgent and restart.
-  status   Show CowAgent running status.
-  logs     View CowAgent logs.
-  skill    Manage CowAgent skills.
+  start    Start NovaAgent.
+  stop     Stop NovaAgent.
+  restart  Restart NovaAgent.
+  update   Update NovaAgent and restart.
+  status   Show NovaAgent running status.
+  logs     View NovaAgent logs.
+  skill    Manage NovaAgent skills.
   knowledge  Manage knowledge base.
   backup   Back up config and agent workspace.
-  restore  Restore a CowAgent backup.
+  restore  Restore a NovaAgent backup.
   install-browser  Install browser tool (Playwright + Chromium).
 
 Tip: Memory index management lives in chat — send /memory status or
@@ -49,7 +49,7 @@ class CowCLI(click.Group):
 @click.group(cls=CowCLI, invoke_without_command=True, context_settings=dict(help_option_names=[]))
 @click.pass_context
 def main(ctx):
-    """CowAgent CLI - Manage your CowAgent instance."""
+    """NovaAgent CLI - Manage your NovaAgent instance."""
     if ctx.invoked_subcommand is None:
         click.echo(HELP_TEXT.strip())
 
@@ -57,7 +57,7 @@ def main(ctx):
 @main.command()
 def version():
     """Show the version."""
-    click.echo(f"cow {__version__}")
+    click.echo(f"nova {__version__}")
 
 
 @main.command(name='help')

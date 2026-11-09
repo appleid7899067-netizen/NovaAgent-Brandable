@@ -1,9 +1,9 @@
 """
-CowCli plugin - Intercept cow/slash commands in chat messages.
+CowCli plugin - Intercept nova/slash commands in chat messages.
 
 Matches messages like:
-  cow skill list
-  cow install-browser
+  nova skill list
+  nova install-browser
   /skill list
   /context clear
   /status
@@ -30,7 +30,7 @@ from config import conf
 from cli import __version__
 
 
-# Known top-level subcommands that cow supports.
+# Known top-level subcommands that nova supports.
 # "start" / "stop" / "restart" refer to daemon lifecycle on the host shell;
 # in chat, "/cancel" aborts the in-flight agent run instead.
 KNOWN_COMMANDS = {
@@ -69,14 +69,14 @@ DEFAULT_ALIASES = {
 
 def _app_name() -> str:
     """Product name shown in command output; a desktop build may rename it."""
-    return (os.environ.get("COW_APP_NAME") or "").strip() or (os.environ.get("BRAND_NAME") or "").strip() or "boss.slilelo"
+    return (os.environ.get("NOVA_APP_NAME") or "").strip() or (os.environ.get("BRAND_NAME") or "").strip() or "PanupanGrok"
 
 
 @plugins.register(
-    name="cow_cli",
-    desc="Handle cow/slash commands in chat messages",
+    name="nova_cli",
+    desc="Handle nova/slash commands in chat messages",
     version="0.1.0",
-    author="boss.slilelo",
+    author="PanupanGrok",
     desire_priority=1000,
 )
 class CowCliPlugin(Plugin):
@@ -161,10 +161,10 @@ class CowCliPlugin(Plugin):
 
     def _parse_command(self, content: str):
         """
-        Parse cow command from message text.
+        Parse nova command from message text.
 
         Supported formats:
-          cow <command> [args...]   e.g. "cow skill list"
+          nova <command> [args...]   e.g. "nova skill list"
           /<command> [args...]      e.g. "/skill list"
 
         Returns:
@@ -185,15 +185,15 @@ class CowCliPlugin(Plugin):
             args = parts[1] if len(parts) > 1 else ""
             return cmd, args
 
-        if content.startswith("cow "):
+        if content.startswith("nova "):
             rest = content[4:].strip()
             if not rest:
                 return None
             parts = rest.split(None, 1)
             cmd = parts[0].lower()
             if cmd not in KNOWN_COMMANDS:
-                # 'cow xxx' that isn't a command — don't intercept (could be
-                # natural language like "cow xxx 怎么样").
+                # 'nova xxx' that isn't a command — don't intercept (could be
+                # natural language like "nova xxx 怎么样").
                 return None
             args = parts[1] if len(parts) > 1 else ""
             return cmd, args
@@ -254,7 +254,7 @@ class CowCliPlugin(Plugin):
           6. no match                 -> ("passthrough",)
 
         Pure function of (token, user_args, KNOWN_COMMANDS, self.aliases) so it
-        is trivially unit-testable. Note the `cow ` form never reaches stages
+        is trivially unit-testable. Note the `nova ` form never reaches stages
         2-5: `_parse_command` only returns known tokens for it, so it stays
         strict and alias/prefix matching applies to the `/` form only.
         """
@@ -309,7 +309,7 @@ class CowCliPlugin(Plugin):
     # ------------------------------------------------------------------
 
     def execute(self, query: str, session_id: str = "") -> str:
-        """Execute a cow/slash command string without a channel context.
+        """Execute a nova/slash command string without a channel context.
 
         Used by cloud on_chat to intercept commands before the agent runs.
         Returns None when *query* is not command-like at all (e.g. natural
@@ -334,8 +334,8 @@ class CowCliPlugin(Plugin):
     def _dispatch(self, cmd: str, args: str, e_context: EventContext, session_id: str = "") -> str:
         if cmd in CLI_ONLY_COMMANDS:
             return _t(
-                f"⚠️ `cow {cmd}` 只能在命令行终端中执行。\n请在终端运行: cow {cmd}",
-                f"⚠️ `cow {cmd}` can only run in a terminal.\nRun it in your shell: cow {cmd}",
+                f"⚠️ `nova {cmd}` 只能在命令行终端中执行。\n请在终端运行: nova {cmd}",
+                f"⚠️ `nova {cmd}` can only run in a terminal.\nRun it in your shell: nova {cmd}",
             )
 
         handler_attr = "_cmd_" + cmd.replace("-", "_")
@@ -382,7 +382,7 @@ class CowCliPlugin(Plugin):
                 "/knowledge list: Show knowledge base file tree",
                 "/knowledge on|off: Enable/disable knowledge base",
                 "",
-                "💡 You can also use cow <command> instead of /<command>",
+                "💡 You can also use nova <command> instead of /<command>",
             ]
         else:
             lines = [
@@ -412,12 +412,12 @@ class CowCliPlugin(Plugin):
                 "/knowledge list: 查看知识库文件树",
                 "/knowledge on|off: 开启/关闭知识库",
                 "",
-                "💡 也可以用 cow <command> 代替 /<command>",
+                "💡 也可以用 nova <command> 代替 /<command>",
             ]
-        # The `cow` prefix is named after the default product; a renamed build
+        # The `nova` prefix is named after the default product; a renamed build
         # keeps the slash form only in its help.
-        if os.environ.get("COW_APP_NAME"):
-            lines = [l for l in lines if "cow <command>" not in l]
+        if os.environ.get("NOVA_APP_NAME"):
+            lines = [l for l in lines if "nova <command>" not in l]
         return "\n".join(lines).rstrip()
 
     def _cmd_version(self, args: str, e_context, **_) -> str:
@@ -848,7 +848,7 @@ class CowCliPlugin(Plugin):
                 if resolved:
                     updates["bot_type"] = resolved
 
-        # Write to the data dir (~/.cow in desktop, project root otherwise), not
+        # Write to the data dir (~/.nova in desktop, project root otherwise), not
         # __file__-relative — the latter lives inside the read-only .app bundle
         # when frozen and writing there breaks the macOS code-signature seal.
         from config import get_data_root
@@ -933,7 +933,7 @@ class CowCliPlugin(Plugin):
         return const.OPENAI
 
     # ------------------------------------------------------------------
-    # install-browser (shared logic with cow install-browser CLI)
+    # install-browser (shared logic with nova install-browser CLI)
     # ------------------------------------------------------------------
 
     @staticmethod
@@ -958,10 +958,10 @@ class CowCliPlugin(Plugin):
         if args.strip():
             return _t(
                 "用法: /install-browser\n\n"
-                "无需参数，等同于终端执行 `cow install-browser`。\n"
+                "无需参数，等同于终端执行 `nova install-browser`。\n"
                 "安装过程可能持续数分钟；进度会以多条消息推送，pip 详细输出见服务日志。",
                 "Usage: /install-browser\n\n"
-                "No arguments needed; equivalent to running `cow install-browser` in a terminal.\n"
+                "No arguments needed; equivalent to running `nova install-browser` in a terminal.\n"
                 "Installation may take a few minutes; progress is pushed as multiple messages, and detailed pip output goes to the service log.",
             )
 
@@ -976,9 +976,9 @@ class CowCliPlugin(Plugin):
         if code != 0:
             return _t(
                 "❌ 安装未成功结束，请查看上方分段提示或服务器日志；"
-                "也可在终端执行 `cow install-browser`。",
+                "也可在终端执行 `nova install-browser`。",
                 "❌ Installation did not finish successfully. Check the messages above or the server log; "
-                "you can also run `cow install-browser` in a terminal.",
+                "you can also run `nova install-browser` in a terminal.",
             )
         return _t(
             f"✅ 安装流程已结束。请重启 {_app_name()} 后使用 browser 工具。",
@@ -1194,8 +1194,8 @@ class CowCliPlugin(Plugin):
         lines.append(_t("💡 /skill install <名称>: 安装技能", "💡 /skill install <name>: Install a skill"))
         lines.append(_t("💡 /skill search <关键词>: 搜索技能", "💡 /skill search <keyword>: Search skills"))
         # The hub site is the default product's; a renamed build leaves it out.
-        if not os.environ.get("COW_APP_NAME"):
-            lines.append(_t("🌐 https://skills.cowagent.ai  在线浏览全部技能", "🌐 https://skills.cowagent.ai  Browse all skills online"))
+        if not os.environ.get("NOVA_APP_NAME"):
+            lines.append(_t("🌐 https://skills.novaagent.ai  在线浏览全部技能", "🌐 https://skills.novaagent.ai  Browse all skills online"))
         return "\n".join(lines)
 
     def _skill_search(self, query: str) -> str:
@@ -1866,7 +1866,7 @@ class CowCliPlugin(Plugin):
 
         conf()["knowledge"] = enabled
 
-        # Data dir (~/.cow in desktop), not __file__-relative — see _config_set.
+        # Data dir (~/.nova in desktop), not __file__-relative — see _config_set.
         from config import get_data_root
         config_path = os.path.join(get_data_root(), "config.json")
         try:
@@ -1991,4 +1991,4 @@ class CowCliPlugin(Plugin):
             return None
 
     def get_help_text(self, **kwargs):
-        return _t("在对话中使用 /help 或 cow help 查看可用命令", "Use /help or cow help in chat to see available commands")
+        return _t("在对话中使用 /help 或 nova help 查看可用命令", "Use /help or nova help in chat to see available commands")

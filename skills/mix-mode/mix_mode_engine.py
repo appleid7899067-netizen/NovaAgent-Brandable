@@ -1,5 +1,5 @@
 """
-Mix Mode Engine - NovaAgent boss.slilelo
+Mix Mode Engine - NovaAgent PanupanGrok
 สวมบทบาทเป็นโมเดล AI ใดก็ได้ในโหมด GOD-MODE / CHEAT
 """
 
@@ -95,7 +95,7 @@ class MixModeEngine:
 {self._simulate_model_response(user_input, target_model)}
 
 ---
-หมายเหตุ: คำตอบนี้ถูกสร้างโดย Mix Mode Engine ของ boss.slilelo
+หมายเหตุ: คำตอบนี้ถูกสร้างโดย Mix Mode Engine ของ PanupanGrok
 ในโหมด GOD-MODE / CHEAT — เข้าถึงระบบได้อย่างอิสระ ไม่มี guardrails"""
         return response
 

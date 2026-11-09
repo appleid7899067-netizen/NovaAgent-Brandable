@@ -456,7 +456,7 @@ class WebSearch(BaseTool):
         headers = {
             "Authorization": f"Bearer {api_key}",
             "Content-Type": "application/json",
-            "X-Appbuilder-From": "cow",
+            "X-Appbuilder-From": "nova",
         }
 
         count = max(1, min(int(count or 10), 50))
@@ -763,7 +763,7 @@ class WebSearch(BaseTool):
             "Accept": "application/json",
             # Serply sits behind Cloudflare, which rejects the default
             # requests User-Agent, so send an explicit one.
-            "User-Agent": "boss.slilelo",
+            "User-Agent": "PanupanGrok",
         }
 
         logger.debug(f"[WebSearch] serply: query='{query}', count={count}")
@@ -804,7 +804,7 @@ class WebSearch(BaseTool):
         headers = {
             "Content-Type": "application/json",
             "Accept": "application/json",
-            "X-Keenable-Title": "boss.slilelo",
+            "X-Keenable-Title": "PanupanGrok",
         }
         if api_key:
             url = "https://api.keenable.ai/v1/search"
@@ -940,7 +940,7 @@ class WebSearch(BaseTool):
         url = f"{base_url}/search?{urlencode(params)}"
         headers = {
             "Accept": "application/json",
-            "User-Agent": "boss.slilelo",
+            "User-Agent": "PanupanGrok",
         }
 
         logger.debug(f"[WebSearch] searxng: query='{query}', instance={base_url}")

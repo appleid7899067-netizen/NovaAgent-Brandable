@@ -31,6 +31,10 @@
                                             class="config-tab px-4 py-1.5 rounded-md text-xs font-medium cursor-pointer transition-colors duration-150">
                                         <i class="fas fa-microchip mr-1.5"></i><span data-i18n="settings_tab_models">模型配置</span>
                                     </button>
+                                    <button id="config-tab-opencode" onclick="switchConfigTab('opencode')"
+                                            class="config-tab px-4 py-1.5 rounded-md text-xs font-medium cursor-pointer transition-colors duration-150">
+                                        <i class="fas fa-terminal mr-1.5"></i>OpenCode
+                                    </button>
                                 </div>
                             </div>
 
@@ -279,7 +283,7 @@
                                             <h3 class="font-semibold text-slate-800 dark:text-slate-100" data-i18n="config_api">对话 API</h3>
                                             <p class="text-xs text-slate-400 dark:text-slate-500 mt-0.5">
                                                 <span data-i18n="config_api_desc">通过 OpenAI 兼容接口调用 Agent</span>
-                                                <a id="cfg-api-docs" href="https://docs.boss.slilelo.ai/zh/extensions/chat-api" target="_blank" rel="noopener noreferrer"
+                                                <a id="cfg-api-docs" href="https://docs.panupangrok.ai/zh/extensions/chat-api" target="_blank" rel="noopener noreferrer"
                                                    class="ml-1 text-primary-500 hover:underline" data-i18n="config_api_docs">查看文档</a>
                                             </p>
                                         </div>
@@ -408,6 +412,35 @@
                                     <i class="fas fa-spinner fa-spin text-xs"></i><span>Loading...</span>
                                 </div>
                                 <div id="models-content" class="grid gap-6 hidden"></div>
+                            </div>
+
+                            <div id="config-panel-opencode" class="hidden">
+                                <div class="oc-registry-head">
+                                    <div>
+                                        <h3><i class="fas fa-terminal"></i> OpenCode registry</h3>
+                                        <p>โมเดล Skills และ MCP ที่ OpenCode โหลดได้จริง</p>
+                                    </div>
+                                    <div class="oc-registry-meta"><span id="oc-version">—</span><span id="oc-model-count">0 models</span></div>
+                                </div>
+                                <div class="oc-subtabs">
+                                    <button class="oc-subtab active" data-oc-tab="models">Models</button>
+                                    <button class="oc-subtab" data-oc-tab="functions">Functions</button>
+                                </div>
+                                <div id="oc-panel-models">
+                                    <div class="oc-model-toolbar">
+                                        <input id="oc-model-search" type="search" placeholder="ค้นหาโมเดล เช่น gpt, claude, puter...">
+                                        <select id="oc-provider-filter"><option value="">ทุก provider</option></select>
+                                    </div>
+                                    <div id="oc-model-list" class="oc-model-list"><span class="oc-loading">กำลังโหลดรายการโมเดล…</span></div>
+                                </div>
+                                <div id="oc-panel-functions" class="hidden">
+                                    <div class="oc-function-grid">
+                                        <div class="oc-function-card"><i class="fas fa-terminal"></i><div><strong>Tools</strong><span id="oc-tools-summary">กำลังโหลด…</span></div></div>
+                                        <div class="oc-function-card"><i class="fas fa-wrench"></i><div><strong>Skills</strong><span id="oc-skills-summary">กำลังโหลด…</span></div></div>
+                                        <div class="oc-function-card"><i class="fas fa-plug"></i><div><strong>MCP</strong><span id="oc-mcp-summary">กำลังโหลด…</span></div></div>
+                                    </div>
+                                    <div id="oc-function-list" class="oc-function-list"></div>
+                                </div>
                             </div>
 
                         </div>

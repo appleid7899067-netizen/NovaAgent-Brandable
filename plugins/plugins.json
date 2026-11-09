@@ -1,6 +1,6 @@
 {
     "plugins": {
-        "cow_cli": {
+        "nova_cli": {
             "enabled": true,
             "priority": 1000
         },

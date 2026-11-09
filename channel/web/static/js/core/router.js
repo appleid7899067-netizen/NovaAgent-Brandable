@@ -31,6 +31,8 @@ const ROUTE_PATHS = {
     channels:  'channels',
     tasks:     'scheduler',
     logs:      'logs',
+    opencode:  'opencode',
+    puterxboss:'puterxboss',
 };
 
 // An artifact or link the user put in the menu is at /m/<item id>, served by

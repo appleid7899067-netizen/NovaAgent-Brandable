@@ -416,7 +416,7 @@ class ProjectManageHandler:
     """Rename (PUT) or delete (DELETE) a project record.
 
     Neither touches the folder on disk: a rename only sets a display name, and a
-    delete only forgets the boss.slilelo record and unbinds any sessions (they revert
+    delete only forgets the PanupanGrok record and unbinds any sessions (they revert
     to the default workspace). The files stay exactly where they are.
     """
 

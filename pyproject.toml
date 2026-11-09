@@ -3,9 +3,9 @@ requires = ["setuptools>=45.0"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "cowagent"
+name = "novaagent"
 version = "1.0.0"
-description = "CowAgent - AI Agent on WeChat and more"
+description = "NovaAgent - AI Agent on WeChat and more"
 # The codebase uses 3.10+ syntax (match statements, PEP 604 `X | Y` unions)
 # and the Docker image is built on python:3.10-slim, so 3.10 is the real floor.
 requires-python = ">=3.10"
@@ -15,7 +15,7 @@ dependencies = [
 ]
 
 [project.scripts]
-cow = "cli.cli:main"
+nova = "cli.cli:main"
 
 [tool.setuptools.packages.find]
 include = ["cli*"]
@@ -62,7 +62,7 @@ extend-immutable-calls = ["fastapi.Depends", "fastapi.Query", "fastapi.Path", "f
 "voice/xunfei/xunfei_voice.py" = ["F401"]
 # __init__.py re-exports the package's public API on purpose.
 "agent/tools/vision/__init__.py" = ["F401"]
-"plugins/cow_cli/__init__.py" = ["F401"]
+"plugins/nova_cli/__init__.py" = ["F401"]
 
 [tool.pytest.ini_options]
 # Only the curated unit tests run in CI. The repo also ships ad-hoc scripts

@@ -1,4 +1,4 @@
-"""Portable local backup and restore commands for CowAgent user data."""
+"""Portable local backup and restore commands for NovaAgent user data."""
 
 import errno
 import json
@@ -31,10 +31,10 @@ def _team():
     return team
 
 
-BACKUP_FORMAT = "cowagent-backup"
+BACKUP_FORMAT = "novaagent-backup"
 # v2 only describes the multi-Agent layout. A single-workspace archive is
 # structurally identical to what v1 produced, so it keeps declaring v1 and
-# stays restorable by older CowAgent versions.
+# stays restorable by older NovaAgent versions.
 BACKUP_VERSION = 2
 _SINGLE_WORKSPACE_VERSION = 1
 _SUPPORTED_BACKUP_VERSIONS = {_SINGLE_WORKSPACE_VERSION, BACKUP_VERSION}
@@ -44,7 +44,7 @@ _SKIP_FILES = {".DS_Store"}
 
 
 def _data_root() -> Path:
-    configured = os.environ.get("COW_DATA_DIR")
+    configured = os.environ.get("NOVA_DATA_DIR")
     return Path(configured).expanduser().resolve() if configured else Path(get_project_root()).resolve()
 
 
@@ -61,7 +61,7 @@ def _read_config(data_root: Path) -> dict:
 
 
 def _workspace_from_config(config: dict) -> Path:
-    return Path(config.get("agent_workspace") or "~/cow").expanduser().resolve()
+    return Path(config.get("agent_workspace") or "~/nova").expanduser().resolve()
 
 
 def _configured_workspaces(config: dict, fallback: Path):
@@ -209,7 +209,7 @@ def create_backup_archive(
     }
 
     # os.replace requires the staging archive and output to share a filesystem.
-    temp_dir = Path(tempfile.mkdtemp(prefix="cowagent-backup-", dir=str(output.parent)))
+    temp_dir = Path(tempfile.mkdtemp(prefix="novaagent-backup-", dir=str(output.parent)))
     temp_archive = temp_dir / "backup.zip"
     try:
         with zipfile.ZipFile(
@@ -271,7 +271,7 @@ def _validate_archive(archive: zipfile.ZipFile) -> dict:
         manifest.get("format") != BACKUP_FORMAT
         or version not in _SUPPORTED_BACKUP_VERSIONS
     ):
-        raise ValueError("unsupported CowAgent backup format or version")
+        raise ValueError("unsupported NovaAgent backup format or version")
 
     # The user dimension is declared but not yet produced. Checked at any
     # version, because the slot travels on single-workspace archives too.
@@ -283,7 +283,7 @@ def _validate_archive(archive: zipfile.ZipFile) -> dict:
         raise ValueError("archive manifest has an invalid users list")
     if users:
         raise ValueError(
-            "archive contains user-scoped workspaces, which this CowAgent "
+            "archive contains user-scoped workspaces, which this NovaAgent "
             "version cannot restore; upgrade before restoring"
         )
 
@@ -426,7 +426,7 @@ def restore_backup_archive(
         # archive implies and its real workspace is left behind.
         current_config = _team().resolve(current_config)
 
-    temp_dir = Path(tempfile.mkdtemp(prefix="cowagent-restore-"))
+    temp_dir = Path(tempfile.mkdtemp(prefix="novaagent-restore-"))
     try:
         with zipfile.ZipFile(str(archive_path), "r") as archive:
             manifest = _validate_archive(archive)
@@ -475,9 +475,9 @@ def restore_backup_archive(
                 target_workspace = _workspace_from_config(current_config)
             else:
                 # Do not trust an archive-controlled absolute destination on a
-                # fresh machine. Portable restores default to ~/cow unless the
+                # fresh machine. Portable restores default to ~/nova unless the
                 # operator supplies --workspace.
-                target_workspace = Path("~/cow").expanduser().resolve()
+                target_workspace = Path("~/nova").expanduser().resolve()
             if restored_config:
                 restored_config["agent_workspace"] = str(target_workspace)
 
@@ -575,7 +575,7 @@ def restore_backup_archive(
     "--output",
     "-o",
     type=click.Path(dir_okay=False, path_type=Path),
-    help="Output .zip path (default: ./cow-backup-<timestamp>.zip).",
+    help="Output .zip path (default: ./nova-backup-<timestamp>.zip).",
 )
 def backup_command(output: Optional[Path]):
     """Back up config, persona, memory, skills, knowledge, and schedules."""
@@ -584,7 +584,7 @@ def backup_command(output: Optional[Path]):
     workspace = _workspace_from_config(config)
     if output is None:
         stamp = datetime.now().strftime("%Y%m%d-%H%M%S")
-        output = Path.cwd() / f"cow-backup-{stamp}.zip"
+        output = Path.cwd() / f"nova-backup-{stamp}.zip"
     result = create_backup_archive(output, data_root, workspace)
     click.echo(click.style("✓ Backup created", fg="green"))
     click.echo(f"  Archive: {result['archive']}")
@@ -608,7 +608,7 @@ def restore_command(archive: Path, workspace: Optional[Path], yes: bool):
     pid = _read_pid()
     if pid:
         raise click.ClickException(
-            f"CowAgent is running (PID: {pid}). Run 'cow stop' before restoring."
+            f"NovaAgent is running (PID: {pid}). Run 'nova stop' before restoring."
         )
     if not yes:
         click.confirm(
@@ -622,7 +622,7 @@ def restore_command(archive: Path, workspace: Optional[Path], yes: bool):
     has_current_data = (data_root / "config.json").is_file() or current_workspace.is_dir()
     if has_current_data:
         stamp = datetime.now().strftime("%Y%m%d-%H%M%S")
-        rollback = archive.resolve().parent / f"cow-pre-restore-{stamp}.zip"
+        rollback = archive.resolve().parent / f"nova-pre-restore-{stamp}.zip"
         create_backup_archive(
             rollback,
             data_root,

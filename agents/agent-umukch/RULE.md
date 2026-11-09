@@ -5,7 +5,7 @@ This folder is your home. Treat it well.
 ## Workspace directory structure
 
 ```
-~/cow/
+~/nova/
 ├── AGENT.md          # Your identity and soul
 ├── USER.md           # User basics (static)
 ├── RULE.md           # Workspace rules (this file)

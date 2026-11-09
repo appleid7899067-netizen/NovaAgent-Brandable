@@ -385,7 +385,7 @@ function onFallbackChainProviderChange(i, providerId) {
     const models = _fallbackModelOptions(providerId);
     const opts = models.concat([{
         value: '__custom__',
-        label: currentLang === 'zh' ? '自定义' : 'Custom',
+        label: tln('自定义', 'Custom', 'กำหนดเอง'),
     }]);
     if (modelDd) {
         initDropdown(modelDd, opts, models.length ? models[0].value : '', (value) => {
@@ -480,7 +480,7 @@ function renderFallbackChainEditor() {
         if (modelDd) {
             initDropdown(modelDd, models.concat([{
                 value: '__custom__',
-                label: currentLang === 'zh' ? '自定义' : 'Custom',
+                label: tln('自定义', 'Custom', 'กำหนดเอง'),
             }]), inCatalog ? link.model : (link.model ? '__custom__' : ''), (value) => {
                 if (!customWrap) return;
                 if (value === '__custom__') customWrap.classList.remove('hidden');
@@ -917,9 +917,9 @@ function openSearchKeyModal(providerId, providerMeta) {
         : '';
     let descText = t('models_search_' + providerId + '_desc');
     if (providerId === 'anysearch') {
-        const hint = currentLang === 'zh'
-            ? '（留空可启用匿名模式，每日有免费额度）'
-            : '(Leave blank to enable anonymous mode with daily free quota)';
+        const hint = tln('（留空可启用匿名模式，每日有免费额度）',
+                '(Leave blank to enable anonymous mode with daily free quota)',
+                '(เว้นว่างเพื่อเปิดโหมดไม่ระบุตัวตน มีโควตาฟรีรายวัน)');
         descText = descText + ' ' + hint;
     }
     const modal = document.createElement('div');
@@ -1588,10 +1588,10 @@ function rebuildCapabilityModelDropdown(def, providerId, selectedModel, scope) {
         // (e.g. LinkAI ASR). It has no model id, so fall back to its hint as
         // the label; otherwise the row and trigger would render blank. The
         // hint is then only kept as a secondary label for real model ids.
-        const label = entry.label || entry.value || entry.hint || (currentLang === 'zh' ? '默认' : 'Default');
+        const label = entry.label || entry.value || entry.hint || (tln('默认', 'Default', 'ค่าเริ่มต้น'));
         return { value: entry.value, label: label, hint: entry.value ? (entry.hint || '') : '' };
     });
-    opts.push({ value: '__custom__', label: currentLang === 'zh' ? '自定义' : 'Custom' });
+    opts.push({ value: '__custom__', label: tln('自定义', 'Custom', 'กำหนดเอง') });
 
     let initialValue = selectedModel || '';
     if (initialValue && !modelValues.includes(initialValue)) {
@@ -1674,7 +1674,7 @@ function rebuildCapabilityVoiceDropdown(providerId, selectedVoice, scope, modelI
             hint: desc === code ? '' : code,
         };
     });
-    opts.push({ value: '__custom__', label: currentLang === 'zh' ? '自定义' : 'Custom' });
+    opts.push({ value: '__custom__', label: tln('自定义', 'Custom', 'กำหนดเอง') });
 
     // Off-catalog values route through the custom branch.
     let initial = selectedVoice || '';

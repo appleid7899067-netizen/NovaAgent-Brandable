@@ -106,11 +106,18 @@ class StepWriter:
             self._mark(message)
 
     def _with_run_usage(self, messages: List[Dict]) -> List[Dict]:
-        """Stamp the run's usage on a closing answer, on a copy of it."""
+        """Stamp the run's usage and provenance on a closing answer, on a copy of it."""
         usage = getattr(self._executor, "run_usage", None)
+        provenance = getattr(self._executor, "run_provenance", None)
         last = messages[-1]
-        if usage and last.get("role") == "assistant" and not _has_tool_use(last):
-            messages[-1] = {**last, "extras": {**(last.get("extras") or {}), "usage": dict(usage)}}
+        if last.get("role") == "assistant" and not _has_tool_use(last):
+            extras = dict(last.get("extras") or {})
+            if usage:
+                extras["usage"] = dict(usage)
+            if provenance:
+                extras["provenance"] = dict(provenance)
+            if extras:
+                messages[-1] = {**last, "extras": extras}
         return messages
 
     def _mark(self, message: Dict) -> None:

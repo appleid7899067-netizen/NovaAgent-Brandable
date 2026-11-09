@@ -9,8 +9,8 @@ Features:
 
 Implementation note:
     slack_bolt's SocketModeHandler is blocking and runs its own background
-    threads. We start it in a dedicated thread so the rest of cow (sync) stays
-    untouched. Inbound events are dispatched onto cow's existing sync
+    threads. We start it in a dedicated thread so the rest of nova (sync) stays
+    untouched. Inbound events are dispatched onto nova's existing sync
     ChatChannel.produce() pipeline; outbound send() calls the Slack Web API
     client directly (it is sync-safe).
 """
@@ -433,7 +433,7 @@ class SlackChannel(ChatChannel):
     # ------------------------------------------------------------------
 
     def send(self, reply: Reply, context: Context):
-        """Called from cow's sync main thread; Slack Web client is sync-safe."""
+        """Called from nova's sync main thread; Slack Web client is sync-safe."""
         if self._client is None:
             logger.warning("[Slack] client not ready, drop reply")
             return

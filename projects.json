@@ -5,7 +5,7 @@
       "ts": 1792233092.1433358
     },
     "agent-umukch::session_234d2e93-4154-4680-99f1-4702d415952d": {
-      "path": "/data/data/com.termux/files/home/projects/NovaAgent-Brandable/cowbase/projects/Panupan01",
+      "path": "/data/data/com.termux/files/home/projects/NovaAgent-Brandable/novabase/projects/Panupan01",
       "ts": 1792176105.6277227
     }
   },
@@ -16,7 +16,7 @@
       "ts": 1792233092.1433644
     },
     {
-      "path": "/data/data/com.termux/files/home/projects/NovaAgent-Brandable/cowbase/projects/Panupan01",
+      "path": "/data/data/com.termux/files/home/projects/NovaAgent-Brandable/novabase/projects/Panupan01",
       "name": "Panupan01",
       "ts": 1792200860.968881
     },
@@ -26,14 +26,14 @@
       "ts": 1792173571.9281545
     },
     {
-      "path": "/data/data/com.termux/files/home/cow.old.20261016-0449",
-      "name": "cow.old.20261016-0449",
+      "path": "/data/data/com.termux/files/home/nova.old.20261016-0449",
+      "name": "nova.old.20261016-0449",
       "ts": 1792167403.7543085
     }
   ],
   "meta": {
-    "/data/data/com.termux/files/home/cow.old.20261016-0449": {
-      "display_name": "cow.old.20261016-0449"
+    "/data/data/com.termux/files/home/nova.old.20261016-0449": {
+      "display_name": "nova.old.20261016-0449"
     }
   },
   "order": []

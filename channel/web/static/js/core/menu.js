@@ -19,13 +19,14 @@ const MENU_BUILTINS = {
     knowledge: { icon: 'fa-book',             label: 'menu_knowledge' },
     channels:  { icon: 'fa-tower-broadcast',  label: 'menu_channels' },
     tasks:     { icon: 'fa-clock',            label: 'menu_tasks' },
+    opencode:  { icon: 'fa-code',             label: 'menu_opencode' },
     logs:      { icon: 'fa-terminal',         label: 'menu_logs' },
 };
 
 // The built-in menu, as sidebar.html draws it before any script runs.
 const MENU_DEFAULT = [
     { id: 'chat',    views: ['chat', 'artifacts'] },
-    { id: 'manage',  views: ['agents', 'config', 'skills', 'memory', 'knowledge', 'channels', 'tasks'] },
+    { id: 'manage',  views: ['agents', 'config', 'skills', 'memory', 'knowledge', 'channels', 'tasks', 'opencode'] },
     { id: 'monitor', views: ['logs'] },
 ];
 // Built-in pages that start hidden, so only the menu editor offers them.
@@ -49,7 +50,7 @@ const MENU_ICONS = {
     robot: 'fa-robot', pen: 'fa-pen', search: 'fa-magnifying-glass',
 };
 
-const MENU_CACHE_KEY = 'cow_menu_cache';
+const MENU_CACHE_KEY = 'nova_menu_cache';
 
 let menuSaved = null;
 let menuDoc = menuMerge(null);

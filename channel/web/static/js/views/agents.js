@@ -8,7 +8,7 @@
 let agentCatalog = [];
 let channelInstances = [];
 let rosterRevision = '';
-let defaultAgentId = localStorage.getItem('cow_default_agent') || 'default';
+let defaultAgentId = localStorage.getItem('nova_default_agent') || 'default';
 let selectedAdminAgentId = '';
 let selectedCoreRevision = '';
 let installedSkills = [];
@@ -69,7 +69,7 @@ function agentAvatarHTML(agent, size) {
         return `<img class="${cls}" src="/api/agents/${encodeURIComponent(agent.id)}/avatar?v=${encodeURIComponent(v)}" alt="">`;
     }
     // The default (first) Agent falls back to the product logo when it has no
-    // uploaded picture, so the instance's own Agent wears the boss.slilelo face.
+    // uploaded picture, so the instance's own Agent wears the PanupanGrok face.
     // Added Agents keep the initial-disc fallback so a team stays distinguishable.
     if (agent && agent.id && agent.id === defaultAgentId) {
         return `<img class="${cls}" src="/assets/logo.jpg" alt="">`;
@@ -114,14 +114,14 @@ function loadAgentCatalog() {
             channelInstances = data.channel_instances || [];
             rosterRevision = data.revision || '';
             defaultAgentId = data.default_agent_id || (agentCatalog[0] && agentCatalog[0].id) || 'default';
-            localStorage.setItem('cow_default_agent', defaultAgentId);
+            localStorage.setItem('nova_default_agent', defaultAgentId);
             // The default Agent leads every list it appears in — menus, the grid,
             // the memory picker — so its position never depends on load order.
             agentCatalog.sort((a, b) => (b.id === defaultAgentId) - (a.id === defaultAgentId));
             const enabled = enabledAgents();
             if (!enabled.some(a => a.id === activeAgentId)) {
                 activeAgentId = defaultAgentId;
-                localStorage.setItem('cow_active_agent', activeAgentId);
+                localStorage.setItem('nova_active_agent', activeAgentId);
             }
             if (!selectedAdminAgentId || !agentCatalog.some(a => a.id === selectedAdminAgentId)) {
                 selectedAdminAgentId = '';
@@ -868,7 +868,7 @@ function _performAgentDelete(agentId, _retried) {
         // A conversation owned by the deleted Agent falls back to the default.
         if (activeAgentId === agentId) {
             activeAgentId = defaultAgentId;
-            localStorage.setItem('cow_active_agent', activeAgentId);
+            localStorage.setItem('nova_active_agent', activeAgentId);
         }
         // Drop the deleted Agent's remembered session id — its conversations
         // went with the workspace, so the pinned id would only re-pin a ghost.
@@ -1017,7 +1017,7 @@ function saveAgentCoreFile() {
 function startChatWithAgent(agentId) {
     if (!agentId) return;
     activeAgentId = agentId;
-    localStorage.setItem('cow_active_agent', activeAgentId);
+    localStorage.setItem('nova_active_agent', activeAgentId);
     newChat(true);
     navigateTo('chat');
     renderComposerIdentity();
@@ -1404,7 +1404,7 @@ function channelBoundAgentId(channelType) {
     return inst ? (inst.agent_id || '') : '';
 }
 
-let memoryAgentId = localStorage.getItem('cow_memory_agent') || '';
+let memoryAgentId = localStorage.getItem('nova_memory_agent') || '';
 
 function viewingMemoryAgentId() {
     return memoryAgentId || activeAgentId || defaultAgentId;
@@ -1421,8 +1421,7 @@ function renderMemoryAgentSelect() {
 
 function selectMemoryAgent(agentId) {
     memoryAgentId = agentId;
-    localStorage.setItem('cow_memory_agent', agentId);
+    localStorage.setItem('nova_memory_agent', agentId);
     closeMemoryViewer();
     loadMemoryView(1);
 }
-

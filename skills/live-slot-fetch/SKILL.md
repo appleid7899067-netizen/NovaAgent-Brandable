@@ -18,7 +18,7 @@ This skill provides a lightweight, reusable workflow to retrieve live slot game 
 
 ## Using the Skill
 Prerequisites:
-- cow install-browser (required to enable browser tool on the host)
+- nova install-browser (required to enable browser tool on the host)
 
 Usage:
 - Run the fetch script with a URL and optional output path
@@ -26,7 +26,7 @@ Usage:
 - If you omit --output, results are printed to stdout as JSON
 
 Example:
-- python3 /data/data/com.termux/files/home/cow/skills/live-slot-fetch/scripts/fetch_live_slot.py --url "https://example.com/slot" --output /tmp/slot_latest.json
+- python3 /data/data/com.termux/files/home/nova/skills/live-slot-fetch/scripts/fetch_live_slot.py --url "https://example.com/slot" --output /tmp/slot_latest.json
 
 Output:
 - A JSON object containing at least:

@@ -1,5 +1,5 @@
 """
-Botnoi Voice TTS provider for cow
+Botnoi Voice TTS provider for nova
 API: https://api-voice.botnoi.ai/api/service/generate_audio
 """
 import time

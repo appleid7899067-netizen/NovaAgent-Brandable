@@ -95,7 +95,7 @@ def parse_metadata(frontmatter: Dict[str, Any]) -> Optional[SkillMetadata]:
     if not isinstance(metadata_raw, dict):
         return None
     
-    # Unwrap nested namespace (e.g. {"openclaw": {...}} or {"boss.slilelo": {...}})
+    # Unwrap nested namespace (e.g. {"openclaw": {...}} or {"PanupanGrok": {...}})
     meta_obj = _unwrap_metadata_namespace(metadata_raw)
     
     # Parse install specs
@@ -147,12 +147,12 @@ def parse_metadata(frontmatter: Dict[str, Any]) -> Optional[SkillMetadata]:
     )
 
 
-_KNOWN_METADATA_NAMESPACES = {"boss.slilelo", "openclaw"}
+_KNOWN_METADATA_NAMESPACES = {"PanupanGrok", "openclaw"}
 
 
 def _unwrap_metadata_namespace(metadata_raw: Dict[str, Any]) -> Dict[str, Any]:
     """
-    Unwrap a single-key namespace wrapper like {"boss.slilelo": {...} or {"openclaw": {...}}}.
+    Unwrap a single-key namespace wrapper like {"PanupanGrok": {...} or {"openclaw": {...}}}.
     If the top-level dict has exactly one key matching a known namespace, return the inner dict.
     Otherwise return the original dict unchanged.
     """

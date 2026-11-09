@@ -450,7 +450,7 @@ class WorkspaceService:
         half-written, and a reader never observes a partial document.
         """
         directory = os.path.dirname(full)
-        fd, tmp_path = tempfile.mkstemp(dir=directory, prefix=".cow-edit-", suffix=".tmp")
+        fd, tmp_path = tempfile.mkstemp(dir=directory, prefix=".nova-edit-", suffix=".tmp")
         try:
             with os.fdopen(fd, "wb") as f:
                 f.write(data)

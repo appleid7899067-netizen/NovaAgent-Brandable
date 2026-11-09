@@ -1,10 +1,10 @@
 #!/bin/bash
 # Configure NovaAgent to use the Typhoon 4B model hosted on GitHub Actions.
-# The API key is prompted securely and stored only in COW_DATA_DIR/config.json.
+# The API key is prompted securely and stored only in NOVA_DATA_DIR/config.json.
 set -euo pipefail
 cd "$(dirname "$0")/.."
 BASE_DIR="$(pwd)"
-DATA_DIR="${COW_DATA_DIR:-$HOME/.cow}"
+DATA_DIR="${NOVA_DATA_DIR:-$HOME/.nova}"
 mkdir -p "$DATA_DIR"
 CFG="$DATA_DIR/config.json"
 
@@ -60,4 +60,4 @@ print("Config:", path)
 PY
 echo
 echo "เปิด NovaAgent ด้วย:"
-echo "COW_DATA_DIR=\"$DATA_DIR\" python app.py"
+echo "NOVA_DATA_DIR=\"$DATA_DIR\" python app.py"

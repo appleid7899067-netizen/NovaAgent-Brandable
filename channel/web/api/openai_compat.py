@@ -1,4 +1,4 @@
-"""OpenAI-compatible HTTP adapter for boss.slilelo chat completions."""
+"""OpenAI-compatible HTTP adapter for PanupanGrok chat completions."""
 
 from __future__ import annotations
 
@@ -258,7 +258,7 @@ def _base_chunk(
     model: str,
     delta: dict,
     finish_reason=None,
-    cow_event: dict | None = None,
+    nova_event: dict | None = None,
 ) -> dict:
     payload = {
         "id": completion_id,
@@ -273,13 +273,13 @@ def _base_chunk(
             }
         ],
     }
-    if cow_event is not None:
-        payload["cow_event"] = cow_event
+    if nova_event is not None:
+        payload["nova_event"] = nova_event
     return payload
 
 
 class _ToolEvents:
-    """Turns the Agent's tool and teammate chunks into ``cow_event`` objects.
+    """Turns the Agent's tool and teammate chunks into ``nova_event`` objects.
 
     A call is reported when it starts and again when it finishes, with its
     arguments; the closing batch of a turn repeats results already reported.
@@ -442,12 +442,12 @@ def _stream_completion(
                     created,
                     model,
                     {"reasoning_content": chunk["delta"]},
-                    cow_event={"type": "reasoning", "delta": chunk["delta"]},
+                    nova_event={"type": "reasoning", "delta": chunk["delta"]},
                 )
             )
         else:
             for event in tool_events(chunk):
-                publish(_base_chunk(completion_id, created, model, {}, cow_event=event))
+                publish(_base_chunk(completion_id, created, model, {}, nova_event=event))
 
     def execute() -> None:
         try:
@@ -485,12 +485,12 @@ def _stream_completion(
         closed.set()
         _cancel_agent_request(completion_id, agent_id)
         raise OpenAIAPIError(
-            500, "boss.slilelo timed out before producing a response.", "timeout"
+            500, "PanupanGrok timed out before producing a response.", "timeout"
         ) from error
     if first_item is _STREAM_ERROR:
         closed.set()
         raise OpenAIAPIError(
-            500, "boss.slilelo failed to complete the request.", "internal_error"
+            500, "PanupanGrok failed to complete the request.", "internal_error"
         )
 
     def frames() -> Iterator[str]:
@@ -511,9 +511,9 @@ def _stream_completion(
                             created,
                             model,
                             {},
-                            cow_event={
+                            nova_event={
                                 "type": "error",
-                                "message": "boss.slilelo failed to complete the request.",
+                                "message": "PanupanGrok failed to complete the request.",
                             },
                         )
                     )
@@ -532,10 +532,10 @@ def _stream_completion(
                             created,
                             model,
                             {},
-                            cow_event={
+                            nova_event={
                                 "type": "error",
                                 "message": (
-                                    "boss.slilelo stopped producing events before the "
+                                    "PanupanGrok stopped producing events before the "
                                     "stream finished."
                                 ),
                             },
@@ -618,7 +618,7 @@ def _non_stream_completion(
     except Exception as error:
         logger.exception("[OpenAI API] Chat completion failed")
         raise OpenAIAPIError(
-            500, "boss.slilelo failed to complete the request.", "internal_error"
+            500, "PanupanGrok failed to complete the request.", "internal_error"
         ) from error
     finally:
         registry.unregister(cancel_key)
