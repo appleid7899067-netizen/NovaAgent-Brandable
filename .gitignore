@@ -76,3 +76,13 @@ agents/*/tmp/
 ms-playwright/
 playwright-report/
 test-results/
+
+# ===== local secrets & editor/backup junk (ไม่ขึ้น Git) =====
+.preview_secret
+*.pre-line
+*.pre-line-*
+*.pre-route
+*.bak
+*.bak2
+*.theme-bak
+*.original-*
