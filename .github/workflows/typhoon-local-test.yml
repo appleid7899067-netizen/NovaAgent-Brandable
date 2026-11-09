@@ -1,0 +1,38 @@
+name: Typhoon 4B local inference test
+
+on:
+  push:
+    branches:
+      - arena/9b8a1dc1-novaagent-brandable
+    paths:
+      - .github/workflows/typhoon-local-test.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  local-inference:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Report runner resources
+        run: |
+          echo '=== CPU ==='
+          nproc
+          echo '=== MEMORY ==='
+          free -h
+          echo '=== DISK ==='
+          df -h /
+      - name: Install llama.cpp CLI
+        run: |
+          curl -LsSf https://llama.app/install.sh | sh
+          echo "$HOME/.local/bin" >> "$GITHUB_PATH"
+          echo "$HOME/.llama/bin" >> "$GITHUB_PATH"
+          find "$HOME" -maxdepth 4 -type f -name llama -perm -111 -print 2>/dev/null | head -20
+      - name: Download Typhoon 4B and run local CPU inference
+        run: |
+          set -euo pipefail
+          export PATH="$HOME/.local/bin:$HOME/.llama/bin:$PATH"
+          command -v llama
+          llama cli -hf typhoon-ai/typhoon2.5-qwen3-4b-gguf:Q4_K_M -p 'ตอบเป็นภาษาไทยสั้น ๆ: สวัสดี ช่วยแนะนำตัวและยืนยันว่าคุณกำลังรันจากไฟล์โมเดลในเครื่องนี้' -n 80
