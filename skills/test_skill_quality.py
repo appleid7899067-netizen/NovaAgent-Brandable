@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
 import re
-import json
 from pathlib import Path
 
 ROOT = Path('/data/data/com.termux/files/home/projects/NovaAgent-Brandable/cowbase/skills')

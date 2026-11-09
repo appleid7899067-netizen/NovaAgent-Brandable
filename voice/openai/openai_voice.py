@@ -10,7 +10,8 @@ import requests
 from common import const
 from common.media_download import MAX_FILE_BYTES, MediaTooLargeError, save_response
 from common.tmp_dir import TmpDir
-import datetime, random
+import datetime
+import random
 
 # Connect 5s, read 60s. Bounded like every other HTTP voice backend
 # (voice/zhipuai, voice/mimo, voice/linkai): a stalled transcription or

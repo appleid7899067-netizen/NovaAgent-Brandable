@@ -2,7 +2,6 @@
 Botnoi Voice TTS provider for cow
 API: https://api-voice.botnoi.ai/api/service/generate_audio
 """
-import os
 import time
 import urllib.request
 

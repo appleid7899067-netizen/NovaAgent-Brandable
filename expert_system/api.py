@@ -1,7 +1,6 @@
 from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
 from .orchestrator import ExpertOrchestrator
-import json
 
 router = APIRouter(prefix="/api/expert", tags=["Expert"])
 orchestrator = ExpertOrchestrator()

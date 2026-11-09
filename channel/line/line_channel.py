@@ -1,7 +1,7 @@
 from channel.chat_channel import ChatChannel
 from channel.line.line_message import LineMessage
 from bridge.context import Context
-from bridge.reply import Reply, ReplyType
+from bridge.reply import Reply
 from common.log import logger
 from config import conf
 

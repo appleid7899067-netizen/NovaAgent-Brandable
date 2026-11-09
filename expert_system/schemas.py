@@ -1,5 +1,5 @@
 from pydantic import BaseModel, Field
-from typing import List, Optional
+from typing import List
 
 class CodeReview(BaseModel):
     has_bugs: bool = Field(description="Does the code have bugs?")

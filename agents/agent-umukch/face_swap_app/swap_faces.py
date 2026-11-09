@@ -1,4 +1,4 @@
-from PIL import Image, ImageChops
+from PIL import Image
 import numpy as np
 
 # Minimal placeholder swap: place images side-by-side with a separator
