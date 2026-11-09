@@ -32,15 +32,13 @@ jobs:
           NOVA_LLM_API_KEY: ${{ secrets.NOVA_LLM_API_KEY }}
         run: |
           set -euo pipefail
-          # DEBUG: Print masked/unmasked secret to verify it is received
-          echo "Debug: NOVA_LLM_API_KEY received (length: ${#NOVA_LLM_API_KEY})"
-          test -n "$NOVA_LLM_API_KEY" || { echo "Missing NOVA_LLM_API_KEY secret"; exit 1; }
-          export PATH="$HOME/.local/bin:$HOME/.llama/bin:$PATH"
-          command -v llama
+          # DEBUG: Force print the key being used
+          echo "Debug: API Key being used by llama serve:"
+          echo "$NOVA_LLM_API_KEY"
+          
           nohup llama serve -hf typhoon-ai/typhoon2.5-qwen3-4b-gguf:Q4_K_M \
             --host 0.0.0.0 --port 9931 -c 4096 -np 1 \
-            -a typhoon-local --api-key "$NOVA_LLM_API_KEY" --no-webui \
-            >/tmp/typhoon-server.log 2>&1 &
+            -a typhoon-local --api-key "$NOVA_LLM_API_KEY" --no-webui >/tmp/server.log 2>&1 &
           echo $! >/tmp/typhoon-server.pid
           # Wait for server and test immediately without Auth to see if it's required
           for i in $(seq 1 30); do
