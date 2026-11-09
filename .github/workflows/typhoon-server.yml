@@ -15,7 +15,7 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v4
 
-      - name: Install llama.cpp and cloudflared
+      - name: Install Tools & HuggingFace CLI
         run: |
           set -euo pipefail
           curl -LsSf https://llama.app/install.sh | sh
@@ -23,13 +23,15 @@ jobs:
           echo "$HOME/.llama/bin" >> "$GITHUB_PATH"
           curl -fsSL https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-amd64 -o /tmp/cloudflared
           sudo install -m 0755 /tmp/cloudflared /usr/local/bin/cloudflared
+          pip install -U huggingface_hub
 
-      - name: Download Typhoon 12B GGUF Model
+      - name: Download Typhoon 12B via HF CLI
         run: |
           set -euo pipefail
-          echo "📥 Downloading Typhoon 12B GGUF model (~7.3 GB)..."
-          curl -L -o /tmp/model.gguf "https://huggingface.co/typhoon-ai/typhoon2.1-gemma3-12b-gguf/resolve/main/typhoon2.1-gemma3-12b-Q4_K_M.gguf" || \
-          curl -L -o /tmp/model.gguf "https://huggingface.co/scb10x/typhoon2-12b-instruct-gguf/resolve/main/typhoon2-12b-instruct-Q4_K_M.gguf"
+          echo "📥 Downloading Typhoon 12B GGUF Model (~7.3 GB)..."
+          huggingface-cli download scb10x/typhoon2-12b-instruct-gguf typhoon2-12b-instruct-Q4_K_M.gguf --local-dir /tmp --local-dir-use-symlinks False
+          mv /tmp/typhoon2-12b-instruct-Q4_K_M.gguf /tmp/model.gguf
+          ls -lh /tmp/model.gguf
 
       - name: Start Typhoon 12B Server
         env:
