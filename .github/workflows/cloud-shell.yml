@@ -75,6 +75,7 @@ jobs:
       - name: Run command
         env:
           SHELL_COMMAND: ${{ inputs.command }}
+          TYPHOON_API_KEY: ${{ secrets.TYPHOON_API_KEY }}
         run: |
           set -o pipefail
           mkdir -p cloud-shell-out
