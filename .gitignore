@@ -51,7 +51,9 @@ Thumbs.db
 
 # ===== Project-specific =====
 projects/
+# Legacy scratch dirs (test1/, testfoo/) — but keep the real test suite.
 test*/
+!tests/
 demo*/
 *.orig
 skills.orig/
