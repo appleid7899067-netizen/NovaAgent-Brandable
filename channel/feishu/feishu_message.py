@@ -48,7 +48,7 @@ class FeishuMessage(ChatMessage):
             self.ctype = ContextType.IMAGE
             content = json.loads(msg.get("content"))
             image_key = content.get("image_key")
-            
+
             # 下载图片到工作空间临时目录
             tmp_dir = str(state_dir.tmp_dir())
             image_path = os.path.join(tmp_dir, f"{safe_filename(image_key) or 'image'}.png")
@@ -62,27 +62,27 @@ class FeishuMessage(ChatMessage):
         elif msg_type == "post":
             # 富文本消息，可能包含图片、文本等多种元素
             content = json.loads(msg.get("content"))
-            
+
             # 飞书富文本消息结构：content 直接包含 title 和 content 数组
             # 不是嵌套在 post 字段下
             title = content.get("title", "")
             content_list = content.get("content", [])
-            
+
             logger.info(f"[FeiShu] Post message - title: '{title}', content_list length: {len(content_list)}")
-            
+
             # 收集所有图片和文本
             image_keys = []
             text_parts = []
-            
+
             if title:
                 text_parts.append(title)
-            
+
             for block in content_list:
                 logger.debug(f"[FeiShu] Processing block: {block}")
                 # block 本身就是元素列表
                 if not isinstance(block, list):
                     continue
-                    
+
                 for element in block:
                     element_tag = element.get("tag")
                     logger.debug(f"[FeiShu] Element tag: {element_tag}, element: {element}")
@@ -96,16 +96,16 @@ class FeishuMessage(ChatMessage):
                         text_content = element.get("text", "")
                         if text_content:
                             text_parts.append(text_content)
-            
+
             logger.info(f"[FeiShu] Parsed - images: {len(image_keys)}, text_parts: {text_parts}")
-            
+
             # 富文本消息统一作为文本消息处理
             self.ctype = ContextType.TEXT
-            
+
             if image_keys:
                 # 如果包含图片，下载并在文本中引用本地路径
                 tmp_dir = str(state_dir.tmp_dir())
-                
+
                 # Only successful downloads are recorded as paths; failed ones
                 # keep a marker so the agent knows an image was sent.
                 self.image_paths = {}
@@ -117,7 +117,7 @@ class FeishuMessage(ChatMessage):
                         logger.info(f"[FeiShu] Image downloaded from post message, key={image_key}, path={image_path}")
                     else:
                         failed_keys.append(image_key)
-                
+
                 # 构建消息内容：文本 + 图片路径
                 content_parts = []
                 if text_parts:
@@ -126,7 +126,7 @@ class FeishuMessage(ChatMessage):
                     content_parts.append(f"[图片: {image_path}]")
                 for image_key in failed_keys:
                     content_parts.append(f"[图片下载失败: {image_key}]")
-                
+
                 self.content = "\n".join(content_parts)
                 logger.info(f"[FeiShu] Received post message with {len(image_keys)} image(s) and text: {self.content}")
             else:

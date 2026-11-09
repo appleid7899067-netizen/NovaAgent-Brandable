@@ -184,4 +184,4 @@ def xunfei_tts(APPID, APIKey, APISecret,BusinessArgsTTS, Text, OutFile):
         # never written: XunfeiVoice.textToVoice turns it into an ERROR reply.
         raise RuntimeError("[Xunfei] text-to-speech stream failed: {}".format(stream_error))
     return outfile
-     
+

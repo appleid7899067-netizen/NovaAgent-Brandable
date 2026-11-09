@@ -495,11 +495,11 @@ class AgentLLMModel(LLMModel):
                 # Fallback to regular call
                 # This would need to be implemented based on your specific needs
                 raise NotImplementedError("Regular call not implemented yet")
-                
+
         except Exception as e:
             logger.error(f"AgentLLMModel call error: {e}")
             raise
-    
+
     def call_stream(self, request: LLMRequest):
         """
         Call the model with streaming using COW's bot infrastructure
@@ -561,23 +561,23 @@ class AgentLLMModel(LLMModel):
                         kwargs['reasoning_effort'] = effort
 
                 stream = self.bot.call_with_tools(**kwargs)
-                
+
                 # Convert stream format to our expected format
                 for chunk in stream:
                     yield self._format_stream_chunk(chunk)
             else:
                 bot_type = type(self.bot).__name__
                 raise NotImplementedError(f"Bot {bot_type} does not support call_with_tools. Please add the method.")
-                
+
         except Exception as e:
             logger.error(f"AgentLLMModel call_stream error: {e}", exc_info=True)
             raise
-    
+
     def _format_response(self, response):
         """Format Claude response to our expected format"""
         # This would need to be implemented based on Claude's response format
         return response
-    
+
     def _format_stream_chunk(self, chunk):
         """Format Claude stream chunk to our expected format"""
         # This would need to be implemented based on Claude's stream format
@@ -589,7 +589,7 @@ class AgentBridge:
     Bridge class that integrates super Agent with COW
     Manages multiple agent instances per session for conversation isolation
     """
-    
+
     def __init__(self, bridge: Bridge):
         self.bridge = bridge
         from agent.registry import get_agent_registry
@@ -609,7 +609,7 @@ class AgentBridge:
         self.agent: Optional[Agent] = None
         self.scheduler_initialized = False
         self.scheduler_agent_ids = set()
-        
+
         # Create helper instances
         self.initializer = AgentInitializer(bridge, self)
 
@@ -645,14 +645,14 @@ class AgentBridge:
         """
         # Create LLM model that uses COW's bot infrastructure
         model = AgentLLMModel(self.bridge)
-        
+
         # Default tools if none provided
         if tools is None:
             # Use ToolManager to load all available tools
             from agent.tools import ToolManager
             tool_manager = ToolManager()
             tool_manager.load_tools()
-            
+
             tools = []
             workspace_dir = kwargs.get("workspace_dir")
             for tool_name in tool_manager.tool_classes.keys():
@@ -664,7 +664,7 @@ class AgentBridge:
                         tools.append(tool)
                 except Exception as e:
                     logger.warning(f"[AgentBridge] Failed to load tool {tool_name}: {e}")
-        
+
         # Create agent instance
         agent = Agent(
             system_prompt=system_prompt,
@@ -687,7 +687,7 @@ class AgentBridge:
             logger.debug(f"[AgentBridge] SkillManager initialized with {len(agent.skill_manager.skills)} skills")
 
         return agent
-    
+
     def steer_session(self, session_id: str, instruction: str, agent_id: str = None):
         """Inject an explicit instruction into one active session."""
         logger.info(f"[AgentBridge] steer new instruction: session={session_id}, content={instruction}")
@@ -1522,7 +1522,7 @@ class AgentBridge:
         )
         return count
 
-    def agent_reply(self, query: str, context: Context = None, 
+    def agent_reply(self, query: str, context: Context = None,
                    on_event=None, clear_history: bool = False) -> Reply:
         """
         Use super agent to reply to a query
@@ -1671,14 +1671,14 @@ class AgentBridge:
             # runtime built for this turn has only just restored it.
             if cached:
                 self._sync_shared_transcript(agent, session_id, resolved_agent_id)
-            
+
             # Create event handler for logging and channel communication
             event_handler = AgentEventHandler(context=context, original_callback=on_event)
-            
+
             # Filter tools based on context
             original_tools = agent.tools
             filtered_tools = original_tools
-            
+
             # If this is a scheduled task execution, exclude scheduler tool to prevent recursion
             if context and context.get("is_scheduled_task"):
                 filtered_tools = [tool for tool in agent.tools if tool.name != "scheduler"]
@@ -1699,7 +1699,7 @@ class AgentBridge:
                             attach_agent_delegate_to_tool(tool, self, context)
                         except Exception as e:
                             logger.warning(f"[AgentBridge] Failed to attach delegation context: {e}")
-            
+
             # Pass context metadata to model for downstream API requests
             if context and hasattr(agent, 'model'):
                 agent.model.channel_type = context.get("channel_type", "")
@@ -1837,7 +1837,7 @@ class AgentBridge:
                 if pre_persisted and new_messages and new_messages[0].get("role") == "user":
                     new_messages = new_messages[1:]
                 writer.finish(new_messages)
-            
+
             # Record this user turn for the self-evolution idle trigger. Skip
             # scheduler-injected / scheduled-task sessions so internal runs do
             # not count as user activity.
@@ -1892,9 +1892,9 @@ class AgentBridge:
                     if extras:
                         reply.extra_replies = extras
                     return reply
-            
+
             return Reply(ReplyType.TEXT, response)
-            
+
         except Exception as e:
             logger.error(f"Agent reply error: {e}")
             run_status = "failed"
@@ -1917,7 +1917,7 @@ class AgentBridge:
 
         finally:
             self._end_run(run_store, run_id, run_token, run_status, run_error)
-    
+
     def _schedule_mcp_hot_reload(self, agent):
         """
         Fire-and-forget: detect mcp.json edits and reconcile the agent's
@@ -1984,7 +1984,7 @@ class AgentBridge:
             if text_response:
                 reply.text_content = text_response  # Store accompanying text
             return reply
-        
+
         # For all file types (document, video, audio), use FILE type
         if file_type in ["document", "video", "audio"]:
             file_url = _to_channel_url(file_path)
@@ -1996,7 +1996,7 @@ class AgentBridge:
             if text_response:
                 reply.text_content = text_response
             return reply
-        
+
         # For all other file types (tar.gz, zip, etc.), also use FILE type
         file_url = _to_channel_url(file_path)
         logger.info(f"[AgentBridge] Sending generic file: {file_url}")
@@ -2006,7 +2006,7 @@ class AgentBridge:
         if text_response:
             reply.text_content = text_response
         return reply
-    
+
     def _migrate_config_to_env(self, workspace_root: str):
         """
         Sync API keys from config.json to .env file.
@@ -2017,7 +2017,7 @@ class AgentBridge:
         """
         from config import conf
         import os
-        
+
         key_mapping = {
             "open_ai_api_key": "OPENAI_API_KEY",
             "open_ai_api_base": "OPENAI_API_BASE",
@@ -2025,9 +2025,9 @@ class AgentBridge:
             "claude_api_key": "CLAUDE_API_KEY",
             "linkai_api_key": "LINKAI_API_KEY",
         }
-        
+
         env_file = expand_path("~/.cow/.env")
-        
+
         # Read existing env vars (key -> value)
         existing_env_vars = {}
         if os.path.exists(env_file):
@@ -2040,7 +2040,7 @@ class AgentBridge:
                             existing_env_vars[key.strip()] = val.strip()
             except Exception as e:
                 logger.warning(f"[AgentBridge] Failed to read .env file: {e}")
-        
+
         # Sync config.json values into .env (add/update/remove)
         updated = False
         for config_key, env_key in key_mapping.items():
@@ -2076,7 +2076,7 @@ class AgentBridge:
                 logger.info("[AgentBridge] Synced API keys from config.json to .env")
             except Exception as e:
                 logger.warning(f"[AgentBridge] Failed to sync API keys: {e}")
-    
+
     def _pre_persist_user_message(
         self,
         session_id: str,
@@ -2441,7 +2441,7 @@ class AgentBridge:
                 self.agents.clear()
                 self.default_agent = None
         return len(keys)
-    
+
     def clear_all_sessions(self):
         """Clear all agent sessions"""
         with self._agents_lock:
@@ -2451,7 +2451,7 @@ class AgentBridge:
             self._default_agents.clear()
             self.agents.clear()
             self.default_agent = None
-    
+
     def refresh_all_skills(self) -> int:
         """
         Refresh skills and conditional tools in all agent instances after

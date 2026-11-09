@@ -52,7 +52,7 @@ class SchedulerService:
     """
     Background service that executes scheduled tasks
     """
-    
+
     def __init__(self, task_store, execute_callback: Callable):
         """
         Initialize scheduler service
@@ -73,14 +73,14 @@ class SchedulerService:
         self._lock = threading.Lock()
         self._execution_lock = threading.Lock()
         self._active_task_ids = set()
-    
+
     def start(self):
         """Start the scheduler service"""
         with self._lock:
             if self.running:
                 logger.warning("[Scheduler] Service already running")
                 return
-            
+
             self.running = True
             # Each worker keeps its own stop signal so a restart cannot
             # reactivate a previous worker still finishing a callback.
@@ -89,23 +89,23 @@ class SchedulerService:
                 target=self._run_loop, args=(self._stop_event,), daemon=True
             )
             self.thread.start()
-    
+
     def stop(self):
         """Stop the scheduler service"""
         with self._lock:
             if not self.running:
                 return
-            
+
             self.running = False
             self._stop_event.set()
             if self.thread:
                 self.thread.join(timeout=5)
             logger.info("[Scheduler] Service stopped")
-    
+
     def _run_loop(self, stop_event):
         """Main scheduler loop"""
         logger.info("[Scheduler] Scheduler loop started")
-        
+
         while self.running and not stop_event.is_set():
             try:
                 self._check_and_execute_tasks()
@@ -113,7 +113,7 @@ class SchedulerService:
                 logger.error(f"[Scheduler] Error in scheduler loop: {e}")
 
             stop_event.wait(30)
-    
+
     def _check_and_execute_tasks(self):
         """Check for due tasks and execute them"""
         now = datetime.now()
@@ -126,7 +126,7 @@ class SchedulerService:
                     f"[Scheduler] Failed to normalize timestamps for task "
                     f"{raw_task.get('id')}: {e}"
                 )
-        
+
         for task in tasks:
             try:
                 if self._is_task_due(task, now):
@@ -213,7 +213,7 @@ class SchedulerService:
     def _release_task(self, task_id: str) -> None:
         with self._execution_lock:
             self._active_task_ids.discard(task_id)
-    
+
     def _is_task_due(self, task: dict, now: datetime) -> bool:
         """
         Check if a task is due to run
@@ -235,7 +235,7 @@ class SchedulerService:
                 })
                 return False
             return False
-        
+
         try:
             reference_now = scheduled_reference_time(task, now)
             next_run = parse_scheduled_time(next_run_str, task_timezone(task))
@@ -276,7 +276,7 @@ class SchedulerService:
                 f"{task.get('id')} (next_run_at={next_run_str!r}): {e}"
             )
             return False
-    
+
     def _calculate_next_run(self, task: dict, from_time: datetime) -> Optional[datetime]:
         """
         Calculate next run time for a task
@@ -297,7 +297,7 @@ class SchedulerService:
             expression = schedule.get("expression")
             if not expression:
                 return None
-            
+
             try:
                 return next_cron_occurrence(
                     expression, from_time, task_timezone(task)
@@ -305,20 +305,20 @@ class SchedulerService:
             except Exception as e:
                 logger.error(f"[Scheduler] Invalid cron expression '{expression}': {e}")
                 return None
-        
+
         elif schedule_type == "interval":
             # Interval in seconds
             seconds = schedule.get("seconds", 0)
             if seconds <= 0:
                 return None
             return from_time + timedelta(seconds=seconds)
-        
+
         elif schedule_type == "once":
             # One-time task at specific time
             run_at_str = schedule.get("run_at")
             if not run_at_str:
                 return None
-            
+
             try:
                 run_at = parse_scheduled_time(run_at_str, task_timezone(task))
                 if run_at > from_time:
@@ -329,9 +329,9 @@ class SchedulerService:
                     f"{run_at_str!r}: {e}"
                 )
             return None
-        
+
         return None
-    
+
     def _execute_task(self, task: dict, trigger: str = "scheduled") -> bool:
         """
         Execute a task.

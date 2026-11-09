@@ -6,7 +6,7 @@ class ExpertOrchestrator:
     def __init__(self):
         self.base_url = "http://127.0.0.1:8741/v1"
         self.api_key = "any-value"
-        
+
         # 👑 SYSTEM BLUEPRINT: บังคับให้ตอบเป็น JSON 100%
         self.coding_blueprint = (
             "You are 'Codex-Engineer', an elite Senior Software Engineer. "
@@ -25,7 +25,7 @@ class ExpertOrchestrator:
 
     def review_code(self, code_snippet: str, language: str = "python") -> CodeReview:
         prompt = f"Language: {language}\n\nCode to review:\n```{language}\n{code_snippet}\n```"
-        
+
         payload = {
             "model": "gpt-4o-mini",
             "messages": [
@@ -35,25 +35,25 @@ class ExpertOrchestrator:
             "temperature": 0.1
             # ไม่ส่ง response_format เพราะ Puter ไม่รองรับ
         }
-        
+
         headers = {
             "Content-Type": "application/json",
             "Authorization": f"Bearer {self.api_key}"
         }
-        
+
         response = requests.post(
             f"{self.base_url}/chat/completions",
             headers=headers,
             json=payload,
             timeout=60
         )
-        
+
         if response.status_code != 200:
             raise Exception(f"API Error: {response.status_code} - {response.text}")
-        
+
         data = response.json()
         content = data["choices"][0]["message"]["content"]
-        
+
         # ทำความสะอาดข้อความ (เผื่อบอทใส่ ```json ... ``` มาด้วย)
         content = content.strip()
         if content.startswith("```json"):
@@ -63,7 +63,7 @@ class ExpertOrchestrator:
         if content.endswith("```"):
             content = content[:-3]
         content = content.strip()
-        
+
         # แปลง JSON กลับเป็น Pydantic Model
         return CodeReview.model_validate_json(content)
 

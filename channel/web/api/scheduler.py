@@ -273,7 +273,7 @@ class SchedulerUpdateHandler:
             task_id = body.get("task_id")
             if not task_id:
                 return json.dumps({"status": "error", "message": "task_id required"})
-            
+
             from agent.tools.scheduler.scheduler_service import SchedulerService
             from datetime import datetime
             store = _global_task_store()
@@ -284,14 +284,14 @@ class SchedulerUpdateHandler:
             original_task = store.get_task(task_id)
             if not original_task:
                 return json.dumps({"status": "error", "message": f"Task '{task_id}' not found"})
-            
+
             # Build updates dict
             updates = {}
             if "name" in body:
                 updates["name"] = body["name"]
             if "enabled" in body:
                 updates["enabled"] = body["enabled"]
-            
+
             # Update schedule
             if "schedule" in body:
                 schedule_patch = body["schedule"]
@@ -314,10 +314,10 @@ class SchedulerUpdateHandler:
                 else:
                     # Cannot calculate next run time, schedule config may be invalid
                     return json.dumps({
-                        "status": "error", 
+                        "status": "error",
                         "message": "Cannot calculate next run time. Please check the schedule config (e.g., cron expression format, or whether the one-time task time has already passed)."
                     }, ensure_ascii=False)
-            
+
             # Update action
             if "action" in body:
                 # Get the task's original channel_type
@@ -411,7 +411,7 @@ class SchedulerUpdateHandler:
                     )
                     # agent_id follows instance_id's live binding, so it needs no update here.
                 updates["action"] = action
-                
+
                 # If schedule was not updated but action was, ensure next_run_at exists
                 if "schedule" not in body and "next_run_at" not in original_task:
                     merged = dict(original_task)
@@ -420,7 +420,7 @@ class SchedulerUpdateHandler:
                     next_run = temp_service._calculate_next_run(merged, datetime.now())
                     if next_run:
                         updates["next_run_at"] = next_run.isoformat()
-            
+
             store.update_task(task_id, updates)
             task = store.get_task(task_id)
             return json.dumps({"status": "success", "task": task}, ensure_ascii=False)
@@ -438,7 +438,7 @@ class SchedulerDeleteHandler:
             task_id = body.get("task_id")
             if not task_id:
                 return json.dumps({"status": "error", "message": "task_id required"})
-            
+
             store = _global_task_store()
             if store is None:
                 return json.dumps({"status": "error", "message": "Scheduler store unavailable"})

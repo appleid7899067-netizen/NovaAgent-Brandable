@@ -39,7 +39,7 @@ class SkillLoader:
 
     def __init__(self):
         pass
-    
+
     def load_skills_from_dir(
         self, dir_path: str, source: str, use_cache: bool = False
     ) -> LoadSkillsResult:
@@ -57,26 +57,26 @@ class SkillLoader:
         """
         skills = []
         diagnostics = []
-        
+
         if not os.path.exists(dir_path):
             diagnostics.append(f"Directory does not exist: {dir_path}")
             return LoadSkillsResult(skills=skills, diagnostics=diagnostics)
-        
+
         if not os.path.isdir(dir_path):
             diagnostics.append(f"Path is not a directory: {dir_path}")
             return LoadSkillsResult(skills=skills, diagnostics=diagnostics)
-        
+
         # Load skills from root-level .md files and subdirectories
         result = self._load_skills_recursive(
             dir_path, source, include_root_files=True, use_cache=use_cache
         )
-        
+
         return result
-    
+
     def _load_skills_recursive(
-        self, 
-        dir_path: str, 
-        source: str, 
+        self,
+        dir_path: str,
+        source: str,
         include_root_files: bool = False,
         use_cache: bool = False,
         _ancestor_dirs: Optional[frozenset] = None,
@@ -107,7 +107,7 @@ class SkillLoader:
             diagnostics.append(f"Skipped cyclic skill directory: {dir_path}")
             return LoadSkillsResult(skills=skills, diagnostics=diagnostics)
         ancestors = ancestors | {canonical_dir}
-        
+
         try:
             entries = os.listdir(dir_path)
         except Exception as e:
@@ -124,16 +124,16 @@ class SkillLoader:
                     skills.extend(skill_result.skills)
                 diagnostics.extend(skill_result.diagnostics)
                 return LoadSkillsResult(skills=skills, diagnostics=diagnostics)
-        
+
         for entry in entries:
             if entry.startswith('.'):
                 continue
-            
+
             if entry in ('node_modules', '__pycache__', 'venv', '.git'):
                 continue
-            
+
             full_path = os.path.join(dir_path, entry)
-            
+
             if os.path.isdir(full_path):
                 sub_result = self._load_skills_recursive(
                     full_path, source, include_root_files=False, use_cache=use_cache,
@@ -142,22 +142,22 @@ class SkillLoader:
                 skills.extend(sub_result.skills)
                 diagnostics.extend(sub_result.diagnostics)
                 continue
-            
+
             if not os.path.isfile(full_path):
                 continue
-            
+
             is_root_md = include_root_files and entry.endswith('.md') and entry.upper() != 'README.MD'
-            
+
             if not is_root_md:
                 continue
-            
+
             skill_result = self._load_skill_from_file(full_path, source, use_cache)
             if skill_result.skills:
                 skills.extend(skill_result.skills)
             diagnostics.extend(skill_result.diagnostics)
-        
+
         return LoadSkillsResult(skills=skills, diagnostics=diagnostics)
-    
+
     def _load_skill_from_file(
         self, file_path: str, source: str, use_cache: bool = False
     ) -> LoadSkillsResult:
@@ -206,40 +206,40 @@ class SkillLoader:
                     _parse_cache[file_path] = (
                         signature, now, content, copy.deepcopy(frontmatter)
                     )
-        
+
         # Get skill name and description
         skill_dir = os.path.dirname(file_path)
         parent_dir_name = os.path.basename(skill_dir)
-        
+
         name = frontmatter.get('name', parent_dir_name)
         description = frontmatter.get('description', '')
-        
+
         # Normalize name (handle both string and list)
         if isinstance(name, list):
             name = name[0] if name else parent_dir_name
         elif not isinstance(name, str):
             name = str(name) if name else parent_dir_name
-        
+
         # Normalize description (handle both string and list)
         if isinstance(description, list):
             description = ' '.join(str(d) for d in description if d)
         elif not isinstance(description, str):
             description = str(description) if description else ''
-        
+
         # Special handling for linkai-agent: dynamically load apps from config.json
         if name == 'linkai-agent':
             description = self._load_linkai_agent_description(skill_dir, description)
-        
+
         if not description or not description.strip():
             diagnostics.append(f"Skill {name} has no description: {file_path}")
             return LoadSkillsResult(skills=[], diagnostics=diagnostics)
-        
+
         # Parse disable-model-invocation flag
         disable_model_invocation = parse_boolean_value(
             get_frontmatter_value(frontmatter, 'disable-model-invocation'),
             default=False
         )
-        
+
         # Create skill object
         skill = Skill(
             name=name,
@@ -251,9 +251,9 @@ class SkillLoader:
             disable_model_invocation=disable_model_invocation,
             frontmatter=frontmatter,
         )
-        
+
         return LoadSkillsResult(skills=[skill], diagnostics=diagnostics)
-    
+
     def _load_linkai_agent_description(self, skill_dir: str, default_description: str) -> str:
         """
         Dynamically load LinkAI agent description from config.json
@@ -263,33 +263,33 @@ class SkillLoader:
         :return: Dynamic description with app list
         """
         import json
-        
+
         config_path = os.path.join(skill_dir, "config.json")
-        
+
         if not os.path.exists(config_path):
             logger.debug("[SkillLoader] linkai-agent skipped: no config.json found")
             return ""
-        
+
         try:
             with open(config_path, 'r', encoding='utf-8') as f:
                 config = json.load(f)
-            
+
             apps = config.get("apps", [])
             if not apps:
                 return default_description
-            
+
             # Build dynamic description with app details
             app_descriptions = "; ".join([
                 f"{app['app_name']}({app['app_code']}: {app['app_description']})"
                 for app in apps
             ])
-            
+
             return f"Call LinkAI apps/workflows. {app_descriptions}"
-        
+
         except Exception as e:
             logger.warning(f"[SkillLoader] Failed to load linkai-agent config: {e}")
             return default_description
-    
+
     def load_all_skills(
         self,
         builtin_dir: Optional[str] = None,
@@ -338,7 +338,7 @@ class SkillLoader:
         logger.debug(f"Loaded {len(skill_map)} skills total")
 
         return skill_map
-    
+
     def _create_skill_entry(self, skill: Skill) -> SkillEntry:
         """
         Create a SkillEntry from a Skill with parsed metadata.
@@ -347,13 +347,13 @@ class SkillLoader:
         :return: SkillEntry with metadata
         """
         metadata = parse_metadata(skill.frontmatter)
-        
+
         # Parse user-invocable flag
         user_invocable = parse_boolean_value(
             get_frontmatter_value(skill.frontmatter, 'user-invocable'),
             default=True
         )
-        
+
         return SkillEntry(
             skill=skill,
             metadata=metadata,

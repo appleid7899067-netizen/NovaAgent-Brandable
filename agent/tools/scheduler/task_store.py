@@ -57,7 +57,7 @@ class TaskStore:
     """
     Manages persistent storage of scheduled tasks
     """
-    
+
     def __init__(self, store_path: str = None):
         """
         Initialize task store
@@ -69,16 +69,16 @@ class TaskStore:
             # Default to ~/cow/scheduler/tasks.json
             home = expand_path("~")
             store_path = os.path.join(home, "cow", "scheduler", "tasks.json")
-        
+
         self.store_path = store_path
         self.lock = _lock_for_path(store_path)
         self._ensure_store_dir()
-    
+
     def _ensure_store_dir(self):
         """Ensure the storage directory exists"""
         store_dir = os.path.dirname(self.store_path) or "."
         os.makedirs(store_dir, exist_ok=True)
-    
+
     def load_tasks(self, strict: bool = False) -> Dict[str, dict]:
         """
         Load all tasks from storage
@@ -90,7 +90,7 @@ class TaskStore:
         with self.lock:
             if not os.path.exists(self.store_path) and not os.path.exists(f"{self.store_path}.bak"):
                 return {}
-            
+
             try:
                 return _read_tasks(self.store_path)[1]
             except Exception as e:
@@ -111,7 +111,7 @@ class TaskStore:
             except Exception as e:
                 print(f"Error restoring task store from backup: {e}")
             return tasks
-    
+
     def save_tasks(self, tasks: Dict[str, dict]):
         """
         Save all tasks to storage
@@ -151,7 +151,7 @@ class TaskStore:
             except Exception as e:
                 print(f"Error saving tasks: {e}")
                 raise
-    
+
     def add_task(self, task: dict) -> bool:
         """
         Add a new task
@@ -176,7 +176,7 @@ class TaskStore:
             tasks[task_id] = task
             self.save_tasks(tasks)
         return True
-    
+
     def update_task(self, task_id: str, updates: dict) -> bool:
         """
         Update an existing task
@@ -199,7 +199,7 @@ class TaskStore:
 
             self.save_tasks(tasks)
         return True
-    
+
     def delete_task(self, task_id: str) -> bool:
         """
         Delete a task
@@ -219,7 +219,7 @@ class TaskStore:
             del tasks[task_id]
             self.save_tasks(tasks)
         return True
-    
+
     def get_task(self, task_id: str) -> Optional[dict]:
         """
         Get a specific task
@@ -232,7 +232,7 @@ class TaskStore:
         """
         tasks = self.load_tasks()
         return tasks.get(task_id)
-    
+
     def list_tasks(self, enabled_only: bool = False, agent_id: str = None) -> List[dict]:
         """
         List all tasks
@@ -267,7 +267,7 @@ class TaskStore:
                 t for t in task_list
                 if (effective_task_agent_id(t) or default_id) == agent_id
             ]
-        
+
         # Enabled tasks first, then newest-created on top (a task the user just
         # created should sit at the head of the list rather than wherever its
         # next_run_at happens to fall). created_at is an ISO string so a plain
@@ -283,7 +283,7 @@ class TaskStore:
         task_list.sort(key=sort_key)
 
         return task_list
-    
+
     def enable_task(self, task_id: str, enabled: bool = True) -> bool:
         """
         Enable or disable a task

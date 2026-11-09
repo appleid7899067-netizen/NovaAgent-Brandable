@@ -87,15 +87,15 @@ def get_skill_config(config: Optional[Dict], skill_name: str) -> Optional[Dict]:
     """
     if not config:
         return None
-    
+
     skills_config = config.get('skills', {})
     if not isinstance(skills_config, dict):
         return None
-    
+
     entries = skills_config.get('entries', {})
     if not isinstance(entries, dict):
         return None
-    
+
     return entries.get(skill_name)
 
 
@@ -118,11 +118,11 @@ def should_include_skill(
     :return: True if skill should be included
     """
     metadata = entry.metadata
-    
+
     # No metadata = always include (no requirements)
     if not metadata:
         return True
-    
+
     # Check platform requirements (can't work on wrong platform)
     if metadata.os:
         platform_name = current_platform or resolve_runtime_platform()
@@ -133,14 +133,14 @@ def should_include_skill(
             'windows': 'win32',
         }
         normalized_platform = platform_map.get(platform_name, platform_name)
-        
+
         if normalized_platform not in metadata.os:
             return False
-    
+
     # If skill has 'always: true', include it regardless of other requirements
     if metadata.always:
         return True
-    
+
     # Check requirements
     if metadata.requires:
         # Check required binaries (all must be present)
@@ -148,13 +148,13 @@ def should_include_skill(
         if required_bins:
             if not all(has_binary(bin_name) for bin_name in required_bins):
                 return False
-        
+
         # Check anyBins (at least one must be present)
         any_bins = metadata.requires.get('anyBins', [])
         if any_bins:
             if not has_any_binary(any_bins):
                 return False
-        
+
         # Check environment variables (API keys)
         # All required env vars must be set
         required_env = metadata.requires.get('env', [])
@@ -169,7 +169,7 @@ def should_include_skill(
         if any_env:
             if not any(has_env_var(e) for e in any_env) and not has_custom_provider(entry.skill.name):
                 return False
-    
+
     return True
 
 
@@ -224,14 +224,14 @@ def is_config_path_truthy(config: Dict, path: str) -> bool:
     """
     parts = path.split('.')
     current = config
-    
+
     for part in parts:
         if not isinstance(current, dict):
             return False
         current = current.get(part)
         if current is None:
             return False
-    
+
     # Check if value is truthy
     if isinstance(current, bool):
         return current
@@ -239,7 +239,7 @@ def is_config_path_truthy(config: Dict, path: str) -> bool:
         return current != 0
     if isinstance(current, str):
         return bool(current.strip())
-    
+
     return bool(current)
 
 
@@ -253,12 +253,12 @@ def resolve_config_path(config: Dict, path: str):
     """
     parts = path.split('.')
     current = config
-    
+
     for part in parts:
         if not isinstance(current, dict):
             return None
         current = current.get(part)
         if current is None:
             return None
-    
+
     return current

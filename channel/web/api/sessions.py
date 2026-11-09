@@ -1089,10 +1089,10 @@ class MessageDeleteHandler:
             user_seq = data.get('user_seq')
             delete_user = data.get('delete_user', True)
             cascade = data.get('cascade', False)
-            
+
             if not session_id or user_seq is None:
                 return json.dumps({"status": "error", "message": "session_id and user_seq required"})
-            
+
             # 1. Delete from database
             from agent.memory import get_conversation_store
             store = get_conversation_store(_get_workspace_root(agent_id=agent_id))

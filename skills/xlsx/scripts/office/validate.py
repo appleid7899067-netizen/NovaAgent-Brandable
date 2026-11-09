@@ -40,7 +40,7 @@ def _has_tracked_changes(unpacked_dir: Path) -> bool:
     try:
         root = ET.parse(document).getroot()
     except (ET.ParseError, DefusedXmlException):
-        return False  
+        return False
     tracked = {f"{{{WORD_NS}}}ins", f"{{{WORD_NS}}}del"}
     return any(elem.tag in tracked for elem in root.iter())
 

@@ -229,7 +229,7 @@ class SkillManager:
         :return: copy of skills_config
         """
         return dict(self.skills_config)
-    
+
     def get_skill(self, name: str) -> Optional[SkillEntry]:
         """
         Get a skill by name.
@@ -238,7 +238,7 @@ class SkillManager:
         :return: SkillEntry or None if not found
         """
         return self.skills.get(name)
-    
+
     def list_skills(self) -> List[SkillEntry]:
         """
         Get all loaded skills.
@@ -246,7 +246,7 @@ class SkillManager:
         :return: List of all skill entries
         """
         return list(self.skills.values())
-    
+
     @staticmethod
     def _normalize_skill_filter(skill_filter: Optional[List[str]]) -> Optional[List[str]]:
         """Normalize a skill_filter list into a flat list of stripped names."""
@@ -361,7 +361,7 @@ class SkillManager:
 
         logger.debug(f"[SkillManager] Generated prompt length: {len(result)}")
         return result
-    
+
     def build_skill_snapshot(
         self,
         skill_filter: Optional[List[str]] = None,
@@ -376,24 +376,24 @@ class SkillManager:
         """
         entries = self.filter_skills(skill_filter=skill_filter, include_disabled=False)
         prompt = format_skill_entries_for_prompt(entries)
-        
+
         skills_info = []
         resolved_skills = []
-        
+
         for entry in entries:
             skills_info.append({
                 'name': entry.skill.name,
                 'primary_env': entry.metadata.primary_env if entry.metadata else None,
             })
             resolved_skills.append(entry.skill)
-        
+
         return SkillSnapshot(
             prompt=prompt,
             skills=skills_info,
             resolved_skills=resolved_skills,
             version=version,
         )
-    
+
     def sync_skills_to_workspace(self, target_workspace_dir: str):
         """
         Sync all loaded skills to a target workspace directory.
@@ -403,30 +403,30 @@ class SkillManager:
         :param target_workspace_dir: Target workspace directory
         """
         import shutil
-        
+
         target_skills_dir = os.path.join(target_workspace_dir, 'skills')
-        
+
         # Remove existing skills directory
         if os.path.exists(target_skills_dir):
             shutil.rmtree(target_skills_dir)
-        
+
         # Create new skills directory
         os.makedirs(target_skills_dir, exist_ok=True)
-        
+
         # Copy each skill
         for entry in self.skills.values():
             skill_name = entry.skill.name
             source_dir = entry.skill.base_dir
             target_dir = os.path.join(target_skills_dir, skill_name)
-            
+
             try:
                 shutil.copytree(source_dir, target_dir)
                 logger.debug(f"Synced skill '{skill_name}' to {target_dir}")
             except Exception as e:
                 logger.warning(f"Failed to sync skill '{skill_name}': {e}")
-        
+
         logger.info(f"Synced {len(self.skills)} skills to {target_skills_dir}")
-    
+
     def get_skill_by_key(self, skill_key: str) -> Optional[SkillEntry]:
         """
         Get a skill by its skill key (which may differ from name).

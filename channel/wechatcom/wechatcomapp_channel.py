@@ -77,7 +77,7 @@ class WechatComAppChannel(ChatChannel):
         logger.info("[wechatcom] ✅ WeCom app channel started successfully")
         logger.info("[wechatcom] 📡 Listening on http://0.0.0.0:{}/wxcomapp/".format(port))
         logger.info("[wechatcom] 🤖 Ready to receive messages")
-        
+
         # Build WSGI app with middleware (same as runsimple but without print)
         func = web.httpserver.StaticMiddleware(app.wsgifunc())
         func = web.httpserver.LogMiddleware(func)

@@ -96,7 +96,7 @@ from agent.tools.base_tool import BaseTool, ToolStage, is_tool_available
 
 class Agent:
     def __init__(self, system_prompt: str, description: str = "AI Agent", model: LLMModel = None,
-                 tools=None, output_mode="print", max_steps=100, max_context_tokens=None, 
+                 tools=None, output_mode="print", max_steps=100, max_context_tokens=None,
                  context_reserve_tokens=None, memory_manager=None, name: str = None,
                  workspace_dir: str = None, skill_manager=None, enable_skills: bool = True,
                  runtime_info: dict = None, skip_context_files: bool = False):
@@ -156,7 +156,7 @@ class Agent:
         # on top of the full context (tools, workspace, user preferences, time)
         # so it both follows the user's preferences and knows its evolution job.
         self.extra_system_suffix = None
-        
+
         # Initialize skill manager
         self.skill_manager = None
         if enable_skills:
@@ -170,7 +170,7 @@ class Agent:
                     logger.debug(f"Initialized SkillManager with {len(self.skill_manager.skills)} skills")
                 except Exception as e:
                     logger.warning(f"Failed to initialize SkillManager: {e}")
-        
+
         if tools:
             for tool in tools:
                 self.add_tool(tool)
@@ -300,13 +300,13 @@ class Agent:
         """
         if not self.skill_manager:
             return ""
-        
+
         try:
             return self.skill_manager.build_skills_prompt(skill_filter=skill_filter)
         except Exception as e:
             logger.warning(f"Failed to build skills prompt: {e}")
             return ""
-    
+
     def get_full_system_prompt(self, skill_filter=None) -> str:
         """
         Build the complete system prompt from scratch every time.
@@ -357,7 +357,7 @@ class Agent:
         if self.skill_manager:
             self.skill_manager.refresh_skills()
             logger.info(f"Refreshed skills: {len(self.skill_manager.skills)} skills loaded")
-    
+
     def list_skills(self):
         """
         List all loaded skills.
@@ -821,7 +821,7 @@ class Agent:
         # Get max_context_turns from config
         from config import conf
         max_context_turns = conf().get("agent_max_context_turns", 20)
-        
+
         # Create stream executor with copied message history
         executor = AgentStreamExecutor(
             agent=self,
@@ -892,7 +892,7 @@ class Agent:
             else:
                 self._last_run_new_messages = list(executor.messages[original_length:])
             self.messages = list(executor.messages)
-        
+
         # Store executor reference for agent_bridge to access files_to_send
         self.stream_executor = executor
 

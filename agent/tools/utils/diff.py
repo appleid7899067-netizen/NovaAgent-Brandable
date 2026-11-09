@@ -287,7 +287,7 @@ def generate_diff_string(old_content: str, new_content: str) -> dict:
     """
     old_lines = old_content.split('\n')
     new_lines = new_content.split('\n')
-    
+
     # Generate unified diff
     diff_lines = list(difflib.unified_diff(
         old_lines,
@@ -296,7 +296,7 @@ def generate_diff_string(old_content: str, new_content: str) -> dict:
         fromfile='original',
         tofile='modified'
     ))
-    
+
     # Find first changed line number
     first_changed_line = None
     for line in diff_lines:
@@ -306,9 +306,9 @@ def generate_diff_string(old_content: str, new_content: str) -> dict:
             if match:
                 first_changed_line = int(match.group(1))
                 break
-    
+
     diff_string = '\n'.join(diff_lines)
-    
+
     return {
         'diff': diff_string,
         'first_changed_line': first_changed_line

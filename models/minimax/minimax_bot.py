@@ -302,7 +302,7 @@ class MinimaxBot(Bot):
             logger.error(f"[MINIMAX] call_with_tools error: {e}")
             import traceback
             logger.error(traceback.format_exc())
-            
+
             def error_generator():
                 yield {"error": True, "message": error_msg, "status_code": 500}
             return error_generator()
@@ -581,9 +581,9 @@ class MinimaxBot(Bot):
                     error_msg = error_data.get("message", "Unknown error")
                     error_type = error_data.get("type", "")
                     http_code = error_data.get("http_code", "")
-                    
+
                     logger.error(f"[MINIMAX] API error: {error_msg} (type: {error_type}, code: {http_code})")
-                    
+
                     yield {
                         "error": True,
                         "message": error_msg,
@@ -661,7 +661,7 @@ class MinimaxBot(Bot):
                                 "name": tool_call_chunk.get("function", {}).get("name", ""),
                                 "input": ""
                             }
-                        
+
                         # Accumulate tool call arguments
                         if "function" in tool_call_chunk and "arguments" in tool_call_chunk["function"]:
                             current_tool_calls[index]["input"] += tool_call_chunk["function"]["arguments"]

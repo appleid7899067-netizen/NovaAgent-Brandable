@@ -28,7 +28,7 @@ class OpenAICompatibleBot:
     
     Subclasses only need to override get_api_config() to provide their specific API settings.
     """
-    
+
     @staticmethod
     def _is_gpt5_reasoning_model(model_name: str) -> bool:
         """Whether the model is a GPT-5.x / o-series reasoning model.
@@ -66,7 +66,7 @@ class OpenAICompatibleBot:
             }
         """
         raise NotImplementedError("Subclasses must implement get_api_config()")
-    
+
     def call_with_tools(self, messages, tools=None, stream=False, **kwargs):
         """
         Call OpenAI-compatible API with tool support for agent integration
@@ -89,7 +89,7 @@ class OpenAICompatibleBot:
         try:
             # Get API configuration from subclass
             api_config = self.get_api_config()
-            
+
             # Convert messages from Claude format to OpenAI format
             messages = self._convert_messages_to_openai_format(messages)
             # "_"-prefixed keys are in-memory markers; strict endpoints reject them.
@@ -97,11 +97,11 @@ class OpenAICompatibleBot:
                 {k: v for k, v in msg.items() if not k.startswith("_")}
                 for msg in messages
             ]
-            
+
             # Convert tools from Claude format to OpenAI format
             if tools:
                 tools = self._convert_tools_to_openai_format(tools)
-            
+
             # Handle system prompt (OpenAI uses system message, Claude uses separate parameter)
             system_prompt = kwargs.get('system')
             if system_prompt:
@@ -111,7 +111,7 @@ class OpenAICompatibleBot:
                 else:
                     # Replace existing system message
                     messages[0] = {"role": "system", "content": system_prompt}
-            
+
             # Build request parameters
             model_name = kwargs.get("model", api_config.get('model', 'gpt-5.4'))
 
@@ -153,11 +153,11 @@ class OpenAICompatibleBot:
             if is_gpt5_reasoning:
                 for key in ("temperature", "top_p", "frequency_penalty", "presence_penalty"):
                     request_params.pop(key, None)
-            
+
             # Add max_tokens if specified
             if kwargs.get("max_tokens"):
                 request_params["max_tokens"] = kwargs["max_tokens"]
-            
+
             # Add tools if provided
             if tools:
                 request_params["tools"] = tools
@@ -168,16 +168,16 @@ class OpenAICompatibleBot:
                 # the Responses API.
                 if is_gpt5_reasoning:
                     request_params["reasoning_effort"] = "none"
-            
+
             # Make API call with proper configuration
             api_key = api_config.get('api_key')
             api_base = api_config.get('api_base')
-            
+
             if stream:
                 return self._handle_stream_response(request_params, api_key, api_base)
             else:
                 return self._handle_sync_response(request_params, api_key, api_base)
-                
+
         except Exception as e:
             error_msg = str(e)
             logger.error(f"[{self.__class__.__name__}] call_with_tools error: {error_msg}")
@@ -195,7 +195,7 @@ class OpenAICompatibleBot:
                     "message": error_msg,
                     "status_code": 500
                 }
-    
+
     @classmethod
     def _responses_reasoning_effort(cls, model_name, kwargs) -> Optional[str]:
         """Pick the reasoning effort for a Responses request.
@@ -383,7 +383,7 @@ class OpenAICompatibleBot:
                 "message": str(e),
                 "status_code": 500,
             }
-    
+
     def _convert_tools_to_openai_format(self, tools):
         """
         Convert tools from Claude format to OpenAI format
@@ -393,7 +393,7 @@ class OpenAICompatibleBot:
         """
         if not tools:
             return None
-        
+
         openai_tools = []
         for tool in tools:
             # Check if already in OpenAI format
@@ -409,9 +409,9 @@ class OpenAICompatibleBot:
                         "parameters": tool.get("input_schema", {})
                     }
                 })
-        
+
         return openai_tools
-    
+
     def _convert_messages_to_openai_format(self, messages):
         """
         Convert messages from Claude format to OpenAI format

@@ -55,13 +55,13 @@ class TrieNode2():
     def SetResults(self,index):
         if (self.End == False) :
             self.End = True
-        if (index in self.Results )==False : 
+        if (index in self.Results )==False :
             self.Results.append(index)
 
     def HasKey(self,c):
         return c in self.m_values
-        
- 
+
+
     def TryGetValue(self,c):
         if (self.minflag <= c and self.maxflag >= c):
             if c in self.m_values:
@@ -74,7 +74,7 @@ class WordsSearch():
         self._first = {}
         self._keywords = []
         self._indexs=[]
-    
+
     def SetKeywords(self,keywords):
         self._keywords = keywords
         self._indexs=[]
@@ -84,10 +84,10 @@ class WordsSearch():
         root = TrieNode()
         allNodeLayer={}
 
-        for i in range(len(self._keywords)): # for (i = 0; i < _keywords.length; i++) 
+        for i in range(len(self._keywords)): # for (i = 0; i < _keywords.length; i++)
             p = self._keywords[i]
             nd = root
-            for j in range(len(p)): # for (j = 0; j < p.length; j++) 
+            for j in range(len(p)): # for (j = 0; j < p.length; j++)
                 nd = nd.Add(ord(p[j]))
                 if (nd.Layer == 0):
                     nd.Layer = j + 1
@@ -106,7 +106,7 @@ class WordsSearch():
                 allNode.append(nd)
         allNodeLayer=None
 
-        for i in range(len(allNode)): # for (i = 0; i < allNode.length; i++) 
+        for i in range(len(allNode)): # for (i = 0; i < allNode.length; i++)
             if i==0 :
                 continue
             nd=allNode[i]
@@ -124,28 +124,28 @@ class WordsSearch():
         root.Failure = root
 
         allNode2 = []
-        for i in range(len(allNode)): # for (i = 0; i < allNode.length; i++) 
+        for i in range(len(allNode)): # for (i = 0; i < allNode.length; i++)
             allNode2.append( TrieNode2())
-        
-        for i in range(len(allNode2)): # for (i = 0; i < allNode2.length; i++) 
+
+        for i in range(len(allNode2)): # for (i = 0; i < allNode2.length; i++)
             oldNode = allNode[i]
             newNode = allNode2[i]
 
             for key in oldNode.m_values :
                 index = oldNode.m_values[key].Index
                 newNode.Add(key, allNode2[index])
-            
-            for index in range(len(oldNode.Results)): # for (index = 0; index < oldNode.Results.length; index++) 
+
+            for index in range(len(oldNode.Results)): # for (index = 0; index < oldNode.Results.length; index++)
                 item = oldNode.Results[index]
                 newNode.SetResults(item)
-            
+
             oldNode=oldNode.Failure
             while oldNode != root:
                 for key in oldNode.m_values :
                     if (newNode.HasKey(key) == False):
                         index = oldNode.m_values[key].Index
                         newNode.Add(key, allNode2[index])
-                for index in range(len(oldNode.Results)): 
+                for index in range(len(oldNode.Results)):
                     item = oldNode.Results[index]
                     newNode.SetResults(item)
                 oldNode=oldNode.Failure
@@ -153,18 +153,18 @@ class WordsSearch():
         root = None
 
         # first = []
-        # for index in range(65535):# for (index = 0; index < 0xffff; index++) 
+        # for index in range(65535):# for (index = 0; index < 0xffff; index++)
         #     first.append(None)
-        
+
         # for key in allNode2[0].m_values :
         #     first[key] = allNode2[0].m_values[key]
-        
+
         self._first = allNode2[0]
-    
+
 
     def FindFirst(self,text):
         ptr = None
-        for index in range(len(text)): # for (index = 0; index < text.length; index++) 
+        for index in range(len(text)): # for (index = 0; index < text.length; index++)
             t =ord(text[index]) # text.charCodeAt(index)
             tn = None
             if (ptr == None):
@@ -173,8 +173,8 @@ class WordsSearch():
                 tn = ptr.TryGetValue(t)
                 if (tn==None):
                     tn = self._first.TryGetValue(t)
-                
-            
+
+
             if (tn != None):
                 if (tn.End):
                     item = tn.Results[0]
@@ -187,7 +187,7 @@ class WordsSearch():
         ptr = None
         list = []
 
-        for index in range(len(text)): # for (index = 0; index < text.length; index++) 
+        for index in range(len(text)): # for (index = 0; index < text.length; index++)
             t =ord(text[index]) # text.charCodeAt(index)
             tn = None
             if (ptr == None):
@@ -196,11 +196,11 @@ class WordsSearch():
                 tn = ptr.TryGetValue(t)
                 if (tn==None):
                     tn = self._first.TryGetValue(t)
-                
-            
+
+
             if (tn != None):
                 if (tn.End):
-                    for j in range(len(tn.Results)): # for (j = 0; j < tn.Results.length; j++) 
+                    for j in range(len(tn.Results)): # for (j = 0; j < tn.Results.length; j++)
                         item = tn.Results[j]
                         keyword = self._keywords[item]
                         list.append({ "Keyword": keyword, "Success": True, "End": index, "Start": index + 1 - len(keyword), "Index": self._indexs[item] })
@@ -210,7 +210,7 @@ class WordsSearch():
 
     def ContainsAny(self,text):
         ptr = None
-        for index in range(len(text)): # for (index = 0; index < text.length; index++) 
+        for index in range(len(text)): # for (index = 0; index < text.length; index++)
             t =ord(text[index]) # text.charCodeAt(index)
             tn = None
             if (ptr == None):
@@ -219,18 +219,18 @@ class WordsSearch():
                 tn = ptr.TryGetValue(t)
                 if (tn==None):
                     tn = self._first.TryGetValue(t)
-            
+
             if (tn != None):
                 if (tn.End):
                     return True
             ptr = tn
         return False
-    
+
     def Replace(self,text, replaceChar = '*'):
-        result = list(text) 
+        result = list(text)
 
         ptr = None
-        for i in range(len(text)): # for (i = 0; i < text.length; i++) 
+        for i in range(len(text)): # for (i = 0; i < text.length; i++)
             t =ord(text[i]) # text.charCodeAt(index)
             tn = None
             if (ptr == None):
@@ -239,12 +239,12 @@ class WordsSearch():
                 tn = ptr.TryGetValue(t)
                 if (tn==None):
                     tn = self._first.TryGetValue(t)
-            
+
             if (tn != None):
                 if (tn.End):
                     maxLength = len( self._keywords[tn.Results[0]])
                     start = i + 1 - maxLength
-                    for j in range(start,i+1): # for (j = start; j <= i; j++) 
+                    for j in range(start,i+1): # for (j = start; j <= i; j++)
                         result[j] = replaceChar
             ptr = tn
-        return ''.join(result) 
+        return ''.join(result)

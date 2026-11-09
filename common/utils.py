@@ -106,10 +106,10 @@ def expand_path(path: str) -> str:
     """
     if not path:
         return path
-    
+
     # Try standard expansion first
     expanded = os.path.expanduser(path)
-    
+
     # If expansion didn't work (path still starts with ~), use HOME or USERPROFILE
     if expanded.startswith('~'):
         import platform
@@ -119,14 +119,14 @@ def expand_path(path: str) -> str:
         else:
             # On Unix-like systems, use HOME
             home = os.environ.get('HOME')
-        
+
         if home:
             # Replace ~ with home directory
             if path == '~':
                 expanded = home
             elif path.startswith('~/') or path.startswith('~\\'):
                 expanded = os.path.join(home, path[2:])
-    
+
     return expanded
 
 

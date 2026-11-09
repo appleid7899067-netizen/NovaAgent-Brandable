@@ -351,7 +351,7 @@ class ChatChannel(Channel):
             reply = e_context["reply"]
             if not e_context.is_pass() and reply and reply.type:
                 logger.debug("[chat_channel] sending reply: {}, context: {}".format(reply, context))
-                
+
                 # 如果是文本回复，尝试提取并发送图片
                 # Web channel renders images/videos inline via renderMarkdown,
                 # so skip the extract-and-send step to avoid duplicate media.
@@ -398,7 +398,7 @@ class ChatChannel(Channel):
         """
         content = reply.content
         media_items = []  # [(url, type), ...]
-        
+
         # 正则提取各种格式的媒体URL
         patterns = [
             (r'\[图片:\s*([^\]]+)\]', 'image'),   # [图片: /path/to/image.png]
@@ -409,12 +409,12 @@ class ChatChannel(Channel):
             (r'https?://[^\s]+\.(?:jpg|jpeg|png|gif|webp)', 'image'),  # 直接的图片URL
             (r'https?://[^\s]+\.(?:mp4|avi|mov|wmv|flv)', 'video'),  # 直接的视频URL
         ]
-        
+
         for pattern, media_type in patterns:
             matches = re.findall(pattern, content, re.IGNORECASE)
             for match in matches:
                 media_items.append((match, media_type))
-        
+
         # 去重（保持顺序）并限制最多5个
         seen = set()
         unique_items = []
@@ -423,15 +423,15 @@ class ChatChannel(Channel):
                 seen.add(url)
                 unique_items.append((url, mtype))
         media_items = unique_items[:5]
-        
+
         if media_items:
             logger.info(f"[chat_channel] Extracted {len(media_items)} media item(s) from reply")
-            
+
             # Send text first (the frontend will embed video players via renderMarkdown).
             logger.info(f"[chat_channel] Sending text content before media: {reply.content[:100]}...")
             self._send(reply, context)
             logger.info(f"[chat_channel] Text sent, now sending {len(media_items)} media item(s)")
-            
+
             for i, (url, media_type) in enumerate(media_items):
                 try:
                     # Determine whether it is a remote URL or a local file.
@@ -450,12 +450,12 @@ class ChatChannel(Channel):
                     else:
                         logger.warning(f"[chat_channel] Media file not found or invalid URL: {url}")
                         continue
-                    
+
                     if i > 0:
                         time.sleep(0.5)
                     self._send(media_reply, context)
                     logger.info(f"[chat_channel] Sent {media_type} {i+1}/{len(media_items)}: {url[:50]}...")
-                    
+
                 except Exception as e:
                     logger.error(f"[chat_channel] Failed to send {media_type} {url}: {e}")
         else:

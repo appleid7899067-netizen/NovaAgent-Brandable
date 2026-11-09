@@ -94,7 +94,7 @@ class Tool(Plugin):
                     e_context.action = EventAction.BREAK
                     return
                 query = content_list[1].strip()
-                
+
                 use_one_tool = False
                 for tool_name in main_tool_register.get_registered_tool_names():
                     if query.startswith(tool_name):
