@@ -64,5 +64,13 @@ jobs:
 
       - name: Verify image runs
         run: |
-          docker run --rm panupangrok:${{ matrix.variant.name }}-test python --version
-          docker run --rm panupangrok:${{ matrix.variant.name }}-test pip list | head -20
+          # --entrypoint bypasses the bot launcher (entrypoint.sh runs the bot,
+          # which never exits and used to make this step hang until the 6h limit).
+          # `timeout` is a second safety net so a regression fails fast.
+          timeout 120 docker run --rm --entrypoint python \
+            panupangrok:${{ matrix.variant.name }}-test --version
+          timeout 120 docker run --rm --entrypoint pip \
+            panupangrok:${{ matrix.variant.name }}-test list | head -20
+          # Also exercise the entrypoint's arg passthrough path.
+          timeout 120 docker run --rm panupangrok:${{ matrix.variant.name }}-test \
+            python -c "import sys; print('python', sys.version.split()[0])"

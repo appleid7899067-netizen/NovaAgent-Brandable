@@ -37,6 +37,20 @@ if [ "$CHATGPT_ON_WECHAT_EXEC" == "" ] ; then
     CHATGPT_ON_WECHAT_EXEC="python app.py"
 fi
 
+# Decide what to actually run:
+#   1. explicit `docker run <image> <cmd...>` args win, so
+#      `docker run --rm <image> python --version` behaves as expected instead
+#      of silently starting the bot (which looks like a hang in CI);
+#   2. otherwise fall back to the CHATGPT_ON_WECHAT_EXEC env var / default.
+# printf %q keeps args containing spaces, quotes or ';' intact for the shell
+# that re-parses CMD_STR below; a plain "$*" would destroy the quoting.
+if [ "$#" -gt 0 ]; then
+    printf -v CMD_STR '%q ' "$@"
+    CMD_STR="${CMD_STR% }"
+else
+    CMD_STR="$CHATGPT_ON_WECHAT_EXEC"
+fi
+
 # modify content in config.json
 # if [ "$OPEN_AI_API_KEY" == "YOUR API KEY" ] || [ "$OPEN_AI_API_KEY" == "" ]; then
 #     echo -e "\033[31m[Warning] You need to set OPEN_AI_API_KEY before running!\033[0m"
@@ -53,11 +67,10 @@ fi
 if [ "$(id -u)" = "0" ]; then
     mkdir -p /home/agent/cow "${COW_DATA_DIR:-/home/agent/.cow}"
     chown agent:agent /home/agent/cow "${COW_DATA_DIR:-/home/agent/.cow}"
-    exec su agent -s /bin/bash -c "cd $CHATGPT_ON_WECHAT_PREFIX && $CHATGPT_ON_WECHAT_EXEC"
+    exec su agent -s /bin/bash -c "cd $CHATGPT_ON_WECHAT_PREFIX && $CMD_STR"
 fi
 
 # fallback: already running as agent
-cd $CHATGPT_ON_WECHAT_PREFIX
-$CHATGPT_ON_WECHAT_EXEC
+eval "cd $CHATGPT_ON_WECHAT_PREFIX && $CMD_STR"
 
 
