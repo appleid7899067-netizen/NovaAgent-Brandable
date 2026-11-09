@@ -121,34 +121,33 @@ def main():
             _fail(f"{path} is not a directory or Office file")
         unpacked_dir = path
 
-    match family:
-        case "docx":
-            validators = [
-                DOCXSchemaValidator(unpacked_dir, original_file, verbose=args.verbose),
-            ]
-            if args.author is not None:
-                validators.append(
-                    RedliningValidator(unpacked_dir, original_file, verbose=args.verbose)  
-                )
-            elif original_file and _has_tracked_changes(unpacked_dir):
-                print(
-                    "Note: this document has tracked changes; they were not "
-                    "checked against the original (pass --author to check)."
-                )
-        case "pptx":
-            validators = [
-                PPTXSchemaValidator(unpacked_dir, original_file, verbose=args.verbose),
-            ]
-        case "xlsx":
-            exts = ", ".join(k for k, v in sorted(OOXML_FAMILY.items()) if v == "xlsx")
-            print(
-                f"No XSD schema validation is performed for xlsx-family files ({exts}). "
-                "For formula-error checking, use scripts/recalc.py instead."
+    if family == "docx":
+        validators = [
+            DOCXSchemaValidator(unpacked_dir, original_file, verbose=args.verbose),
+        ]
+        if args.author is not None:
+            validators.append(
+                RedliningValidator(unpacked_dir, original_file, verbose=args.verbose)
             )
-            sys.exit(0)
-        case _:
-            print(f"Error: Validation not supported for file type {family}")
-            sys.exit(1)
+        elif original_file and _has_tracked_changes(unpacked_dir):
+            print(
+                "Note: this document has tracked changes; they were not "
+                "checked against the original (pass --author to check)."
+            )
+    elif family == "pptx":
+        validators = [
+            PPTXSchemaValidator(unpacked_dir, original_file, verbose=args.verbose),
+        ]
+    elif family == "xlsx":
+        exts = ", ".join(k for k, v in sorted(OOXML_FAMILY.items()) if v == "xlsx")
+        print(
+            f"No XSD schema validation is performed for xlsx-family files ({exts}). "
+            "For formula-error checking, use scripts/recalc.py instead."
+        )
+        sys.exit(0)
+    else:
+        print(f"Error: Validation not supported for file type {family}")
+        sys.exit(1)
 
     if args.auto_repair:
         total_repairs = sum(v.repair() for v in validators)
