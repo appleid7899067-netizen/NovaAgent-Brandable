@@ -1,4 +1,4 @@
-name: Typhoon Local Server
+name: Typhoon Local Server (12B)
 
 on:
   workflow_dispatch:
@@ -24,7 +24,14 @@ jobs:
           curl -fsSL https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-amd64 -o /tmp/cloudflared
           sudo install -m 0755 /tmp/cloudflared /usr/local/bin/cloudflared
 
-      - name: Start Typhoon 1.5B Server
+      - name: Download Typhoon 12B GGUF Model
+        run: |
+          set -euo pipefail
+          echo "📥 Downloading Typhoon 12B GGUF model (~7.3 GB)..."
+          curl -L -o /tmp/model.gguf "https://huggingface.co/typhoon-ai/typhoon2.1-gemma3-12b-gguf/resolve/main/typhoon2.1-gemma3-12b-Q4_K_M.gguf" || \
+          curl -L -o /tmp/model.gguf "https://huggingface.co/scb10x/typhoon2-12b-instruct-gguf/resolve/main/typhoon2-12b-instruct-Q4_K_M.gguf"
+
+      - name: Start Typhoon 12B Server
         env:
           NOVA_LLM_API_KEY: ${{ secrets.NOVA_LLM_API_KEY }}
         run: |
@@ -34,13 +41,13 @@ jobs:
             exit 1
           fi
 
-          nohup llama serve -hf scb10x/typhoon2-1.5b-instruct-gguf:Q4_K_M \
+          nohup llama serve -m /tmp/model.gguf \
             --host 0.0.0.0 --port 9931 -c 2048 -np 1 \
             -a typhoon-local --api-key "$NOVA_LLM_API_KEY" --no-webui >/tmp/server.log 2>&1 &
           echo $! > /tmp/typhoon-server.pid
 
           ready=false
-          for i in $(seq 1 30); do
+          for i in $(seq 1 60); do
             sleep 5
             if curl -fsS -H "Authorization: Bearer $NOVA_LLM_API_KEY" http://127.0.0.1:9931/v1/models >/tmp/models.json 2>/dev/null; then
               ready=true
