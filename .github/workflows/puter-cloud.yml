@@ -1,0 +1,52 @@
+name: Puter Cloud Server
+
+on:
+  workflow_dispatch:
+
+jobs:
+  run-puter:
+    runs-on: ubuntu-latest
+    timeout-minutes: 360
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Install Cloudflared & Node.js
+        run: |
+          sudo apt update && sudo apt install -y curl git
+          curl -fsSL https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-amd64 -o /tmp/cloudflared
+          sudo install -m 0755 /tmp/cloudflared /usr/local/bin/cloudflared
+
+      - name: Clone and Setup Puter
+        run: |
+          git clone https://github.com/HeyPuter/puter.git ~/puter
+          cd ~/puter
+          npm install
+
+      - name: Start Puter Server
+        run: |
+          cd ~/puter
+          nohup npm start > /tmp/puter.log 2>&1 &
+          sleep 5
+
+      - name: Start Cloudflare Tunnel & Print URL
+        run: |
+          nohup cloudflared tunnel --url http://127.0.0.1:4100 > /tmp/cloudflared.log 2>&1 &
+          
+          tunnel_url=""
+          for i in $(seq 1 30); do
+            tunnel_url=$(grep -Eo 'https://[a-zA-Z0-9-]+\.trycloudflare\.com' /tmp/cloudflared.log | head -n 1 || true)
+            if [ -n "$tunnel_url" ]; then break; fi
+            sleep 2
+          done
+
+          echo "=========================================="
+          echo "🎉 PUTER CLOUD DESKTOP IS READY"
+          echo "URL: ${tunnel_url}"
+          echo "=========================================="
+
+      - name: Keep Server Alive
+        run: |
+          for i in $(seq 1 360); do
+            sleep 60
+          done
