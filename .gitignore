@@ -39,6 +39,8 @@ config.json.*
 secrets.local.json
 .env
 .env.*
+# Team roster carries per-channel credentials (e.g. telegram_token) — local only.
+agents/team.json
 
 # ===== IDE =====
 .vscode/
