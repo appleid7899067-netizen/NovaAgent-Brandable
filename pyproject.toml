@@ -6,7 +6,9 @@ build-backend = "setuptools.build_meta"
 name = "cowagent"
 version = "1.0.0"
 description = "CowAgent - AI Agent on WeChat and more"
-requires-python = ">=3.7"
+# The codebase uses 3.10+ syntax (match statements, PEP 604 `X | Y` unions)
+# and the Docker image is built on python:3.10-slim, so 3.10 is the real floor.
+requires-python = ">=3.10"
 dependencies = [
     "click>=8.0",
     "requests>=2.28.2",
@@ -19,7 +21,10 @@ cow = "cli.cli:main"
 include = ["cli*"]
 
 [tool.ruff]
-target-version = "py39"
+# Match the runtime floor declared in [project].requires-python. With py39 the
+# linter parsed `match` statements as syntax errors (invalid-syntax) and
+# mis-modelled PEP 604 unions; py310 reflects what the code actually targets.
+target-version = "py310"
 line-length = 120
 extend-exclude = [
     "desktop",
