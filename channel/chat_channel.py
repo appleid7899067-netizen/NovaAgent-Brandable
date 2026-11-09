@@ -220,7 +220,13 @@ class ChatChannel(Channel):
             session_id=context.get("session_id"),
         )
 
-    def _generate_reply(self, context: Context, reply: Reply = Reply()) -> Reply:
+    def _generate_reply(self, context: Context, reply: Reply = None) -> Reply:
+        # Reply() is instantiated once at def time, so every call that omitted
+        # the argument shared one instance. No plugin mutates it in place (they
+        # all do `e_context["reply"] = Reply(...)`), so this was only a
+        # pointless shared object; building it per call removes the hazard.
+        if reply is None:
+            reply = Reply()
         e_context = PluginManager().emit_event(
             EventContext(
                 Event.ON_HANDLE_CONTEXT,

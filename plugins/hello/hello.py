@@ -39,8 +39,12 @@ class Hello(Plugin):
             logger.debug("[Hello] inited")
             self.handlers[Event.ON_HANDLE_CONTEXT] = self.on_handle_context
         except Exception as e:
-            logger.error(f"[Hello]初始化异常：{e}")
-            raise "[Hello] init failed, ignore "
+            # A bare string is not a valid exception: `raise "..."` itself raises
+            # TypeError, which replaces the real failure and reaches
+            # activate_plugins() as an opaque TypeError instead of its cause.
+            # The sibling plugins (banwords, keyword, role, tool) log and fall
+            # through here; do the same so the plugin is simply disabled.
+            logger.error("[Hello] 初始化失败，插件将被禁用：{}".format(e))
 
     def on_handle_context(self, e_context: EventContext):
         if e_context["context"].type not in [

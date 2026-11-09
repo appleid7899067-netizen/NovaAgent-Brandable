@@ -44,7 +44,7 @@ def main():
             v = row[rev_idx] if rev_idx is not None and rev_idx < len(row) else '0'
             try:
                 val = float(v)
-            except:
+            except ValueError:
                 continue
             totals[m] += val
 

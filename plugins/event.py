@@ -34,9 +34,13 @@ class EventAction(Enum):
 
 
 class EventContext:
-    def __init__(self, event, econtext=dict()):
+    def __init__(self, event, econtext=None):
         self.event = event
-        self.econtext = econtext
+        # A mutable default (dict()) is built once, at def time, so every
+        # EventContext created without an explicit dict would share it. Callers
+        # that do pass a dict (all of channel/chat_channel.py) are unaffected;
+        # this just removes the latent aliasing hazard.
+        self.econtext = {} if econtext is None else econtext
         self.action = EventAction.CONTINUE
 
     def __getitem__(self, key):
