@@ -64,6 +64,14 @@ jobs:
           echo "- node    : $(node -v 2>&1 || echo 'n/a')"
           echo "- docker  : $(docker --version 2>&1 || echo 'n/a')"
 
+      # Install test tools in an isolated virtual environment. Adding its bin
+      # directory to GITHUB_PATH makes both pip and pytest available below.
+      - name: Set up Python test tools
+        run: |
+          python3 -m venv .venv
+          .venv/bin/python -m pip install --upgrade pip pytest
+          echo "$PWD/.venv/bin" >> "$GITHUB_PATH"
+
       - name: Run command
         env:
           SHELL_COMMAND: ${{ inputs.command }}
