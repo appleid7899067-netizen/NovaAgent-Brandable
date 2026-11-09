@@ -1,0 +1,88 @@
+name: cloud-shell
+
+# A reusable, always-available Linux shell on GitHub runners.
+# Dispatch it with a command, read the output back with `gh run view --log`.
+#
+#   gh workflow run cloud-shell.yml -f command='uname -a && python3 -V'
+#   gh run watch
+#   gh run view --log
+#
+# Notes:
+#  - Public repo => free, unmetered minutes; ubuntu-latest = 4 vCPU / 16 GB.
+#  - Command output is attached to the run log, which is PUBLIC for a public repo.
+#    Never echo secrets; pass them via repository secrets instead.
+#  - The workspace is ephemeral (a few hours max). Use artifacts/cache for persistence.
+
+on:
+  workflow_dispatch:
+    inputs:
+      command:
+        description: "Shell command(s) to run on the cloud runner"
+        required: true
+        type: string
+        default: "uname -a && python3 -V && df -h /"
+      machine:
+        description: "Runner label"
+        required: false
+        type: choice
+        options:
+          - ubuntu-latest
+          - ubuntu-24.04
+          - ubuntu-22.04
+        default: ubuntu-latest
+      keep_artifact:
+        description: "Upload ./cloud-shell-out as an artifact"
+        required: false
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+
+concurrency: cloud-shell-${{ github.actor }}
+
+jobs:
+  shell:
+    runs-on: ${{ inputs.machine }}
+    timeout-minutes: 120
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: Environment report
+        run: |
+          echo "### Cloud runner"
+          echo "- os      : $(. /etc/os-release; echo "$PRETTY_NAME")"
+          echo "- kernel  : $(uname -r)"
+          echo "- cpu     : $(nproc) vCPU"
+          echo "- memory  : $(free -h | awk '/^Mem:/{print $2}')"
+          echo "- disk    : $(df -h / | awk 'NR==2{print $2" total, "$4" free"}')"
+          echo "- python  : $(python3 -V 2>&1)"
+          echo "- node    : $(node -v 2>&1 || echo 'n/a')"
+          echo "- docker  : $(docker --version 2>&1 || echo 'n/a')"
+
+      - name: Run command
+        env:
+          SHELL_COMMAND: ${{ inputs.command }}
+        run: |
+          set -o pipefail
+          mkdir -p cloud-shell-out
+          {
+            echo "::group::command"
+            echo "$SHELL_COMMAND"
+            echo "::endgroup::"
+          }
+          # Run through bash so pipes, &&, redirects and quoting all behave.
+          bash -euo pipefail -c "$SHELL_COMMAND" 2>&1 | tee cloud-shell-out/output.txt
+          echo "exit_code=${PIPESTATUS[0]}" | tee -a cloud-shell-out/output.txt
+
+      - name: Upload output
+        if: ${{ inputs.keep_artifact }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: cloud-shell-out
+          path: cloud-shell-out/
+          if-no-files-found: warn
