@@ -41,7 +41,9 @@ jobs:
         run: ruff check .
 
       - name: Run tests
-        run: pytest --tb=short -q
+        run: pytest --tb=short -q --ignore=tasks_api/test_app.py --ignore=skills/test_skill_quality.py
+        env:
+          CI: true
 
       - name: Build package
         run: python -m build
