@@ -38,7 +38,7 @@ jobs:
           set -euo pipefail
           test -n "$NOVA_LLM_API_KEY" || { echo "NOVA_LLM_API_KEY secret is empty"; exit 1; }
 
-          nohup llama serve -hf typhoon-ai/typhoon2.1-gemma3-12b-gguf:Q4_K_M \
+          nohup llama serve -hf scb10x/typhoon2-1.5b-instruct-gguf:Q4_K_M \
             --host 0.0.0.0 --port 9931 -c 2048 -np 1 \
             -a typhoon-local --api-key "$NOVA_LLM_API_KEY" --no-webui >/tmp/server.log 2>&1 &
           echo $! >/tmp/typhoon-server.pid
