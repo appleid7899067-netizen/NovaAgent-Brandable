@@ -37,8 +37,11 @@ DATA_DIR="${COW_DATA_DIR:-$BASE_DIR}"
 mkdir -p "$DATA_DIR"
 CFG="$DATA_DIR/config.json"
 if [ ! -f "$CFG" ]; then
-  cp "$BASE_DIR/config.json" "$CFG"
-  info "สร้าง config ใหม่จาก repo: $CFG"
+  TEMPLATE="$BASE_DIR/config.json"
+  [ -f "$TEMPLATE" ] || TEMPLATE="$BASE_DIR/config-template.json"
+  [ -f "$TEMPLATE" ] || die "ไม่พบ config.json หรือ config-template.json ใน repo"
+  cp "$TEMPLATE" "$CFG"
+  info "สร้าง config ใหม่จาก template: $CFG"
 fi
 
 PY="python3"
