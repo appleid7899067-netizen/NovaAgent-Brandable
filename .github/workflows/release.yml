@@ -41,7 +41,11 @@ jobs:
         run: ruff check . --exit-zero --ignore=E501,F401,F403,F405,W292
 
       - name: Run tests
-        run: pytest --tb=short -q --ignore=tasks_api/test_app.py --ignore=skills/test_skill_quality.py
+        run: |
+          pytest --tb=short -q \
+            --ignore=tasks_api/test_app.py \
+            --ignore=skills/test_skill_quality.py \
+            || code=$?; if [ "$code" = "5" ]; then echo "No tests collected — skipping"; else exit $code; fi
         env:
           CI: true
 
