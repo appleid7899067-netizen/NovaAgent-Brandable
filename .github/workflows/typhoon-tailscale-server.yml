@@ -1,0 +1,73 @@
+name: Typhoon Local Cloud Server (Tailscale)
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  serve:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    steps:
+      - name: Show runner resources
+        run: |
+          echo "CPU: $(nproc)"
+          free -h
+          df -h /
+
+      - name: Connect this runner to the private Tailscale network
+        uses: tailscale/github-action@v4
+        with:
+          authkey: ${{ secrets.TAILSCALE_AUTHKEY }}
+
+      - name: Install llama.cpp CLI
+        run: |
+          curl -LsSf https://llama.app/install.sh | sh
+          echo "$HOME/.local/bin" >> "$GITHUB_PATH"
+          echo "$HOME/.llama/bin" >> "$GITHUB_PATH"
+
+      - name: Start Typhoon 4B OpenAI-compatible server
+        env:
+          NOVA_LLM_API_KEY: ${{ secrets.NOVA_LLM_API_KEY }}
+        run: |
+          set -euo pipefail
+          test -n "$NOVA_LLM_API_KEY" || { echo "Missing NOVA_LLM_API_KEY secret"; exit 1; }
+          export PATH="$HOME/.local/bin:$HOME/.llama/bin:$PATH"
+          command -v llama
+          nohup llama serve -hf typhoon-ai/typhoon2.5-qwen3-4b-gguf:Q4_K_M \
+            --host 0.0.0.0 --port 9931 -c 4096 -np 1 \
+            -a typhoon-local --api-key "$NOVA_LLM_API_KEY" --no-webui \
+            >/tmp/typhoon-server.log 2>&1 &
+          echo $! >/tmp/typhoon-server.pid
+          for i in $(seq 1 90); do
+            if curl -fsS http://127.0.0.1:9931/v1/models \
+              -H "Authorization: Bearer $NOVA_LLM_API_KEY" >/tmp/models.json; then
+              echo "Typhoon server is ready."
+              cat /tmp/models.json
+              break
+            fi
+            if ! kill -0 "$(cat /tmp/typhoon-server.pid)" 2>/dev/null; then
+              cat /tmp/typhoon-server.log
+              exit 1
+            fi
+            sleep 10
+          done
+          test -s /tmp/models.json || { cat /tmp/typhoon-server.log; exit 1; }
+          echo "=== PRIVATE TAILSCALE ADDRESS ==="
+          tailscale ip -4
+          echo "API base: http://$(tailscale ip -4):9931/v1"
+          echo "Model alias: typhoon-local"
+          echo "The API key is intentionally not printed."
+
+      - name: Keep the private model server online
+        run: |
+          echo "Server stays online until this GitHub Actions job ends."
+          for i in $(seq 1 660); do
+            kill -0 "$(cat /tmp/typhoon-server.pid)" || {
+              cat /tmp/typhoon-server.log
+              exit 1
+            }
+            sleep 10
+          done
