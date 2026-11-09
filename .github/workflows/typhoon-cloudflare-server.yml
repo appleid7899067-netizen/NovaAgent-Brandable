@@ -1,0 +1,97 @@
+name: Typhoon Local Cloud Server (Cloudflare Tunnel)
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  serve:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    steps:
+      - name: Show runner resources
+        run: |
+          echo "CPU: $(nproc)"
+          free -h
+          df -h /
+
+      - name: Install llama.cpp CLI and cloudflared
+        run: |
+          set -euo pipefail
+          curl -LsSf https://llama.app/install.sh | sh
+          echo "$HOME/.local/bin" >> "$GITHUB_PATH"
+          echo "$HOME/.llama/bin" >> "$GITHUB_PATH"
+          curl -fsSL https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-amd64 -o /tmp/cloudflared
+          sudo install -m 0755 /tmp/cloudflared /usr/local/bin/cloudflared
+          cloudflared --version
+
+      - name: Start Typhoon 4B OpenAI-compatible server
+        env:
+          NOVA_LLM_API_KEY: ${{ secrets.NOVA_LLM_API_KEY }}
+        run: |
+          set -euo pipefail
+          test -n "$NOVA_LLM_API_KEY" || { echo "Missing NOVA_LLM_API_KEY secret"; exit 1; }
+          export PATH="$HOME/.local/bin:$HOME/.llama/bin:$PATH"
+          command -v llama
+          nohup llama serve -hf typhoon-ai/typhoon2.5-qwen3-4b-gguf:Q4_K_M \
+            --host 0.0.0.0 --port 9931 -c 4096 -np 1 \
+            -a typhoon-local --api-key "$NOVA_LLM_API_KEY" --no-webui \
+            >/tmp/typhoon-server.log 2>&1 &
+          echo $! >/tmp/typhoon-server.pid
+          ready=0
+          for i in $(seq 1 90); do
+            if curl -fsS http://127.0.0.1:9931/v1/models \
+              -H "Authorization: Bearer $NOVA_LLM_API_KEY" >/tmp/models.json; then
+              echo "Typhoon server is ready."
+              cat /tmp/models.json
+              ready=1
+              break
+            fi
+            if ! kill -0 "$(cat /tmp/typhoon-server.pid)" 2>/dev/null; then
+              cat /tmp/typhoon-server.log
+              exit 1
+            fi
+            sleep 10
+          done
+          test "$ready" = 1 || { cat /tmp/typhoon-server.log; exit 1; }
+
+      - name: Publish private-key-protected endpoint through Cloudflare Quick Tunnel
+        run: |
+          set -euo pipefail
+          nohup cloudflared tunnel --url http://127.0.0.1:9931 --no-autoupdate \
+            >/tmp/cloudflared.log 2>&1 &
+          echo $! >/tmp/cloudflared.pid
+          tunnel_url=""
+          for i in $(seq 1 60); do
+            tunnel_url="$(grep -Eo 'https://[a-zA-Z0-9-]+\.trycloudflare\.com' /tmp/cloudflared.log | head -n 1 || true)"
+            if [ -n "$tunnel_url" ]; then break; fi
+            if ! kill -0 "$(cat /tmp/cloudflared.pid)" 2>/dev/null; then
+              cat /tmp/cloudflared.log
+              exit 1
+            fi
+            sleep 5
+          done
+          test -n "$tunnel_url" || { cat /tmp/cloudflared.log; exit 1; }
+          echo "=== TYHOON CLOUD ENDPOINT ==="
+          echo "API base: ${tunnel_url}/v1"
+          echo "Model alias: typhoon-local"
+          echo "Authentication: Bearer API key (NOVA_LLM_API_KEY GitHub Secret)"
+          echo "Keep this URL and API key private. The tunnel URL is temporary."
+
+      - name: Keep the model server and tunnel online
+        run: |
+          set -euo pipefail
+          echo "Server and tunnel stay online until this GitHub Actions job ends."
+          for i in $(seq 1 660); do
+            kill -0 "$(cat /tmp/typhoon-server.pid)" || {
+              cat /tmp/typhoon-server.log
+              exit 1
+            }
+            kill -0 "$(cat /tmp/cloudflared.pid)" || {
+              cat /tmp/cloudflared.log
+              exit 1
+            }
+            sleep 10
+          done
