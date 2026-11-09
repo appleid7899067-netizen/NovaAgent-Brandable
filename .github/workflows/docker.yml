@@ -1,0 +1,68 @@
+name: docker
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+      - arena/9b8a1dc1-novaagent-brandable
+    paths:
+      - "docker/**"
+      - "Dockerfile"
+      - "requirements*.txt"
+      - "pyproject.toml"
+      - ".github/workflows/docker.yml"
+  pull_request:
+    branches:
+      - main
+      - arena/9b8a1dc1-novaagent-brandable
+    paths:
+      - "docker/**"
+      - "Dockerfile"
+      - "requirements*.txt"
+      - "pyproject.toml"
+      - ".github/workflows/docker.yml"
+
+concurrency: ${{ github.workflow }}-${{ github.ref }}
+
+permissions:
+  contents: read
+  packages: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        variant:
+          - name: standard
+            dockerfile: docker/Dockerfile.latest
+            build_args: ""
+          - name: no-browser
+            dockerfile: docker/Dockerfile.latest
+            build_args: "--build-arg INSTALL_BROWSER=false"
+      fail-fast: false
+
+    name: Build (${{ matrix.variant.name }})
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build image
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: ${{ matrix.variant.dockerfile }}
+          build-args: ${{ matrix.variant.build_args }}
+          push: false
+          load: true
+          tags: panupangrok:${{ matrix.variant.name }}-test
+          cache-from: type=gha,scope=${{ matrix.variant.name }}
+          cache-to: type=gha,mode=max,scope=${{ matrix.variant.name }}
+
+      - name: Verify image runs
+        run: |
+          docker run --rm panupangrok:${{ matrix.variant.name }}-test python --version
+          docker run --rm panupangrok:${{ matrix.variant.name }}-test pip list | head -20
