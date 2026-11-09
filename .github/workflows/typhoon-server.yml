@@ -15,7 +15,7 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v4
 
-      - name: Install Tools & HuggingFace CLI
+      - name: Install Tools & HuggingFace Hub
         run: |
           set -euo pipefail
           curl -LsSf https://llama.app/install.sh | sh
@@ -23,13 +23,13 @@ jobs:
           echo "$HOME/.llama/bin" >> "$GITHUB_PATH"
           curl -fsSL https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-amd64 -o /tmp/cloudflared
           sudo install -m 0755 /tmp/cloudflared /usr/local/bin/cloudflared
-          pip install -U huggingface_hub
+          python3 -m pip install -U "huggingface_hub[cli]"
 
-      - name: Download Typhoon 12B via HF CLI
+      - name: Download Typhoon 12B via Python
         run: |
           set -euo pipefail
           echo "📥 Downloading Typhoon 12B GGUF Model (~7.3 GB)..."
-          huggingface-cli download scb10x/typhoon2-12b-instruct-gguf typhoon2-12b-instruct-Q4_K_M.gguf --local-dir /tmp --local-dir-use-symlinks False
+          python3 -c "from huggingface_hub import hf_hub_download; hf_hub_download(repo_id='scb10x/typhoon2-12b-instruct-gguf', filename='typhoon2-12b-instruct-Q4_K_M.gguf', local_dir='/tmp', local_dir_use_symlinks=False)"
           mv /tmp/typhoon2-12b-instruct-Q4_K_M.gguf /tmp/model.gguf
           ls -lh /tmp/model.gguf
 
