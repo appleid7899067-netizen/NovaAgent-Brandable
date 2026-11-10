@@ -31,7 +31,7 @@ jobs:
 
       - name: Start Cloudflare Tunnel & Print URL
         run: |
-          nohup cloudflared tunnel --url http://127.0.0.1:4100 > /tmp/cloudflared.log 2>&1 &
+          nohup cloudflared tunnel --url http://127.0.0.1:4100 --http-host-header localhost > /tmp/cloudflared.log 2>&1 &
           
           tunnel_url=""
           for i in $(seq 1 30); do
