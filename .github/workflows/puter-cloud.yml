@@ -27,7 +27,14 @@ jobs:
         run: |
           cd ~/puter
           nohup npm start > /tmp/puter.log 2>&1 &
-          sleep 5
+          echo "Waiting for Puter on Port 4100..."
+          for i in $(seq 1 30); do
+            if curl -s http://127.0.0.1:4100 > /dev/null; then
+              echo "✅ Puter started successfully!"
+              break
+            fi
+            sleep 2
+          done
 
       - name: Start Cloudflare Tunnel & Print URL
         run: |
