@@ -13,13 +13,37 @@ jobs:
         env:
           OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
         run: |
-          PROMPT="สรุปการทำงานของ GitHub Actions ให้เข้าใจง่าย"
-          RESPONSE=$(curl -sS -X POST https://openrouter.ai/api/v1/chat/completions \
+          set -euo pipefail
+
+          python3 - <<'PY'
+          import json
+
+          with open("request.json", "w", encoding="utf-8") as f:
+              json.dump({
+                  "model": "google/gemma-7b-it:free",
+                  "messages": [{
+                      "role": "user",
+                      "content": "สรุปการทำงานของ GitHub Actions ให้เข้าใจง่าย",
+                  }],
+                  "max_tokens": 300,
+              }, f, ensure_ascii=False)
+          PY
+
+          curl -sS -X POST "https://openrouter.ai/api/v1/chat/completions" \
             -H "Authorization: Bearer ${OPENROUTER_API_KEY}" \
             -H "Content-Type: application/json" \
-            --data-raw '{"model":"google/gemma-7b-it:free","messages":[{"role":"user","content":"'$PROMPT'"}],"max_tokens":300}')
+            --data-binary "@request.json" \
+            -o response.json
 
-          echo "$RESPONSE" | python3 -c "import sys,json; obj=json.load(sys.stdin); print(obj['choices'][0]['message']['content'])" > gemma_output.txt
+          python3 - <<'PY' > gemma_output.txt
+          import json
+
+          with open("response.json", encoding="utf-8") as f:
+              data = json.load(f)
+          if "error" in data:
+              raise SystemExit(str(data["error"]))
+          print(data["choices"][0]["message"]["content"])
+          PY
 
       - name: Upload Gemma output
         uses: actions/upload-artifact@v4
