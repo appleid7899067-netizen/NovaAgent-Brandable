@@ -20,7 +20,7 @@ jobs:
 
           with open("request.json", "w", encoding="utf-8") as f:
               json.dump({
-                  "model": "google/gemma-7b-it:free",
+                  "model": "meta-llama/llama-3.1-8b-instruct:free",
                   "messages": [{
                       "role": "user",
                       "content": "สรุปการทำงานของ GitHub Actions ให้เข้าใจง่าย",
