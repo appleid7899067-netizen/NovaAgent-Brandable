@@ -1,0 +1,28 @@
+name: Run Gemma-7B (free)
+
+on:
+  workflow_dispatch:
+
+jobs:
+  gemma:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Call Gemma-7B via OpenRouter
+        env:
+          OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
+        run: |
+          PROMPT="สรุปการทำงานของ GitHub Actions ให้เข้าใจง่าย"
+          RESPONSE=$(curl -sS -X POST https://openrouter.ai/api/v1/chat/completions \
+            -H "Authorization: Bearer ${OPENROUTER_API_KEY}" \
+            -H "Content-Type: application/json" \
+            --data-raw '{"model":"google/gemma-7b-it:free","messages":[{"role":"user","content":"'$PROMPT'"}],"max_tokens":300}')
+
+          echo "$RESPONSE" | python3 -c "import sys,json; obj=json.load(sys.stdin); print(obj['choices'][0]['message']['content'])" > gemma_output.txt
+
+      - name: Upload Gemma output
+        uses: actions/upload-artifact@v4
+        with:
+          name: gemma-output
+          path: gemma_output.txt
